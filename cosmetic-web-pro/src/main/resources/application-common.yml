@@ -1,0 +1,37 @@
+# CONFIGURATION FOR MAIL
+spring:
+  mail:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: 'true'
+          auth: 'true'
+    host: smtp.gmail.com
+    username: nguyenthinga27070202@gmail.com # YOUR EMAIL
+    password: Tlu#12345 # YOUR PASSWORD
+    port: '587'
+  # CONFIGURATION FOR OAUTH2
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-secret: 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 # YOUR CLIENT SECRET
+            client-id: 275395417575-9g7dafj80dhbg3ssrpr36eue705215cb.apps.googleusercontent.com
+            redirect-uri: '{baseUrl}/oauth2/callback/{registrationId}'
+            scope:
+              - email
+              - profile
+# CONFÌGURATION FOR JWT
+app:
+  app-jwt-expiration-milliseconds: '21440000' # 24 hours
+  jwt-secret: daf66e01593f61a15b857cf433aae03a005812b31234e149036bcc8dee755dbb # YOUR JWT SECRET
+  app-jwt-renewal-milliseconds: '604800000' # 7 days
+  authorizedRedirectUris:
+    - http://localhost:3000/oauth2/redirect
+  tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+  tokenExpirationMsec: 864000000
+
+
+

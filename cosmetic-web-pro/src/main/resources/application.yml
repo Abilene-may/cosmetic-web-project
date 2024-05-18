@@ -1,0 +1,22 @@
+# The common profile
+spring:
+  application:
+    name: 'Cosmetics Management System'
+  profiles:
+    include: common,local  # ENABLE THE COMMON AND LOCAL PROFILE
+  jpa:
+    properties:
+      hibernate:
+        format_sql: 'true' # ENABLE THE SQL FORMATTING
+    show-sql: 'true' # ENABLE THE SQL LOGGING
+  servlet:
+    multipart:
+      enabled: 'true'
+      max-request-size: 215MB
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+  logging:
+    level:
+      org:
+        hibernate:
+          SQL: DEBUG

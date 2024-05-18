@@ -1,0 +1,15 @@
+# This file is used to configure the application
+# properties for the development environment.
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${username}
+    url: jdbc:mysql:${hostname}:${port}/manage_emp
+    password: ${password}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: 'true'
+server:
+  port: '${serverPort}'
+#
