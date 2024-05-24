@@ -38,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
     private final RoleRepository roleRepository;
 
     @Override
-    public TokenAuthDTO login(LoginReqDTO loginDto) {
+    public TokenAuthDTO login(LoginReqDTO loginDto) throws CosmeticException{
         Authentication authentication = authenticate(loginDto.getUsernameOrEmail(),loginDto.getPassword());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -97,7 +97,7 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public TokenAuthDTO refreshToken(String refreshToken) {
+    public TokenAuthDTO refreshToken(String refreshToken) throws CosmeticException{
         TokenAuthDTO tokenAuthDTO = new TokenAuthDTO();
         String userName = jwtTokenProvider.getUsername(refreshToken);
 //        Optional<Users> user = userRepository.findByUserNameOrEmail(userName,userName);
@@ -112,7 +112,7 @@ public class AuthServiceImpl implements AuthService {
         return tokenAuthDTO;
     }
 
-    private Authentication authenticate(String username, String password) {
+    private Authentication authenticate(String username, String password) throws CosmeticException{
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
         if(userDetails == null){

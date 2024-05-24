@@ -3,6 +3,8 @@ package org.example.cosmeticwebpro.services;
 import lombok.AllArgsConstructor;
 import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.User;
+import org.example.cosmeticwebpro.exceptions.CosmeticException;
+import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.repositories.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,16 +25,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
         Optional<User> user = Optional.ofNullable(userRepository.findByUserNameOrEmail(usernameOrEmail, usernameOrEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not exists by Username or Email")));
-        Set<GrantedAuthority> authorities = Set.of(new SimpleGrantedAuthority(Constants.ROLE_USER));
+        Set<GrantedAuthority> authorities = Set.of(new SimpleGrantedAuthority("ROLE_USER"));
 //        Set<GrantedAuthority> authorities = Set.of(new SimpleGrantedAuthority(user.get().getRoleName()));
-//
-//        if (user.get().getGoogleId() != null) {
-//            return new org.springframework.security.core.userdetails.User(
-//                    usernameOrEmail,
-//                    "",
-//                    authorities
-//            );
-//        }
         return new org.springframework.security.core.userdetails.User(
                 usernameOrEmail,
                 user.get().getPassword(),

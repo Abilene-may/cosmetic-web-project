@@ -8,10 +8,10 @@ import org.example.cosmeticwebpro.models.request.SignUpReqDTO;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 public interface AuthService {
-    TokenAuthDTO login(LoginReqDTO loginDto);
+    TokenAuthDTO login(LoginReqDTO loginDto) throws CosmeticException;
     TokenAuthDTO signUp(SignUpReqDTO signupReqDto) throws Exception;
 
     TokenAuthDTO loginWithGoogle(OAuth2User principal);
 
-    TokenAuthDTO refreshToken(String refreshToken);
+    TokenAuthDTO refreshToken(String refreshToken) throws CosmeticException;
 }
