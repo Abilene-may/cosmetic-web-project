@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @AllArgsConstructor
 @Slf4j
+@Entity
 @Table(name="address")
 public class Address {
     @Id

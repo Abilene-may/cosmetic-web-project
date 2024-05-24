@@ -10,4 +10,10 @@ public class Constants {
     public static final String ACTIVE = "Active";
     public static final String PENDING_DELETION = "Pending deletion";
     public static final String DE_ACTIVE = "Deactive";
+
+    // prodcut management
+    public static final String IN_STOCK = "Còn hàng";
+    public static final String TEMPORARILY_OUT_OF_STOCK= "Tạm thời hết hàng";
+    public static final String OUT_OF_STOCK = "Hết hàng";
+
 }

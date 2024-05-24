@@ -17,16 +17,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-// block http request and authentication token if valid set user auth in the security context
 @Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter { // apply one per resquest
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService) {
@@ -34,23 +29,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { // apply one
         this.userDetailsService = userDetailsService;
     }
 
-    // extracts the jwt
-    @Override // apply filter
+    @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        // get JWT token from http request
         String token = getTokenFromRequest(request);
 
-
-        // validate token
-        if(StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)){
-
-            // get username from token
+        if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
             String username = jwtTokenProvider.getUsername(token);
-
-            // load the user associated with token
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -60,21 +47,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { // apply one
             );
 
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
         }
 
         filterChain.doFilter(request, response);
     }
 
-    //  GET JWT TOKEN FROM HTTP REQUEST
-    private String getTokenFromRequest(HttpServletRequest request){
+    private String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")){
-            return bearerToken.substring(7, bearerToken.length());
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
         }
-
         return null;
     }
 }
