@@ -13,8 +13,7 @@ public class Constants {
 
     // prodcut management
     public static final String IN_STOCK = "Còn hàng";
-    public static final String TEMPORARILY_OUT_OF_STOCK= "Tạm thời hết hàng";
-    public static final String DISCONTINUED = "Ngừng sản xuất";
+    public static final String OUT_OF_STOCK= "Hết hàng";
     public static final String HIDDEN = "Ẩn";
     public static final String ON_SALE = "Đang giảm giá";
 

@@ -1,5 +1,6 @@
 package org.example.cosmeticwebpro.controllers;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
@@ -22,11 +23,8 @@ public class ProductController {
 
     /**
      * Create a product
-     * @param productReqDTO
-     * @param multipartFiles
-     * @return
      */
-    @PostMapping("/create-product")
+    @PostMapping("/create")
     public ResponseEntity<Object> createProduct(@ModelAttribute ProductReqDTO productReqDTO,
                                                 @RequestParam(required = false) MultipartFile[] multipartFiles){
         try{
@@ -43,10 +41,17 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/{productId}/{userId}")
-    public ResponseEntity<Object> getProductById(@PathVariable Long productId, @PathVariable Long userId){
+    /**
+     * API show detail information for 1 product
+     * @param productId
+     * @param roleName
+     * @return
+     */
+    @GetMapping("/get-by-id")
+    public ResponseEntity<Object> getProductById(@RequestParam Long productId,
+        @RequestParam String roleName){
         try {
-            var product = productService.getByProductId(productId);
+            var product = productService.getByProductId(productId, roleName);
             return new ResponseEntity<>(product, HttpStatus.OK);
         } catch (CosmeticException e) {
             return new ResponseEntity<>(
@@ -58,4 +63,24 @@ public class ProductController {
                 HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * API update all prodcut status
+     */
+    @PutMapping("/update-all-product-status")
+    private ResponseEntity<Object> updateAllProductStatus(){
+        try {
+            var productList = productService.updateAllProductStatus();
+            return new ResponseEntity<>(productList, HttpStatus.OK);
+        } catch (CosmeticException e) {
+            return new ResponseEntity<>(
+                new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+            return new ResponseEntity<>(
+                ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

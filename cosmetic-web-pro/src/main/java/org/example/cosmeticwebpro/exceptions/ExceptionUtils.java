@@ -14,6 +14,8 @@ public class ExceptionUtils {
     // product
     public static final String PRODUCT_ID_IS_NOT_EXIST = "PRODUCT_ID_IS_NOT_EXIST";
     public static final String PRODUCT_HAS_BEEN_HIDDEN = "PRODUCT_HAS_BEEN_HIDDEN";
+    public static final String PRODUCT_HAS_NO_QUANTITY_YET = "PRODUCT_HAS_NO_QUANTITY_YET";
+    public static final String PRODUCTS_NOT_FOUND = "PRODUCTS_NOT_FOUND";
 
     public static Map<String, String> messages;
 
@@ -30,6 +32,8 @@ public class ExceptionUtils {
     messages.put(
         ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN,
         "Sản phẩm đã bị ẩn hoặc không tồn tại.");
+    messages.put(ExceptionUtils.PRODUCT_HAS_NO_QUANTITY_YET, "Vui lòng nhâp số lượng sản phẩm.");
+    messages.put(ExceptionUtils.PRODUCTS_NOT_FOUND, "Chưa có sản phẩm nào trong danh sách.");
     }
 
 }

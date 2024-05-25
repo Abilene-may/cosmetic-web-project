@@ -1,6 +1,8 @@
 package org.example.cosmeticwebpro.services.Impl;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cosmeticwebpro.commons.Constants;
@@ -33,7 +35,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public void createProduct(ProductReqDTO productReqDTO, MultipartFile[] multipartFiles) throws CosmeticException, IOException {
+    public void createProduct(ProductReqDTO productReqDTO, MultipartFile[] multipartFiles)
+        throws CosmeticException, IOException {
+    // check input quantity
+    if (productReqDTO.getQuantity() == 0) {
+      throw new CosmeticException(
+          ExceptionUtils.PRODUCT_HAS_NO_QUANTITY_YET,
+          ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_HAS_NO_QUANTITY_YET));
+    }
         Product product = Product.builder()
                 .title(productReqDTO.getTitle())
                 .description(productReqDTO.getDescription())
@@ -72,17 +81,46 @@ public class ProductServiceImpl implements ProductService {
      * view details of 1 product
      */
     @Override
-    public Product getByProductId(Long productId) throws CosmeticException {
+    public Product getByProductId(Long productId, String roleName) throws CosmeticException {
         // find information of product
         var product = this.getById(productId);
-    // check quantity and status
-    if (product.getProductStatus().equals(Constants.HIDDEN)) {
-      throw new CosmeticException(
-          ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN,
-          ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN));
+        var productStatus = product.getProductStatus();
+        // check status and role name
+        if (productStatus.equals(Constants.HIDDEN) && !(roleName.equals(Constants.ROLE_ADMIN))) {
+          throw new CosmeticException(
+              ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN,
+              ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN));
+        }
+        return product;
     }
-    return product;
-  }
+
+    /**
+     * update all product status
+     */
+    @Override
+    public List<Product> updateAllProductStatus() throws CosmeticException {
+        List<Product> updateProducts;
+        // find all product
+        List<Product> productList = productRepository.findAll();
+        if (productList.isEmpty()) {
+          throw new CosmeticException(
+              ExceptionUtils.PRODUCTS_NOT_FOUND,
+              ExceptionUtils.messages.get(ExceptionUtils.PRODUCTS_NOT_FOUND));
+        }
+        // Cập nhật trạng thái của từng sản phẩm
+        updateProducts = productList.stream().map(product -> {
+            // get quantity
+            int quantity = product.getQuantity();
+            // check quantity and update status
+            if (quantity == 0) {
+                product.setProductStatus(Constants.OUT_OF_STOCK);
+            }
+            // update in database
+            productRepository.save(product);
+            return product;
+        }).collect(Collectors.toList());
+        return updateProducts;
+    }
 
     public Product getById(Long id) throws CosmeticException{
         var product = productRepository.findById(id);
