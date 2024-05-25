@@ -1,6 +1,9 @@
 package org.example.cosmeticwebpro.domains;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 

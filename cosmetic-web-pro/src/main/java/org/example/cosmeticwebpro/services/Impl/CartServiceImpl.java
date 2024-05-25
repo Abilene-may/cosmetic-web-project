@@ -22,7 +22,7 @@ public class CartServiceImpl implements CartService {
         LocalDateTime localDateTime = LocalDateTime.now();
         Cart cart = new Cart();
         cart.setTotalQuantity(0);
-        cart.setUserId(user.getId());
+        cart.setUser(user);
         cart.setCreatedDate(localDateTime);
         cartRepository.save(cart);
     }

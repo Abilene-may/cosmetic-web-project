@@ -63,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
                     ExceptionUtils.messages.get(ExceptionUtils.USER_SIGNUP_1)
             );
         // setup role for user
-        Role role = roleRepository.findRoleByRoleName(Constants.ROLE_USER);
+        var role = roleRepository.findRoleByRoleName(Constants.ROLE_USER);
         // set user in DB
         User user =User.builder().userName(signupReqDto.getUsername())
                 .email(signupReqDto.getEmail())
@@ -72,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
                 .password(passwordEncoder.encode(signupReqDto.getPassword()))
                 .accountStatus(Constants.ACTIVE)
                 .createdDate(LocalDateTime.now())
-                .roleId(role.getId())
+                .roleId(role.get().getId())
                 .build();
 
         User savedUSer  = userRepository.save(user);

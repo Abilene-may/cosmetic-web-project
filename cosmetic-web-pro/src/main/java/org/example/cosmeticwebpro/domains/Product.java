@@ -68,4 +68,7 @@ public class Product {
     @OneToMany(mappedBy = "products")
     private List<ProductImage> productImages;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 }

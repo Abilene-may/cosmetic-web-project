@@ -7,6 +7,7 @@ import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.Product;
 import org.example.cosmeticwebpro.domains.ProductImage;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
+import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.request.ProductReqDTO;
 import org.example.cosmeticwebpro.repositories.ProductRepository;
 import org.example.cosmeticwebpro.services.CloudinaryService;
@@ -65,5 +66,31 @@ public class ProductServiceImpl implements ProductService {
                     .build();
             productImageService.save(productImage);
         }
+    }
+
+    /**
+     * view details of 1 product
+     */
+    @Override
+    public Product getByProductId(Long productId) throws CosmeticException {
+        // find information of product
+        var product = this.getById(productId);
+    // check quantity and status
+    if (product.getProductStatus().equals(Constants.HIDDEN)) {
+      throw new CosmeticException(
+          ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN,
+          ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN));
+    }
+    return product;
+  }
+
+    public Product getById(Long id) throws CosmeticException{
+        var product = productRepository.findById(id);
+        if(product.isEmpty()){
+            throw new CosmeticException(
+                    ExceptionUtils.PRODUCT_ID_IS_NOT_EXIST,
+                    ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_ID_IS_NOT_EXIST));
+        }
+        return product.get();
     }
 }

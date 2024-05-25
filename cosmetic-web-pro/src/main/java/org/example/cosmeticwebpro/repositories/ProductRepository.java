@@ -2,8 +2,8 @@ package org.example.cosmeticwebpro.repositories;
 
 import org.example.cosmeticwebpro.domains.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-@Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Long> {
+
 }

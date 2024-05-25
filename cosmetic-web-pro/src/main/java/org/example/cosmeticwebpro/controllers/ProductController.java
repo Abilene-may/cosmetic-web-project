@@ -42,4 +42,20 @@ public class ProductController {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/{productId}/{userId}")
+    public ResponseEntity<Object> getProductById(@PathVariable Long productId, @PathVariable Long userId){
+        try {
+            var product = productService.getByProductId(productId);
+            return new ResponseEntity<>(product, HttpStatus.OK);
+        } catch (CosmeticException e) {
+            return new ResponseEntity<>(
+                new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+            return new ResponseEntity<>(
+                ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

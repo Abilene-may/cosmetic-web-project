@@ -2,9 +2,8 @@ package org.example.cosmeticwebpro.repositories;
 
 import org.example.cosmeticwebpro.domains.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-@Repository
-public interface CartRepository extends JpaRepository<Cart, Long> {
+public interface CartRepository extends JpaRepository<Cart, Long>, JpaSpecificationExecutor<Long> {
     Cart findByUserId(Long userId);
 }

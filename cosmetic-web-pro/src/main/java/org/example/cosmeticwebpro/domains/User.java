@@ -5,8 +5,6 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Domain users management
@@ -58,4 +56,7 @@ public class User {
     @Column(name = "role_id")
     private Long roleId;
 
+    private AuthProvider provider;
+
+    private String providerId;
 }

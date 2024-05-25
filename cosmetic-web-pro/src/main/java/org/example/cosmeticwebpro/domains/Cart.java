@@ -1,11 +1,11 @@
 package org.example.cosmeticwebpro.domains;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Slf4j
 @NoArgsConstructor
@@ -32,7 +32,9 @@ public class Cart {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdDate;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id",nullable = false)
+    private User user;
 
 }
