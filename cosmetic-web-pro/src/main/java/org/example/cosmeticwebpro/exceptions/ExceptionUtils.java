@@ -17,6 +17,9 @@ public class ExceptionUtils {
     public static final String PRODUCT_HAS_NO_QUANTITY_YET = "PRODUCT_HAS_NO_QUANTITY_YET";
     public static final String PRODUCTS_NOT_FOUND = "PRODUCTS_NOT_FOUND";
 
+    // brand
+    public static final String BRAND_ID_NOT_FOUND = "BRAND_ID_NOT_FOUND";
+
     public static Map<String, String> messages;
 
     static {
@@ -34,6 +37,10 @@ public class ExceptionUtils {
         "Sản phẩm đã bị ẩn hoặc không tồn tại.");
     messages.put(ExceptionUtils.PRODUCT_HAS_NO_QUANTITY_YET, "Vui lòng nhâp số lượng sản phẩm.");
     messages.put(ExceptionUtils.PRODUCTS_NOT_FOUND, "Chưa có sản phẩm nào trong danh sách.");
+
+    // brand
+    messages.put(ExceptionUtils.BRAND_ID_NOT_FOUND, "Không tìm thấy thông tin của brand hoặc brand không tồn tại.");
+
     }
 
 }

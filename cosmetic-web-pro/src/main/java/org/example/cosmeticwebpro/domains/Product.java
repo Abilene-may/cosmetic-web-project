@@ -65,6 +65,9 @@ public class Product {
     @Column(name = "brand_id")
     private Long brandId;
 
+    @Column(name = "discount_id")
+    private Long disCountId;
+
     @OneToMany(mappedBy = "products")
     private List<ProductImage> productImages;
 

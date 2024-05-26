@@ -2,11 +2,13 @@ package org.example.cosmeticwebpro.domains;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+@Builder
 @Slf4j
 @Setter
 @Getter
