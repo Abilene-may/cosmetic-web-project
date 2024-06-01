@@ -25,9 +25,6 @@ public class Cart {
     @Column(name = "id")
     private Long id;
 
-    @Column(name="total_quantity")
-    private Integer totalQuantity;
-
     @Column(name="created_date")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdDate;

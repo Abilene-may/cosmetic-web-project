@@ -7,10 +7,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.Product;
+import org.example.cosmeticwebpro.domains.ProductHistory;
 import org.example.cosmeticwebpro.domains.ProductImage;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.request.ProductReqDTO;
+import org.example.cosmeticwebpro.repositories.ProductHistoryRepository;
 import org.example.cosmeticwebpro.repositories.ProductRepository;
 import org.example.cosmeticwebpro.services.CloudinaryService;
 import org.example.cosmeticwebpro.services.ProductImageService;
@@ -32,6 +34,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CloudinaryService cloudinaryService;
     private final ProductImageService productImageService;
+    private final ProductHistoryRepository productHistoryRepository;
 
     @Transactional
     @Override
@@ -120,6 +123,52 @@ public class ProductServiceImpl implements ProductService {
             return product;
         }).collect(Collectors.toList());
         return updateProducts;
+    }
+
+    /**
+     * API update product
+     * @param updatedProduct
+     */
+    @Transactional
+    @Override
+    public Product updateProduct(Product updatedProduct) throws CosmeticException {
+        Product existingProduct = this.getById(updatedProduct.getId());
+
+        // compare the price want to change and the current price
+        if (updatedProduct.getCurrentCost() != existingProduct.getCurrentCost()) {
+            // Save history record
+            ProductHistory productHistory = new ProductHistory();
+            productHistory.setProductId(existingProduct.getId());
+            productHistory.setTitle(existingProduct.getTitle());
+            productHistory.setDescription(existingProduct.getDescription());
+            productHistory.setOldCost(existingProduct.getCurrentCost());
+            productHistory.setCategory(existingProduct.getCategory());
+            productHistory.setMadeIn(existingProduct.getMadeIn());
+            productHistory.setCapacity(existingProduct.getCapacity());
+            productHistory.setQuantity(existingProduct.getQuantity());
+            productHistory.setProductStatus(existingProduct.getProductStatus());
+            productHistory.setCountPurchase(existingProduct.getCountPurchase());
+            productHistory.setCreatedDate(existingProduct.getCreatedDate());
+            productHistory.setModifiedDate(existingProduct.getModifiedDate());
+            productHistory.setDiscountId(existingProduct.getDisCountId());
+            productHistory.setBrandId(existingProduct.getBrandId());
+            productHistoryRepository.save(productHistory);
+        }
+        // in case there is no change in the cost
+        existingProduct.setTitle(updatedProduct.getTitle());
+        existingProduct.setDescription(updatedProduct.getDescription());
+        existingProduct.setCurrentCost(updatedProduct.getCurrentCost());
+        existingProduct.setCategory(updatedProduct.getCategory());
+        existingProduct.setMadeIn(updatedProduct.getMadeIn());
+        existingProduct.setCapacity(updatedProduct.getCapacity());
+        existingProduct.setQuantity(updatedProduct.getQuantity());
+        existingProduct.setProductStatus(updatedProduct.getProductStatus());
+        existingProduct.setCountView(updatedProduct.getCountView());
+        existingProduct.setCountPurchase(updatedProduct.getCountPurchase());
+        existingProduct.setModifiedDate(updatedProduct.getModifiedDate());
+        existingProduct.setDisCountId(updatedProduct.getDisCountId());
+        existingProduct.setBrandId(updatedProduct.getBrandId());
+        return productRepository.save(existingProduct);
     }
 
     public Product getById(Long id) throws CosmeticException{
