@@ -20,6 +20,9 @@ public class ExceptionUtils {
     // brand
     public static final String BRAND_ID_NOT_FOUND = "BRAND_ID_NOT_FOUND";
 
+    // cart
+    public static final String PRODUCT_IS_NOT_FOUND_IN_THE_CART = "PRODUCT_IS_NOT_FOUND_IN_THE_CART";
+
     public static Map<String, String> messages;
 
     static {
@@ -40,6 +43,9 @@ public class ExceptionUtils {
 
     // brand
     messages.put(ExceptionUtils.BRAND_ID_NOT_FOUND, "Không tìm thấy thông tin của brand hoặc brand không tồn tại.");
+
+    // cart
+    messages.put(ExceptionUtils.PRODUCT_IS_NOT_FOUND_IN_THE_CART, "Không tìm thấy thông tin sản phẩm trong giỏ hàng.");
 
     }
 
