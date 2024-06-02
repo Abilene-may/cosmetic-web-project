@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Setter
 @Getter
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "brand")

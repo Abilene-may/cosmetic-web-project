@@ -3,6 +3,7 @@ package org.example.cosmeticwebpro.controllers;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.cosmeticwebpro.domains.Product;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.common.ErrorDTO;
@@ -76,6 +77,26 @@ public class ProductController {
             return new ResponseEntity<>(
                 new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
         } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+            return new ResponseEntity<>(
+                ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Create a product
+     */
+    @PostMapping("/update")
+    public ResponseEntity<Object> updateProduct(@ModelAttribute Product product,
+        @RequestParam(required = false) MultipartFile[] multipartFiles){
+        try{
+            productService.updateProduct(product, multipartFiles);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (CosmeticException e){
+            return new ResponseEntity<>(
+                new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+        } catch (Exception ex){
             log.error(ex.getMessage(), ex);
             return new ResponseEntity<>(
                 ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),

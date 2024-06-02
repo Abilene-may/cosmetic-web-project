@@ -2,6 +2,7 @@ package org.example.cosmeticwebpro.services.Impl;
 
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +12,11 @@ import org.example.cosmeticwebpro.domains.ProductHistory;
 import org.example.cosmeticwebpro.domains.ProductImage;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
+import org.example.cosmeticwebpro.models.ProductDisplayDTO;
 import org.example.cosmeticwebpro.models.request.ProductReqDTO;
 import org.example.cosmeticwebpro.repositories.ProductHistoryRepository;
 import org.example.cosmeticwebpro.repositories.ProductRepository;
+import org.example.cosmeticwebpro.repositories.ProductReviewRepository;
 import org.example.cosmeticwebpro.services.CloudinaryService;
 import org.example.cosmeticwebpro.services.ProductImageService;
 import org.example.cosmeticwebpro.services.ProductService;
@@ -35,6 +38,7 @@ public class ProductServiceImpl implements ProductService {
     private final CloudinaryService cloudinaryService;
     private final ProductImageService productImageService;
     private final ProductHistoryRepository productHistoryRepository;
+    private final ProductReviewRepository productReviewRepository;
 
     @Transactional
     @Override
@@ -63,28 +67,14 @@ public class ProductServiceImpl implements ProductService {
                 .build();
         Product savedProduct = productRepository.save(product);
 
-        for (MultipartFile multipartFile : multipartFiles) {
-            BufferedImage bufferedImage;
-            bufferedImage = ImageIO.read(multipartFile.getInputStream());
-            if (bufferedImage == null) {
-                throw new CosmeticException("Invalid image!");
-            }
-            Map result = cloudinaryService.upload(multipartFile);
-            ProductImage productImage = ProductImage.builder()
-                    .name((String) result.get("original_filename"))
-                    .imageUrl((String) result.get("url"))
-                    .imageId((String) result.get("public_id"))
-                    .products(savedProduct)
-                    .build();
-            productImageService.save(productImage);
-        }
+        this.updateProductImage(multipartFiles, savedProduct);
     }
 
     /**
      * view details of 1 product
      */
     @Override
-    public Product getByProductId(Long productId, String roleName) throws CosmeticException {
+    public ProductDisplayDTO getByProductId(Long productId, String roleName) throws CosmeticException {
         // find information of product
         var product = this.getById(productId);
         var productStatus = product.getProductStatus();
@@ -94,7 +84,8 @@ public class ProductServiceImpl implements ProductService {
               ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN,
               ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN));
         }
-        return product;
+        var productReviews = productReviewRepository.findAllByProductId(product.getId());
+      return ProductDisplayDTO.builder().product(product).productReviews(productReviews).build();
     }
 
     /**
@@ -127,31 +118,17 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * API update product
-     * @param updatedProduct
+     *
      */
     @Transactional
     @Override
-    public Product updateProduct(Product updatedProduct) throws CosmeticException {
+    public void updateProduct(Product updatedProduct, MultipartFile[] multipartFiles) throws CosmeticException, IOException {
         Product existingProduct = this.getById(updatedProduct.getId());
 
         // compare the price want to change and the current price
-        if (updatedProduct.getCurrentCost() != existingProduct.getCurrentCost()) {
-            // Save history record
-            ProductHistory productHistory = new ProductHistory();
-            productHistory.setProductId(existingProduct.getId());
-            productHistory.setTitle(existingProduct.getTitle());
-            productHistory.setDescription(existingProduct.getDescription());
-            productHistory.setOldCost(existingProduct.getCurrentCost());
-            productHistory.setCategory(existingProduct.getCategory());
-            productHistory.setMadeIn(existingProduct.getMadeIn());
-            productHistory.setCapacity(existingProduct.getCapacity());
-            productHistory.setQuantity(existingProduct.getQuantity());
-            productHistory.setProductStatus(existingProduct.getProductStatus());
-            productHistory.setCountPurchase(existingProduct.getCountPurchase());
-            productHistory.setCreatedDate(existingProduct.getCreatedDate());
-            productHistory.setModifiedDate(existingProduct.getModifiedDate());
-            productHistory.setDiscountId(existingProduct.getDisCountId());
-            productHistory.setBrandId(existingProduct.getBrandId());
+        // Save history record
+        if (!Objects.equals(updatedProduct.getCurrentCost(), existingProduct.getCurrentCost())) {
+            ProductHistory productHistory = getProductHistory(existingProduct);
             productHistoryRepository.save(productHistory);
         }
         // in case there is no change in the cost
@@ -168,7 +145,47 @@ public class ProductServiceImpl implements ProductService {
         existingProduct.setModifiedDate(updatedProduct.getModifiedDate());
         existingProduct.setDisCountId(updatedProduct.getDisCountId());
         existingProduct.setBrandId(updatedProduct.getBrandId());
-        return productRepository.save(existingProduct);
+
+        this.updateProductImage(multipartFiles, existingProduct);
+        productRepository.save(existingProduct);
+    }
+
+    private static ProductHistory getProductHistory(Product existingProduct) {
+        ProductHistory productHistory = new ProductHistory();
+        productHistory.setProductId(existingProduct.getId());
+        productHistory.setTitle(existingProduct.getTitle());
+        productHistory.setDescription(existingProduct.getDescription());
+        productHistory.setOldCost(existingProduct.getCurrentCost());
+        productHistory.setCategory(existingProduct.getCategory());
+        productHistory.setMadeIn(existingProduct.getMadeIn());
+        productHistory.setCapacity(existingProduct.getCapacity());
+        productHistory.setQuantity(existingProduct.getQuantity());
+        productHistory.setProductStatus(existingProduct.getProductStatus());
+        productHistory.setCountPurchase(existingProduct.getCountPurchase());
+        productHistory.setCreatedDate(existingProduct.getCreatedDate());
+        productHistory.setModifiedDate(existingProduct.getModifiedDate());
+        productHistory.setDiscountId(existingProduct.getDisCountId());
+        productHistory.setBrandId(existingProduct.getBrandId());
+        return productHistory;
+    }
+
+    private void updateProductImage(MultipartFile[] multipartFiles, Product existingProduct)
+        throws IOException, CosmeticException {
+        for (MultipartFile multipartFile : multipartFiles) {
+            BufferedImage bufferedImage;
+            bufferedImage = ImageIO.read(multipartFile.getInputStream());
+            if (bufferedImage == null) {
+                throw new CosmeticException("Invalid image!");
+            }
+            Map result = cloudinaryService.upload(multipartFile);
+            ProductImage productImage = ProductImage.builder()
+                .name((String) result.get("original_filename"))
+                .imageUrl((String) result.get("url"))
+                .imageId((String) result.get("public_id"))
+                .products(existingProduct)
+                .build();
+            productImageService.save(productImage);
+        }
     }
 
     public Product getById(Long id) throws CosmeticException{

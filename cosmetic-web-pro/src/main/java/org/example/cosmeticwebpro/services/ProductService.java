@@ -3,6 +3,7 @@ package org.example.cosmeticwebpro.services;
 import java.util.List;
 import org.example.cosmeticwebpro.domains.Product;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
+import org.example.cosmeticwebpro.models.ProductDisplayDTO;
 import org.example.cosmeticwebpro.models.request.ProductReqDTO;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -10,9 +11,9 @@ import java.io.IOException;
 public interface ProductService {
     void createProduct(ProductReqDTO productReqDTO, MultipartFile[] multipartFiles) throws CosmeticException, IOException;
 
-    Product getByProductId(Long productId, String roleName) throws CosmeticException;
+    ProductDisplayDTO getByProductId(Long productId, String roleName) throws CosmeticException;
 
     List<Product> updateAllProductStatus() throws CosmeticException;
 
-    Product updateProduct(Product updatedProduct) throws CosmeticException;
+    void updateProduct(Product updatedProduct, MultipartFile[] multipartFiles) throws CosmeticException, IOException;
 }
