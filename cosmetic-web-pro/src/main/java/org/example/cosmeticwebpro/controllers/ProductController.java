@@ -26,9 +26,29 @@ public class ProductController {
      * Create a product
      */
     @PostMapping("/create")
-    public ResponseEntity<Object> createProduct(@ModelAttribute ProductReqDTO productReqDTO,
-                                                @RequestParam(required = false) MultipartFile[] multipartFiles){
+    public ResponseEntity<Object> createProduct(@RequestParam("title") String title,
+        @RequestParam(value = "description", required = false) String description,
+        @RequestParam("currentCost") Integer currentCost,
+        @RequestParam("madeIn") String madeIn,
+        @RequestParam(value = "capacity", required = false) Integer capacity,
+        @RequestParam("quantity") Integer quantity,
+        @RequestParam(value = "productStatus", required = false) String productStatus,
+        @RequestParam(required = false) MultipartFile[] multipartFiles,
+        @RequestParam(value = "brandId", required = false) Long brandId,
+        @RequestParam(value = "discountId", required = false) Long discountId,
+        @RequestParam(value = "categoryId", required = false) Long categoryId){
         try{
+            var productReqDTO = ProductReqDTO.builder()
+                .title(title)
+                .description(description)
+                .currentCost(currentCost)
+                .madeIn(madeIn)
+                .capacity(capacity)
+                .quantity(quantity)
+                .productStatus(productStatus)
+                .brandId(brandId)
+                .discountId(discountId)
+                .categoryId(categoryId).build();
             productService.createProduct(productReqDTO, multipartFiles);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CosmeticException e){
@@ -87,9 +107,10 @@ public class ProductController {
      */
     @PostMapping("/update")
     public ResponseEntity<Object> updateProduct(@ModelAttribute Product product,
-        @RequestParam(required = false) MultipartFile[] multipartFiles){
+        @RequestParam(required = false) MultipartFile[] multipartFiles,
+        @RequestParam(required = false) Long[] imageIdDelete){
         try{
-            productService.updateProduct(product, multipartFiles);
+            productService.updateProduct(product, multipartFiles, imageIdDelete);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CosmeticException e){
             return new ResponseEntity<>(

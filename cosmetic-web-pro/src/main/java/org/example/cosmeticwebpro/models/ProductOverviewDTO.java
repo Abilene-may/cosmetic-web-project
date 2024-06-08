@@ -8,17 +8,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.cosmeticwebpro.domains.Product;
 import org.example.cosmeticwebpro.domains.ProductImage;
-import org.example.cosmeticwebpro.domains.ProductReview;
 
 @Builder
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDisplayDTO {
+public class ProductOverviewDTO {
   private Product product;
 
   private List<ProductImage> productImages;
-
-  private List<ProductReview> productReviews;
 }

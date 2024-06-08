@@ -16,9 +16,15 @@ public class ExceptionUtils {
     public static final String PRODUCT_HAS_BEEN_HIDDEN = "PRODUCT_HAS_BEEN_HIDDEN";
     public static final String PRODUCT_HAS_NO_QUANTITY_YET = "PRODUCT_HAS_NO_QUANTITY_YET";
     public static final String PRODUCTS_NOT_FOUND = "PRODUCTS_NOT_FOUND";
+    public static final String PRODUCT_ERROR_1 = "PRODUCT_ERROR_1";
+    public static final String PRODUCT_ERROR_2 = "PRODUCT_ERROR_2";
+    public static final String PRODUCT_ERROR_3 = "PRODUCT_ERROR_3";
 
     // brand
     public static final String BRAND_ID_NOT_FOUND = "BRAND_ID_NOT_FOUND";
+
+    // category
+    public static final String CATEGORY_NOT_FOUND =  "CATEGORY_NOT_FOUND";
 
     // cart
     public static final String PRODUCT_IS_NOT_FOUND_IN_THE_CART = "PRODUCT_IS_NOT_FOUND_IN_THE_CART";
@@ -43,11 +49,16 @@ public class ExceptionUtils {
         "Sản phẩm đã bị ẩn hoặc không tồn tại.");
     messages.put(ExceptionUtils.PRODUCT_HAS_NO_QUANTITY_YET, "Vui lòng nhâp số lượng sản phẩm.");
     messages.put(ExceptionUtils.PRODUCTS_NOT_FOUND, "Chưa có sản phẩm nào trong danh sách.");
+    messages.put(ExceptionUtils.PRODUCT_ERROR_1, "Vui lòng nhập Tiêu đề của sản phẩm.");
+    messages.put(ExceptionUtils.PRODUCT_ERROR_2, "Vui lòng nhập giá của sản phẩm.");
+    messages.put(ExceptionUtils.PRODUCT_ERROR_3, "Vui lòng nhập Made in của sản phẩm.");
 
     // brand
     messages.put(
         ExceptionUtils.BRAND_ID_NOT_FOUND,
         "Không tìm thấy thông tin của brand hoặc brand không tồn tại.");
+    // categpry
+    messages.put(ExceptionUtils.CATEGORY_NOT_FOUND, "Không tìm thấy thông tin danh mục hàng.");
 
     // cart
     messages.put(

@@ -2,6 +2,7 @@ package org.example.cosmeticwebpro.services.Impl;
 
 import lombok.RequiredArgsConstructor;
 import org.example.cosmeticwebpro.domains.ProductImage;
+import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.repositories.ProductImageRepository;
 import org.example.cosmeticwebpro.services.CloudinaryService;
 import org.example.cosmeticwebpro.services.ProductImageService;
@@ -43,5 +44,12 @@ public class ProductImageServiceImpl implements ProductImageService {
     @Override
     public boolean exists(Long id){
         return imageRepository.existsById(id);
+    }
+
+    // get all images for a product
+    @Override
+    public List<ProductImage> getAllByProductId(Long productId) throws CosmeticException {
+        var productImages = imageRepository.findProductImagesByProductId(productId);
+        return productImages;
     }
 }

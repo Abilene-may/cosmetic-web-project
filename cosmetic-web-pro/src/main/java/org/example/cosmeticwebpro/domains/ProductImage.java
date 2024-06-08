@@ -27,10 +27,8 @@ public class ProductImage {
     @Column(name = "url_image")
     private String imageUrl;
 
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "product_id")
-    private Product products;
+    @Column(name = "product_id")
+    private Long productId;
 
     public ProductImage(String name, String imageUrl, String imageId) {
         this.name = name;

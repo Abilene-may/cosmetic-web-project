@@ -43,7 +43,7 @@ public class ProductHistory {
   private String description;
 
   @Column(name = "old_cost")
-  private String oldCost;
+  private Integer oldCost;
 
   @Column(name = "category")
   private String category;
@@ -80,6 +80,6 @@ public class ProductHistory {
   @Column(name = "product_id")
   private Long productId;
 
-  @Column(name = "discount_id")
-  private Long discountId;
+  @Column(name = "discount_percent")
+  private Long discountPercent;
 }

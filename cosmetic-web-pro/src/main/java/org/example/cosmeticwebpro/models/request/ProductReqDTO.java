@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductReqDTO {
@@ -19,9 +21,7 @@ public class ProductReqDTO {
 
     private String description;
 
-    private String currentCost;
-
-    private String category;
+    private Integer currentCost;
 
     private String madeIn;
 
@@ -29,5 +29,11 @@ public class ProductReqDTO {
 
     private Integer quantity;
 
+    private String productStatus;
+
     private Long brandId;
+
+    private Long discountId;
+
+    private Long categoryId;
 }

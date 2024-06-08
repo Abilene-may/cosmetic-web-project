@@ -1,6 +1,7 @@
 package org.example.cosmeticwebpro.domains;
 
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -31,10 +32,7 @@ public class Product {
     private String description;
 
     @Column(name = "current_cost")
-    private String currentCost;
-
-    @Column(name = "category")
-    private String category;
+    private Integer currentCost;
 
     @Column(name = "made_in")
     private String madeIn;
@@ -68,6 +66,6 @@ public class Product {
     @Column(name = "discount_id")
     private Long disCountId;
 
-    @OneToMany(mappedBy = "products")
-    private List<ProductImage> productImages;
+    @Column(name = "category_id")
+    private Long categoryId;
 }
