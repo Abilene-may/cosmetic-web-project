@@ -11,9 +11,12 @@ import java.io.IOException;
 public interface ProductService {
     void createProduct(ProductReqDTO productReqDTO, MultipartFile[] multipartFiles) throws CosmeticException, IOException;
 
-    ProductDisplayDTO getByProductId(Long productId, String roleName) throws CosmeticException;
+    ProductDisplayDTO getByProductId(Long productId) throws CosmeticException;
 
     List<Product> updateAllProductStatus() throws CosmeticException;
 
     void updateProduct(Product updatedProduct, MultipartFile[] multipartFiles) throws CosmeticException, IOException;
+
+    List<Product> getAllProductForAdmin() throws CosmeticException;
+
 }

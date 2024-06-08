@@ -45,14 +45,12 @@ public class ProductController {
     /**
      * API show detail information for 1 product
      * @param productId
-     * @param roleName
      * @return
      */
     @GetMapping("/get-by-id")
-    public ResponseEntity<Object> getProductById(@RequestParam Long productId,
-        @RequestParam String roleName){
+    public ResponseEntity<Object> getProductById(@RequestParam Long productId){
         try {
-            var product = productService.getByProductId(productId, roleName);
+            var product = productService.getByProductId(productId);
             return new ResponseEntity<>(product, HttpStatus.OK);
         } catch (CosmeticException e) {
             return new ResponseEntity<>(
@@ -97,6 +95,26 @@ public class ProductController {
             return new ResponseEntity<>(
                 new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
         } catch (Exception ex){
+            log.error(ex.getMessage(), ex);
+            return new ResponseEntity<>(
+                ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * API show detail information for 1 product
+     * @return
+     */
+    @GetMapping("/get-all")
+    public ResponseEntity<Object> displayProductForAdmin(){
+        try {
+            var product = productService.getAllProductForAdmin();
+            return new ResponseEntity<>(product, HttpStatus.OK);
+        } catch (CosmeticException e) {
+            return new ResponseEntity<>(
+                new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
             return new ResponseEntity<>(
                 ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),

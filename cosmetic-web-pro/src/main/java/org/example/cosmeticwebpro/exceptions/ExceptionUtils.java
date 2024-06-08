@@ -23,6 +23,9 @@ public class ExceptionUtils {
     // cart
     public static final String PRODUCT_IS_NOT_FOUND_IN_THE_CART = "PRODUCT_IS_NOT_FOUND_IN_THE_CART";
 
+    // address
+    public static final String ADDRESS_IS_NOT_FOUND = "ADDRESS_IS_NOT_FOUND";
+
     public static Map<String, String> messages;
 
     static {
@@ -42,11 +45,18 @@ public class ExceptionUtils {
     messages.put(ExceptionUtils.PRODUCTS_NOT_FOUND, "Chưa có sản phẩm nào trong danh sách.");
 
     // brand
-    messages.put(ExceptionUtils.BRAND_ID_NOT_FOUND, "Không tìm thấy thông tin của brand hoặc brand không tồn tại.");
+    messages.put(
+        ExceptionUtils.BRAND_ID_NOT_FOUND,
+        "Không tìm thấy thông tin của brand hoặc brand không tồn tại.");
 
     // cart
-    messages.put(ExceptionUtils.PRODUCT_IS_NOT_FOUND_IN_THE_CART, "Không tìm thấy thông tin sản phẩm trong giỏ hàng.");
+    messages.put(
+        ExceptionUtils.PRODUCT_IS_NOT_FOUND_IN_THE_CART,
+        "Không tìm thấy thông tin sản phẩm trong giỏ hàng.");
 
-    }
-
+    // address
+    messages.put(
+        ExceptionUtils.ADDRESS_IS_NOT_FOUND,
+        "Không tìm thấy thông tin của địa chỉ hoặc địa chỉ không tồn tại.");
+  }
 }

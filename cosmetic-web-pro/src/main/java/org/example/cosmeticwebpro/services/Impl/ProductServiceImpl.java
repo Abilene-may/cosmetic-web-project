@@ -74,16 +74,9 @@ public class ProductServiceImpl implements ProductService {
      * view details of 1 product
      */
     @Override
-    public ProductDisplayDTO getByProductId(Long productId, String roleName) throws CosmeticException {
+    public ProductDisplayDTO getByProductId(Long productId) throws CosmeticException {
         // find information of product
         var product = this.getById(productId);
-        var productStatus = product.getProductStatus();
-        // check status and role name
-        if (productStatus.equals(Constants.HIDDEN) && !(roleName.equals(Constants.ROLE_ADMIN))) {
-          throw new CosmeticException(
-              ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN,
-              ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN));
-        }
         var productReviews = productReviewRepository.findAllByProductId(product.getId());
       return ProductDisplayDTO.builder().product(product).productReviews(productReviews).build();
     }
@@ -150,6 +143,13 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(existingProduct);
     }
 
+    /*
+    Get all product for admin include hiden product
+     */
+    @Override
+    public List<Product> getAllProductForAdmin() throws CosmeticException{
+      return productRepository.findAll();
+    }
     private static ProductHistory getProductHistory(Product existingProduct) {
         ProductHistory productHistory = new ProductHistory();
         productHistory.setProductId(existingProduct.getId());
