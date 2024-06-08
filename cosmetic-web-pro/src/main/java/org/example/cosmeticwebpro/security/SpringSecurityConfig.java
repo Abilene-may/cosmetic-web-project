@@ -61,7 +61,7 @@ public class SpringSecurityConfig {
                     (request, response, authException) -> response.sendError(401)))
         .authorizeHttpRequests(
             (authorize) -> {
-              authorize.requestMatchers("/api/user/**").authenticated();
+              authorize.requestMatchers("/api/user/**").hasRole("USER");
               authorize.requestMatchers("/api/admin/**").authenticated();
               authorize.requestMatchers("/admin/role/**").authenticated();
 
