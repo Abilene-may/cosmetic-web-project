@@ -35,7 +35,7 @@ public class Address {
     private String districtName;
 
     @Column(name = "ward_name")
-    private String email;
+    private String wardName;
 
     @Column(name = "address_detail")
     private String addressDetail;
