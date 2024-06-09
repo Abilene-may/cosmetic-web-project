@@ -103,9 +103,9 @@ public class ProductController {
     }
 
     /**
-     * Create a product
+     * update a product
      */
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<Object> updateProduct(@ModelAttribute Product product,
         @RequestParam(required = false) MultipartFile[] multipartFiles,
         @RequestParam(required = false) Long[] imageIdDelete){
