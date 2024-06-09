@@ -22,4 +22,6 @@ public interface ProductService {
       throws CosmeticException, IOException;
 
   List<ProductOverviewDTO> getAllProductForAdmin() throws CosmeticException;
+
+  List<ProductOverviewDTO> productOverviewDTOS(List<Product> products);
 }

@@ -14,7 +14,7 @@ public class Constants {
     // prodcut management
     public static final String IN_STOCK = "Còn hàng";
     public static final String OUT_OF_STOCK= "Hết hàng";
-    public static final String HIDDEN = "Ẩn";
+    public static final String PRODUCT_HIDDEN = "Ẩn";
     public static final String ON_SALE = "Đang giảm giá";
 
 }

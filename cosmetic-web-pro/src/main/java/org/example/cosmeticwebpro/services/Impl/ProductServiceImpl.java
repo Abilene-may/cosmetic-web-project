@@ -1,6 +1,8 @@
 package org.example.cosmeticwebpro.services.Impl;
 
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -200,27 +202,32 @@ public class ProductServiceImpl implements ProductService {
   /*
   Get all product for admin include hiden product
    */
+  @Override
   public List<ProductOverviewDTO> getAllProductForAdmin() throws CosmeticException {
     // Fetch all products
     List<Product> products = productRepository.findAll();
+    // Map product IDs to their images
 
-    // Convert each product to a ProductOverviewDTO
-    List<ProductOverviewDTO> productOverviewDTOs =
-        products.stream()
-            .map(
-                product -> {
-                  // Fetch images for the product
-                  List<ProductImage> productImages = null;
-                  try {
-                    productImages = productImageService.getAllByProductId(product.getId());
-                  } catch (CosmeticException e) {
-                    throw new RuntimeException(e);
-                  }
-                  // Create and return a new ProductOverviewDTO
-                  return new ProductOverviewDTO(product, productImages);
-                })
-            .collect(Collectors.toList());
+    return this.productOverviewDTOS(products);
+  }
 
+  @Transactional
+  @Override
+  public List<ProductOverviewDTO> productOverviewDTOS(List<Product> products){
+    // Map product IDs to their images
+    Map<Long, List<ProductImage>> productImagesMap = productImageService.getAll()
+        .stream()
+        .collect(Collectors.groupingBy(ProductImage::getProductId));
+    // Create a list of ProductOverviewDTO
+    List<ProductOverviewDTO> productOverviewDTOs = new ArrayList<>();
+
+    for (Product product : products) {
+      List<String> imageUrls = productImagesMap.getOrDefault(product.getId(), Collections.emptyList())
+          .stream()
+          .map(ProductImage::getImageUrl)
+          .collect(Collectors.toList());
+      productOverviewDTOs.add(new ProductOverviewDTO(product, imageUrls));
+    }
     return productOverviewDTOs;
   }
 

@@ -63,4 +63,10 @@ public class Discount {
   @Column(name = "modified_date")
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime modifiedDate;
+
+  @Column(name = "apply_to")
+  private String applyTo;
+
+  @Column(name = "min_amount")
+  private Integer minAmount;
 }

@@ -15,4 +15,6 @@ public interface ProductImageService {
     boolean exists(Long id);
 
     List<ProductImage> getAllByProductId(Long productId) throws CosmeticException;
+
+    List<ProductImage> getAll();
 }

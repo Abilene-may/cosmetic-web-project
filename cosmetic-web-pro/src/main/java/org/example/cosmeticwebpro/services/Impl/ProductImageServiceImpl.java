@@ -52,4 +52,9 @@ public class ProductImageServiceImpl implements ProductImageService {
         var productImages = imageRepository.findProductImagesByProductId(productId);
         return productImages;
     }
+
+    @Override
+    public List<ProductImage> getAll() {
+        return imageRepository.findAll();
+    }
 }
