@@ -31,6 +31,12 @@ public class ExceptionUtils {
 
     // address
     public static final String ADDRESS_IS_NOT_FOUND = "ADDRESS_IS_NOT_FOUND";
+    public static final String ADDRESS_ERROR_1 = "ADDRESS_ERROR_1";
+    public static final String ADDRESS_ERROR_2 = "ADDRESS_ERROR_2";
+    public static final String ADDRESS_ERROR_3 = "ADDRESS_ERROR_3";
+    public static final String ADDRESS_ERROR_4 = "ADDRESS_ERROR_4";
+    public static final String ADDRESS_ERROR_5 = "ADDRESS_ERROR_5";
+    public static final String USER_ID_IS_NOT_EMPTY = "USER_ID_IS_NOT_EMPTY";
 
     public static Map<String, String> messages;
 
@@ -69,5 +75,18 @@ public class ExceptionUtils {
     messages.put(
         ExceptionUtils.ADDRESS_IS_NOT_FOUND,
         "Không tìm thấy thông tin của địa chỉ hoặc địa chỉ không tồn tại.");
-  }
+    messages.put(
+        ExceptionUtils.ADDRESS_ERROR_1, "Vui lòng nhập Họ và tên.");
+
+    messages.put(
+        ExceptionUtils.ADDRESS_ERROR_2, "Vui lòng nhập Số điện thoại.");
+    messages.put(
+        ExceptionUtils.ADDRESS_ERROR_3, "Vui lòng nhập Tỉnh/Thành phố.");
+    messages.put(
+        ExceptionUtils.ADDRESS_ERROR_4, "Vui lòng nhập Quận/Huyện.");
+    messages.put(
+        ExceptionUtils.ADDRESS_ERROR_5, "Vui lòng nhập Xã/Phường.");
+    messages.put(
+        ExceptionUtils.USER_ID_IS_NOT_EMPTY, "Trường userId không được bỏ trống.");
+    }
 }

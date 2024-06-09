@@ -47,8 +47,8 @@ public class HomeController {
   @GetMapping("/view-a-product")
   public ResponseEntity<Object> displayProductDetail(@PathVariable Long productId){
     try {
-      var homeDisplayDTO = homeService.displayHomeScreen();
-      return new ResponseEntity<>(homeDisplayDTO, HttpStatus.OK);
+      var productDisplayDTO = homeService.viewAProductDetail(productId);
+      return new ResponseEntity<>(productDisplayDTO, HttpStatus.OK);
     } catch (CosmeticException e) {
       return new ResponseEntity<>(
           new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
