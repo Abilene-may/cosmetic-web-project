@@ -46,6 +46,10 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdDate;
 
+    @Column(name = "modified_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime modifiedDate;
+
     @Column(name = "account_status")
     private String accountStatus;
 

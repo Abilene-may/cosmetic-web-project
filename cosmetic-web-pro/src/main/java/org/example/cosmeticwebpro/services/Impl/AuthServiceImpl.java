@@ -30,97 +30,110 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 @Service
 public class AuthServiceImpl implements AuthService {
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final CustomUserDetailsService customUserDetailsService;
-    private final CartService cartService;
-    private final RoleRepository roleRepository;
+  private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
+  private final JwtTokenProvider jwtTokenProvider;
+  private final CustomUserDetailsService customUserDetailsService;
+  private final CartService cartService;
+  private final RoleRepository roleRepository;
 
-    @Override
-    public TokenAuthDTO login(LoginReqDTO loginDto) throws CosmeticException{
-        Authentication authentication = authenticate(loginDto.getUsernameOrEmail(),loginDto.getPassword());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+  @Override
+  public TokenAuthDTO login(LoginReqDTO loginDto) throws CosmeticException {
+    Authentication authentication =
+        authenticate(loginDto.getUsernameOrEmail(), loginDto.getPassword());
+    SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String token = jwtTokenProvider.generateToken(authentication);
-        String refreshToken = jwtTokenProvider.generateRefreshToken(new HashMap<>(),authentication);
-        TokenAuthDTO tokenAuthDTO = new TokenAuthDTO();
-        tokenAuthDTO.setAccessToken(token);
-        tokenAuthDTO.setRefreshToken(refreshToken);
-        return tokenAuthDTO;
+    String token = jwtTokenProvider.generateToken(authentication);
+    String refreshToken = jwtTokenProvider.generateRefreshToken(new HashMap<>(), authentication);
+    TokenAuthDTO tokenAuthDTO = new TokenAuthDTO();
+    tokenAuthDTO.setAccessToken(token);
+    tokenAuthDTO.setRefreshToken(refreshToken);
+    return tokenAuthDTO;
+  }
+
+  @Override
+  public TokenAuthDTO signUp(SignUpReqDTO signupReqDto) throws Exception {
+    // check null fields
+    if (signupReqDto.getEmail().isBlank()) {
+      throw new CosmeticException(
+          ExceptionUtils.SIGNUP_ERROR_NULL_1,
+          ExceptionUtils.messages.get(ExceptionUtils.SIGNUP_ERROR_NULL_1));
     }
-
-
-    @Override
-    public TokenAuthDTO signUp(SignUpReqDTO signupReqDto) throws Exception {
-        var checkExistUser = userRepository.findUserByUserNameOrEmail(
-                signupReqDto.getUsername(), signupReqDto.getEmail(), Constants.ACTIVE
-        );
-        // case email or username has been registered
-        if(checkExistUser.isPresent())
-            throw new CosmeticException(
-                    ExceptionUtils.USER_SIGNUP_1,
-                    ExceptionUtils.messages.get(ExceptionUtils.USER_SIGNUP_1)
-            );
-        // setup role for user
-        var role = roleRepository.findRoleByRoleName(Constants.ROLE_USER);
-        // set user in DB
-        User user =User.builder().userName(signupReqDto.getUsername())
-                .email(signupReqDto.getEmail())
-                .firstName(signupReqDto.getFirstName())
-                .lastName(signupReqDto.getLastName())
-                .password(passwordEncoder.encode(signupReqDto.getPassword()))
-                .accountStatus(Constants.ACTIVE)
-                .createdDate(LocalDateTime.now())
-                .roleId(role.get().getId())
-                .build();
-
-        User savedUSer  = userRepository.save(user);
-        // create a shopping cart
-        cartService.createCart(savedUSer);
-        Authentication authentication = authenticate(savedUSer.getUserName(),signupReqDto.getPassword());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtTokenProvider.generateToken(authentication);
-        String refreshToken = jwtTokenProvider.generateRefreshToken(new HashMap<>(),authentication);
-        TokenAuthDTO tokenAuthDTO = new TokenAuthDTO();
-        tokenAuthDTO.setAccessToken(token);
-        tokenAuthDTO.setRefreshToken(refreshToken);
-
-        return tokenAuthDTO;
+    if (signupReqDto.getPassword().isBlank()) {
+      throw new CosmeticException(
+          ExceptionUtils.SIGNUP_ERROR_NULL_2,
+          ExceptionUtils.messages.get(ExceptionUtils.SIGNUP_ERROR_NULL_2));
     }
+    var checkExistUser = userRepository.findUserByEmail(signupReqDto.getEmail(), Constants.ACTIVE);
+    // case email or username has been registered
+    if (checkExistUser.isPresent())
+      throw new CosmeticException(
+          ExceptionUtils.USER_SIGNUP_1, ExceptionUtils.messages.get(ExceptionUtils.USER_SIGNUP_1));
+    // setup username for user
+    String userName = signupReqDto.getEmail().split("@")[0];
+    // setup role for user
+    var role = roleRepository.findRoleByRoleName(Constants.ROLE_USER);
+    // set user in DB
+    User user =
+        User.builder()
+            .email(signupReqDto.getEmail())
+            .firstName(signupReqDto.getFirstName())
+            .lastName(signupReqDto.getLastName())
+            .userName(userName)
+            .password(passwordEncoder.encode(signupReqDto.getPassword()))
+            .createdDate(LocalDateTime.now())
+            .modifiedDate(LocalDateTime.now())
+            .accountStatus(Constants.ACTIVE)
+            .roleId(role.get().getId())
+            .build();
 
-    @Override
-    public TokenAuthDTO loginWithGoogle(OAuth2User principal) {
-        // Setup user and cart
-        return new TokenAuthDTO();
+    User savedUSer = userRepository.save(user);
+    // create a shopping cart
+    cartService.createCart(savedUSer);
+    Authentication authentication =
+        authenticate(savedUSer.getUserName(), signupReqDto.getPassword());
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+    String token = jwtTokenProvider.generateToken(authentication);
+    String refreshToken = jwtTokenProvider.generateRefreshToken(new HashMap<>(), authentication);
+    TokenAuthDTO tokenAuthDTO = new TokenAuthDTO();
+    tokenAuthDTO.setAccessToken(token);
+    tokenAuthDTO.setRefreshToken(refreshToken);
+
+    return tokenAuthDTO;
+  }
+
+  @Override
+  public TokenAuthDTO loginWithGoogle(OAuth2User principal) {
+    // Setup user and cart
+    return new TokenAuthDTO();
+  }
+
+  @Override
+  public TokenAuthDTO refreshToken(String refreshToken) throws CosmeticException {
+    TokenAuthDTO tokenAuthDTO = new TokenAuthDTO();
+    String userName = jwtTokenProvider.getUsername(refreshToken);
+    //        Optional<Users> user = userRepository.findByUserNameOrEmail(userName,userName);
+    UserDetails userDetails = customUserDetailsService.loadUserByUsername(userName);
+    Authentication authentication =
+        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+    if (jwtTokenProvider.validateToken(refreshToken) && authentication != null) {
+      String jwt = jwtTokenProvider.generateToken(authentication);
+      tokenAuthDTO.setRefreshToken(refreshToken);
+      tokenAuthDTO.setAccessToken(jwt);
     }
+    return tokenAuthDTO;
+  }
 
+  private Authentication authenticate(String username, String password) throws CosmeticException {
+    UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
-    @Override
-    public TokenAuthDTO refreshToken(String refreshToken) throws CosmeticException{
-        TokenAuthDTO tokenAuthDTO = new TokenAuthDTO();
-        String userName = jwtTokenProvider.getUsername(refreshToken);
-//        Optional<Users> user = userRepository.findByUserNameOrEmail(userName,userName);
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(userName);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-        if(jwtTokenProvider.validateToken(refreshToken)  && authentication !=null){
-            String jwt  = jwtTokenProvider.generateToken(authentication);
-            tokenAuthDTO.setRefreshToken(refreshToken);
-            tokenAuthDTO.setAccessToken(jwt);
-        }
-        return tokenAuthDTO;
+    if (userDetails == null) {
+      throw new BadCredentialsException("Invalid Username");
     }
-
-    private Authentication authenticate(String username, String password) throws CosmeticException{
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-
-        if(userDetails == null){
-            throw new BadCredentialsException("Invalid Username");
-        }
-        if (!passwordEncoder.matches(password,userDetails.getPassword())){
-            throw new BadCredentialsException("Invalid password");
-        }
-        return new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+    if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+      throw new BadCredentialsException("Invalid password");
     }
+    return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+  }
 }
