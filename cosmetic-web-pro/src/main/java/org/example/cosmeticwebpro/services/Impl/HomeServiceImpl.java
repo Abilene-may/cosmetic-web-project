@@ -10,6 +10,7 @@ import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.HomeDisplayDTO;
 import org.example.cosmeticwebpro.models.ProductDisplayDTO;
 import org.example.cosmeticwebpro.repositories.ProductRepository;
+import org.example.cosmeticwebpro.services.CartService;
 import org.example.cosmeticwebpro.services.HomeService;
 import org.example.cosmeticwebpro.services.ProductService;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,10 @@ import org.springframework.stereotype.Service;
 public class HomeServiceImpl implements HomeService {
   private final ProductRepository productRepository;
   private final ProductService productService;
+  private final CartService cartService;
 
   @Override
-  public HomeDisplayDTO displayHomeScreen() throws CosmeticException {
+  public HomeDisplayDTO displayHomeScreen(Long userId) throws CosmeticException {
     // find all product are on sale
     var listProductOnSale = productRepository.findAllProductOnSale(Constants.PRODUCT_HIDDEN);
     var listOneSale = this.checkNullPointer(listProductOnSale);
@@ -32,7 +34,9 @@ public class HomeServiceImpl implements HomeService {
     var listProductTheMostView = productRepository.findAllProductTheMostView(Constants.PRODUCT_HIDDEN);
     var listTheMostView = this.checkNullPointer(listProductTheMostView);
     var displayListTheMostView = productService.productOverviewDTOS(listTheMostView);
+    var totalQuantityCart = cartService.getTotalQuantityCart(userId);
     return HomeDisplayDTO.builder()
+        .totalQuantityCart(totalQuantityCart)
         .listProductOnSale(displayListOneSale)
         .listProductBestSeller(displayListBestSeller)
         .listProductTheMostView(displayListTheMostView).build();

@@ -5,7 +5,7 @@ import org.example.cosmeticwebpro.models.HomeDisplayDTO;
 import org.example.cosmeticwebpro.models.ProductDisplayDTO;
 
 public interface HomeService {
-  HomeDisplayDTO displayHomeScreen() throws CosmeticException;
+  HomeDisplayDTO displayHomeScreen(Long userId) throws CosmeticException;
 
   ProductDisplayDTO viewAProductDetail(Long productId) throws CosmeticException;
 }

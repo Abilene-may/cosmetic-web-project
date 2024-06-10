@@ -25,10 +25,10 @@ public class HomeController {
    * API home screen
    * @return homeDisplayDTO
    */
-  @GetMapping("/")
-  public ResponseEntity<Object> displayHomeScreen(){
+  @GetMapping("/{userId}")
+  public ResponseEntity<Object> displayHomeScreen(@PathVariable Long userId){
     try {
-      var homeDisplayDTO = homeService.displayHomeScreen();
+      var homeDisplayDTO = homeService.displayHomeScreen(userId);
       return new ResponseEntity<>(homeDisplayDTO, HttpStatus.OK);
     } catch (CosmeticException e) {
       return new ResponseEntity<>(

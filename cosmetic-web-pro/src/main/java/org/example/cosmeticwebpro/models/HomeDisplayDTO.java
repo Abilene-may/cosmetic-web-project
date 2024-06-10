@@ -13,6 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HomeDisplayDTO {
+  private Integer totalQuantityCart;
+
   // list product is on sale
   private List<ProductOverviewDTO> listProductOnSale;
 

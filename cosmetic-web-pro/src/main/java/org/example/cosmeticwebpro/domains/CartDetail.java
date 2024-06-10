@@ -46,7 +46,7 @@ public class CartDetail {
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime modifiedDate;
 
-  @Column(name = "card_id")
+  @Column(name = "cart_id")
   private Long cartId;
 
   @Column(name = "product_id")
