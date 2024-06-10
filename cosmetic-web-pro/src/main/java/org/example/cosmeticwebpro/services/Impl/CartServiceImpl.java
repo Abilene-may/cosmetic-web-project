@@ -35,12 +35,12 @@ public class CartServiceImpl implements CartService {
     }
 
     /**
-     * get total quantity a cart by id
+     * get total quantity a cart by user id
      */
     @Override
-    public Integer getTotalQuantityCart(Long cartId) {
-        var cartDetails = cartDetailRepository.findAllByCartId(cartId);
-        return cartDetails.size() - 1;
+    public Integer getTotalQuantityCart(Long userId) {
+        var cartDetails = cartDetailRepository.findAllByUserId(userId);
+        return cartDetails.size();
     }
 
     /**
