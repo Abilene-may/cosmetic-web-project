@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin("*")
@@ -91,6 +92,25 @@ public class RoleController {
   public ResponseEntity<Object> updateRoleAndPermissions(@RequestBody RoleAndPermissionReqDTO reqDTO){
     try{
       roleService.updateRoleOrPermission(reqDTO);
+      return new ResponseEntity<>(HttpStatus.OK);
+    } catch (CosmeticException e){
+      return new ResponseEntity<>(
+          new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+    } catch (Exception ex){
+      log.error(ex.getMessage(), ex);
+      return new ResponseEntity<>(
+          ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+  /**
+   * change a role and permissions of a role
+   */
+  @PostMapping("/change")
+  public ResponseEntity<Object> changeRole(@RequestParam(value = "oldRoleId") Long oldRoleId,
+      @RequestParam(value = "newRoleId") Long newRoleId){
+    try{
+      roleService.changeRole(oldRoleId, newRoleId);
       return new ResponseEntity<>(HttpStatus.OK);
     } catch (CosmeticException e){
       return new ResponseEntity<>(
