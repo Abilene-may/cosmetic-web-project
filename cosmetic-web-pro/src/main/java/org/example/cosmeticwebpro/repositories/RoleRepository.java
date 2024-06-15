@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificationExecutor<Long> {
     Optional<Role> findRoleByRoleName(String roleName);
+
+    Optional<Role> findRoleById(Long roleId);
 }

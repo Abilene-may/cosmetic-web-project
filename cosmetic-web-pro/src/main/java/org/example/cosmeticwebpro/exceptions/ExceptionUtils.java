@@ -15,6 +15,10 @@ public class ExceptionUtils {
   public static final String USER_IS_NOT_EMPTY = "USER_IS_NOT_EMPTY";
   public static final String USERNAME_HAS_ALREADY = "USERNAME_HAS_ALREADY";
 
+  // role
+  public static final String ROLE_NAME_IS_NOT_BLANK = "ROLE_NAME_IS_NOT_BLANK";
+  public static final String ROLE_NOT_FOUND ="ROLE_NOT_FOUND";
+
   // product
   public static final String PRODUCT_ID_IS_NOT_EXIST = "PRODUCT_ID_IS_NOT_EXIST";
   public static final String PRODUCT_HAS_BEEN_HIDDEN = "PRODUCT_HAS_BEEN_HIDDEN";
@@ -42,6 +46,8 @@ public class ExceptionUtils {
   public static final String ADDRESS_ERROR_5 = "ADDRESS_ERROR_5";
   public static final String USER_ID_IS_NOT_EMPTY = "USER_ID_IS_NOT_EMPTY";
 
+
+
   public static Map<String, String> messages;
 
   static {
@@ -56,6 +62,10 @@ public class ExceptionUtils {
         ExceptionUtils.USER_IS_NOT_EMPTY,
         "Không tìm thấy thông tin người dùng hoặc người dùng không tồn tại.");
     messages.put(ExceptionUtils.USERNAME_HAS_ALREADY, "username đã tồn tại vui lòng chọn username khác.");
+
+    // role
+    messages.put(ExceptionUtils.ROLE_NAME_IS_NOT_BLANK, "Tên vai trò không được bỏ trống.");
+    messages.put(ExceptionUtils.ROLE_NOT_FOUND, "Không tìm thấy vai trò hoặc vai trò không tồn tại.");
 
     // product
     messages.put(

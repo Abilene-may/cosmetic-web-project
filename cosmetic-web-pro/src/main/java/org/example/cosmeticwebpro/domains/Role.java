@@ -1,7 +1,7 @@
 package org.example.cosmeticwebpro.domains;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.*;
@@ -27,5 +27,16 @@ public class Role {
 
     @Column(name = "role_name")
     private String roleName;
+
+    @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime createdDate;
+
+    @Column(name = "modified_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime modifiedDate;
+
+    @OneToMany(mappedBy = "role")
+    private Set<RolePermission> rolePermissions = new HashSet<>();
 
 }
