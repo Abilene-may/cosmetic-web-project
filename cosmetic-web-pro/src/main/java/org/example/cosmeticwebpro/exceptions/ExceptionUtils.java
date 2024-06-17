@@ -46,6 +46,8 @@ public class ExceptionUtils {
   public static final String ADDRESS_ERROR_5 = "ADDRESS_ERROR_5";
   public static final String USER_ID_IS_NOT_EMPTY = "USER_ID_IS_NOT_EMPTY";
 
+  // order
+
 
 
   public static Map<String, String> messages;

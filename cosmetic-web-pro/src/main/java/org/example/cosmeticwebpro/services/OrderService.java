@@ -6,7 +6,7 @@ import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.models.OrderDetailDTO;
 
 public interface OrderService {
-  List<Order> getAllInvoice() throws CosmeticException;
+  List<Order> getAllOrderForAUser(Long userId) throws CosmeticException;
 
   OrderDetailDTO showDetailAnOrder(Long orderId) throws CosmeticException;
 
