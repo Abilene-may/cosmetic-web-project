@@ -24,14 +24,14 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 @Entity
-@Table(name = "cart_detail")
-public class CartDetail {
+@Table(name = "cart_line")
+public class CartLine {
   @Id
   @SequenceGenerator(
-      name = "cart_detail_seq",
-      sequenceName = "cart_detail_seq",
+      name = "cart_line_seq",
+      sequenceName = "cart_line_seq",
       allocationSize = 1)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cart_detail_seq")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cart_line_seq")
   @Column(name = "id")
   private Long id;
 

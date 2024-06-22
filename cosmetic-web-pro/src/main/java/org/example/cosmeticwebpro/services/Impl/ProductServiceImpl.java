@@ -4,21 +4,17 @@ import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cosmeticwebpro.commons.Constants;
-import org.example.cosmeticwebpro.domains.Category;
 import org.example.cosmeticwebpro.domains.Product;
-import org.example.cosmeticwebpro.domains.ProductHistory;
 import org.example.cosmeticwebpro.domains.ProductImage;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.ProductDisplayDTO;
 import org.example.cosmeticwebpro.models.ProductOverviewDTO;
 import org.example.cosmeticwebpro.models.request.ProductReqDTO;
-import org.example.cosmeticwebpro.repositories.ProductHistoryRepository;
 import org.example.cosmeticwebpro.repositories.ProductRepository;
 import org.example.cosmeticwebpro.repositories.ProductReviewRepository;
 import org.example.cosmeticwebpro.services.CategoryService;
@@ -42,7 +38,6 @@ public class ProductServiceImpl implements ProductService {
   private final ProductRepository productRepository;
   private final CloudinaryService cloudinaryService;
   private final ProductImageService productImageService;
-  private final ProductHistoryRepository productHistoryRepository;
   private final ProductReviewRepository productReviewRepository;
   private final CategoryService categoryService;
 
@@ -150,14 +145,6 @@ public class ProductServiceImpl implements ProductService {
       throws CosmeticException, IOException {
     Product existingProduct = this.getById(updatedProduct.getId());
 
-    // compare the price want to change and the current price
-    // Save history record
-    if (!Objects.equals(updatedProduct.getCurrentCost(), existingProduct.getCurrentCost())) {
-      var category = categoryService.getById(existingProduct.getId());
-      ProductHistory productHistory = getProductHistory(existingProduct, category);
-      productHistoryRepository.save(productHistory);
-    }
-    // in case there is no change in the cost
     existingProduct.setTitle(updatedProduct.getTitle());
     existingProduct.setDescription(updatedProduct.getDescription());
     existingProduct.setCurrentCost(updatedProduct.getCurrentCost());
@@ -229,24 +216,6 @@ public class ProductServiceImpl implements ProductService {
       productOverviewDTOs.add(new ProductOverviewDTO(product, imageUrls));
     }
     return productOverviewDTOs;
-  }
-
-  private static ProductHistory getProductHistory(Product existingProduct, Category category) {
-    ProductHistory productHistory = new ProductHistory();
-    productHistory.setProductId(existingProduct.getId());
-    productHistory.setTitle(existingProduct.getTitle());
-    productHistory.setDescription(existingProduct.getDescription());
-    productHistory.setOldCost(existingProduct.getCurrentCost());
-    productHistory.setMadeIn(existingProduct.getMadeIn());
-    productHistory.setCapacity(existingProduct.getCapacity());
-    productHistory.setQuantity(existingProduct.getQuantity());
-    productHistory.setProductStatus(existingProduct.getProductStatus());
-    productHistory.setCountPurchase(existingProduct.getCountPurchase());
-    productHistory.setCreatedDate(existingProduct.getCreatedDate());
-    productHistory.setModifiedDate(existingProduct.getModifiedDate());
-    productHistory.setBrandId(existingProduct.getBrandId());
-    productHistory.setCategory(category.getCategoryName());
-    return productHistory;
   }
 
   private void updateProductImage(MultipartFile[] multipartFiles, Long productId)

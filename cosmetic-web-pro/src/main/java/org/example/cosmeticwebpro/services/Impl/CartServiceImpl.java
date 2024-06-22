@@ -4,12 +4,12 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.cosmeticwebpro.domains.Cart;
-import org.example.cosmeticwebpro.domains.CartDetail;
+import org.example.cosmeticwebpro.domains.CartLine;
 import org.example.cosmeticwebpro.domains.User;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.request.CartReqDTO;
-import org.example.cosmeticwebpro.repositories.CartDetailRepository;
+import org.example.cosmeticwebpro.repositories.CartLineRepository;
 import org.example.cosmeticwebpro.repositories.CartRepository;
 import org.example.cosmeticwebpro.services.CartService;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Service
 public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
-    private final CartDetailRepository cartDetailRepository;
+    private final CartLineRepository cartLineRepository;
 
     /**
      * Create a shopping cart when customer successfully registers for an  account
@@ -39,7 +39,7 @@ public class CartServiceImpl implements CartService {
      */
     @Override
     public Integer getTotalQuantityCart(Long userId) {
-        var cartDetails = cartDetailRepository.findAllByUserId(userId);
+        var cartDetails = cartLineRepository.findAllByUserId(userId);
         return cartDetails.size();
     }
 
@@ -47,8 +47,8 @@ public class CartServiceImpl implements CartService {
      * find all product in a cart
      */
     @Override
-    public List<CartDetail> getAllByCartId(Long cartId) throws CosmeticException {
-        var cartDetails = cartDetailRepository.findAllByCartId(cartId);
+    public List<CartLine> getAllByCartId(Long cartId) throws CosmeticException {
+        var cartDetails = cartLineRepository.findAllByCartId(cartId);
         return cartDetails;
     }
 
@@ -58,9 +58,9 @@ public class CartServiceImpl implements CartService {
      */
     @Transactional
     @Override
-    public CartDetail addANewProduct(CartReqDTO cartReqDTO) throws CosmeticException {
+    public CartLine addANewProduct(CartReqDTO cartReqDTO) throws CosmeticException {
       var product =
-          cartDetailRepository.findAllByProductId(cartReqDTO.getProductId(), cartReqDTO.getCartId());
+          cartLineRepository.findAllByProductId(cartReqDTO.getProductId(), cartReqDTO.getCartId());
       LocalDateTime localDateTime = LocalDateTime.now();
       // case the product is already in the cart
       if (product.isPresent()) {
@@ -72,23 +72,23 @@ public class CartServiceImpl implements CartService {
                 .build();
         return this.updateCart(reqDTO);
       }
-      CartDetail newCartDetail = CartDetail.builder()
+      CartLine newCartDetail = CartLine.builder()
           .productId(cartReqDTO.getProductId())
           .cartId(cartReqDTO.getCartId())
           .quantity(cartReqDTO.getQuantity())
           .createdDate(localDateTime)
           .modifiedDate(localDateTime)
           .build();
-      return cartDetailRepository.save(newCartDetail);
+      return cartLineRepository.save(newCartDetail);
     }
 
     @Override
-    public CartDetail updateCart(CartReqDTO cartReqDTO) throws CosmeticException {
+    public CartLine updateCart(CartReqDTO cartReqDTO) throws CosmeticException {
       var product = this.checkExistProduct(cartReqDTO.getProductId(), cartReqDTO.getCartId());
       LocalDateTime localDateTime = LocalDateTime.now();
       product.setQuantity(product.getQuantity() + cartReqDTO.getQuantity());
       product.setModifiedDate(localDateTime);
-      return cartDetailRepository.save(product);
+      return cartLineRepository.save(product);
     }
 
   /**
@@ -97,12 +97,12 @@ public class CartServiceImpl implements CartService {
   @Override
   public void deleteAProduct(Long productId, Long cartId) throws CosmeticException {
     var cartDetail = this.checkExistProduct(productId, cartId);
-    cartDetailRepository.delete(cartDetail);
+    cartLineRepository.delete(cartDetail);
   }
 
-  CartDetail checkExistProduct(Long productId, Long cartId) throws CosmeticException{
+  CartLine checkExistProduct(Long productId, Long cartId) throws CosmeticException{
     var product =
-        cartDetailRepository.findAllByProductId(productId, cartId);
+        cartLineRepository.findAllByProductId(productId, cartId);
     if (product.isEmpty()) {
       throw new CosmeticException(
           ExceptionUtils.PRODUCT_IS_NOT_FOUND_IN_THE_CART,

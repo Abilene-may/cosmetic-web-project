@@ -34,8 +34,8 @@ public class CartController {
   @GetMapping("/get-all")
   public ResponseEntity<Object> getAll(@PathVariable Long cartId){
     try{
-      var cartDetails = cartService.getAllByCartId(cartId);
-      return new ResponseEntity<>(cartDetails, HttpStatus.OK);
+      var cartLines = cartService.getAllByCartId(cartId);
+      return new ResponseEntity<>(cartLines, HttpStatus.OK);
     } catch (CosmeticException e){
       return new ResponseEntity<>(
           new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
