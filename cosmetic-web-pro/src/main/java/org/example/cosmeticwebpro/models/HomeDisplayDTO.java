@@ -6,6 +6,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.cosmeticwebpro.domains.Brand;
+import org.example.cosmeticwebpro.domains.Category;
+import org.example.cosmeticwebpro.domains.User;
+import org.mapstruct.control.MappingControl.Use;
 
 @Builder
 @Setter
@@ -21,5 +25,11 @@ public class HomeDisplayDTO {
   private List<ProductOverviewDTO> listProductBestSeller;
 
   private List<ProductOverviewDTO> listProductTheMostView;
+
+  private User account;
+
+  private List<Category> categoryList;
+
+  private List<Brand> brandList;
 
 }

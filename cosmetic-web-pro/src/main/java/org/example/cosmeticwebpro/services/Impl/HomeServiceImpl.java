@@ -10,7 +10,9 @@ import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.HomeDisplayDTO;
 import org.example.cosmeticwebpro.models.ProductDisplayDTO;
 import org.example.cosmeticwebpro.repositories.ProductRepository;
+import org.example.cosmeticwebpro.services.BrandService;
 import org.example.cosmeticwebpro.services.CartService;
+import org.example.cosmeticwebpro.services.CategoryService;
 import org.example.cosmeticwebpro.services.HomeService;
 import org.example.cosmeticwebpro.services.ProductService;
 import org.springframework.stereotype.Service;
@@ -21,25 +23,32 @@ public class HomeServiceImpl implements HomeService {
   private final ProductRepository productRepository;
   private final ProductService productService;
   private final CartService cartService;
+  private final CategoryService categoryService;
+  private final BrandService brandService;
 
   @Override
   public HomeDisplayDTO displayHomeScreen(Long userId) throws CosmeticException {
     // find all product are on sale
     var listProductOnSale = productRepository.findAllProductOnSale(Constants.PRODUCT_HIDDEN);
-    var listOneSale = this.checkNullPointer(listProductOnSale);
-    var displayListOneSale = productService.productOverviewDTOS(listOneSale);
+    var displayListOneSale = productService.productOverviewDTOS(listProductOnSale);
     var listProductBestSeller = productRepository.findAllProductBestSeller(Constants.PRODUCT_HIDDEN);
-    var listBestSeller = this.checkNullPointer(listProductBestSeller);
-    var displayListBestSeller = productService.productOverviewDTOS(listBestSeller);
+    var displayListBestSeller = productService.productOverviewDTOS(listProductBestSeller);
     var listProductTheMostView = productRepository.findAllProductTheMostView(Constants.PRODUCT_HIDDEN);
-    var listTheMostView = this.checkNullPointer(listProductTheMostView);
-    var displayListTheMostView = productService.productOverviewDTOS(listTheMostView);
-    var totalQuantityCart = cartService.getTotalQuantityCart(userId);
+    var displayListTheMostView = productService.productOverviewDTOS(listProductTheMostView);
+    Integer totalQuantityCart = 0;
+    if(userId != null){
+      totalQuantityCart =  cartService.getTotalQuantityCart(userId);
+    }
+
+    var listCategory = categoryService.getAll();
+    var listBrand = brandService.getAllBrand();
     return HomeDisplayDTO.builder()
         .totalQuantityCart(totalQuantityCart)
         .listProductOnSale(displayListOneSale)
         .listProductBestSeller(displayListBestSeller)
-        .listProductTheMostView(displayListTheMostView).build();
+        .listProductTheMostView(displayListTheMostView)
+        .categoryList(listCategory)
+        .brandList(listBrand).build();
   }
 
   public List<Product> checkNullPointer(List<Product> productList){
