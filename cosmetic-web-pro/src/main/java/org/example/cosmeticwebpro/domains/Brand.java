@@ -1,6 +1,7 @@
 package org.example.cosmeticwebpro.domains;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,4 +33,10 @@ public class Brand {
     @Lob
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
+
+    @Column(name = "modified_date")
+    private LocalDateTime modifiedDate;
 }

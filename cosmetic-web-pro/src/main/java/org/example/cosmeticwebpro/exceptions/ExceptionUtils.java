@@ -33,6 +33,8 @@ public class ExceptionUtils {
 
   // category
   public static final String CATEGORY_NOT_FOUND = "CATEGORY_NOT_FOUND";
+  public static final String CATEGORY_NAME_NOT_FOUND = "CATEGORY_NAME_NOT_FOUND";
+
 
   // cart
   public static final String PRODUCT_IS_NOT_FOUND_IN_THE_CART = "PRODUCT_IS_NOT_FOUND_IN_THE_CART";
@@ -84,8 +86,10 @@ public class ExceptionUtils {
     messages.put(
         ExceptionUtils.BRAND_ID_NOT_FOUND,
         "Không tìm thấy thông tin của brand hoặc brand không tồn tại.");
+
     // categpry
     messages.put(ExceptionUtils.CATEGORY_NOT_FOUND, "Không tìm thấy thông tin danh mục hàng.");
+    messages.put(ExceptionUtils.CATEGORY_NAME_NOT_FOUND, "Tên danh mục không được bỏ trống.");
 
     // cart
     messages.put(
@@ -103,5 +107,6 @@ public class ExceptionUtils {
     messages.put(ExceptionUtils.ADDRESS_ERROR_4, "Vui lòng nhập Quận/Huyện.");
     messages.put(ExceptionUtils.ADDRESS_ERROR_5, "Vui lòng nhập Xã/Phường.");
     messages.put(ExceptionUtils.USER_ID_IS_NOT_EMPTY, "Trường userId không được bỏ trống.");
+
   }
 }

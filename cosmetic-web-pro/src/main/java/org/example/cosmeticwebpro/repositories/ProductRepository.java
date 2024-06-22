@@ -35,4 +35,6 @@ public interface ProductRepository
           + " ORDER BY p.count_view DESC ",
       nativeQuery = true)
   List<Product> findAllProductTheMostView(@Param("productStatus") String productStatus);
+
+  List<Product> findAllByCategoryId(Long categoryId);
 }

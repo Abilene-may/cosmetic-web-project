@@ -2,15 +2,15 @@ package org.example.cosmeticwebpro.controllers.admin;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cosmeticwebpro.domains.Brand;
+import org.example.cosmeticwebpro.domains.Category;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.common.ErrorDTO;
-import org.example.cosmeticwebpro.models.request.BrandReqDTO;
-import org.example.cosmeticwebpro.services.BrandService;
+import org.example.cosmeticwebpro.services.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,17 +23,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/admin/brand")
-public class BrandController {
-  private final BrandService brandService;
+@RequestMapping("/admin/category")
+public class CategoryController {
+  private final CategoryService categoryService;
 
   /**
-   * Create a new brand
+   * Create a new category
    */
   @PostMapping("/create")
-  public ResponseEntity<Object> create(@RequestBody BrandReqDTO brandReqDTO){
+  public ResponseEntity<Object> create(@RequestBody String categoryName){
     try{
-      brandService.create(brandReqDTO);
+      categoryService.create(categoryName);
       return new ResponseEntity<>(HttpStatus.OK);
     } catch (CosmeticException e){
       return new ResponseEntity<>(
@@ -47,12 +47,12 @@ public class BrandController {
   }
 
   /**
-   * update a brand
+   * update a category
    */
   @PutMapping("/update")
-  public ResponseEntity<Object> updateBrand(@RequestBody Brand brand){
+  public ResponseEntity<Object> update(@RequestBody Category category){
     try{
-      brandService.update(brand);
+      categoryService.update(category);
       return new ResponseEntity<>(HttpStatus.OK);
     } catch (CosmeticException e){
       return new ResponseEntity<>(
@@ -69,10 +69,29 @@ public class BrandController {
    * find all brands
    */
   @GetMapping("/get-all")
-  public ResponseEntity<Object> getAllBrand(){
+  public ResponseEntity<Object> getAll(){
     try{
-      var brands = brandService.getAllBrand();
-      return new ResponseEntity<>(brands, HttpStatus.OK);
+      var categories = categoryService.getAll();
+      return new ResponseEntity<>(categories, HttpStatus.OK);
+    } catch (CosmeticException e){
+      return new ResponseEntity<>(
+          new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+    } catch (Exception ex){
+      log.error(ex.getMessage(), ex);
+      return new ResponseEntity<>(
+          ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  /**
+   * Get a category by id
+   */
+  @GetMapping("/{categoryId}")
+  public ResponseEntity<Object> gteById(@PathVariable Long categoryId){
+    try{
+      var category = categoryService.getById(categoryId);
+      return new ResponseEntity<>(category, HttpStatus.OK);
     } catch (CosmeticException e){
       return new ResponseEntity<>(
           new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -87,11 +106,11 @@ public class BrandController {
   /**
    * Get a brand by id
    */
-  @GetMapping("/{brandId}")
-  public ResponseEntity<Object> getById(@PathVariable Long brandId){
+  @DeleteMapping("/delete/{categoryId}")
+  public ResponseEntity<Object> delete(@PathVariable Long categoryId){
     try{
-      var brand = brandService.getById(brandId);
-      return new ResponseEntity<>(brand, HttpStatus.OK);
+      categoryService.delete(categoryId);
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     } catch (CosmeticException e){
       return new ResponseEntity<>(
           new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -102,4 +121,6 @@ public class BrandController {
           HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+
 }
