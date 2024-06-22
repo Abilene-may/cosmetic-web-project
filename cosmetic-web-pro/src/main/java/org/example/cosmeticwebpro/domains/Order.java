@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 
 @NoArgsConstructor
@@ -32,15 +33,19 @@ public class Order {
   @Column(name = "full_name")
   private String fullName;
 
+  @NonNull
   @Column(name = "phone_number")
   private String phoneNumber;
 
+  @NonNull
   @Column(name = "address_detail")
   private String addressDetail;
 
+  @NonNull
   @Column(name = "total_quantity")
   private Integer totalQuantity;
 
+  @NonNull
   @Column(name = "total_cost")
   private Integer totalCost;
 
@@ -53,9 +58,11 @@ public class Order {
   @Column(name = "note")
   private String note;
 
+  @NonNull
   @Column(name = "status")
   private String status;
 
+  @NonNull
   @Column(name = "payment_method")
   private String paymentMethod;
 
@@ -68,6 +75,7 @@ public class Order {
   @Column(name = "complition_date")
   private LocalDateTime complitionDate;
 
+  @NonNull
   @Column(name = "user_id")
   private Long userId;
   

@@ -27,6 +27,7 @@ public class User {
     @Column(name = "id")
     private Long id;
 
+    @NonNull
     @Column(name = "email")
     private String email;
 
@@ -36,6 +37,7 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
+    @NonNull
     @Column(name = "username")
     private String userName;
 
@@ -50,6 +52,7 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modifiedDate;
 
+    @NonNull
     @Column(name = "account_status")
     private String accountStatus;
 

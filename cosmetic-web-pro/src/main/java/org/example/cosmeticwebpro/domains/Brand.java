@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,6 +28,7 @@ public class Brand {
     @Column(name = "id")
     private Long id;
 
+    @NonNull
     @Column(name = "name")
     private String name;
 

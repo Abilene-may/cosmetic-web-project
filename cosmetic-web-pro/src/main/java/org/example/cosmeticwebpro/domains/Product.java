@@ -1,11 +1,11 @@
 package org.example.cosmeticwebpro.domains;
 
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Builder
 @Setter
@@ -68,4 +68,7 @@ public class Product {
 
     @Column(name = "category_id")
     private Long categoryId;
+
+    @OneToMany(mappedBy = "product")
+    private Set<ProductDiscount> productDiscounts = new HashSet<>();
 }

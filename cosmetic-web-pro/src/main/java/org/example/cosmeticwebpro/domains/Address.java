@@ -22,24 +22,30 @@ public class Address {
     @Column(name = "id")
     private Long id;
 
+    @NonNull
     @Column(name = "full_name")
     private String fullName;
 
+    @NonNull
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @NonNull
     @Column(name = "province_name")
     private String provinceName;
 
+    @NonNull
     @Column(name = "district_name")
     private String districtName;
 
+    @NonNull
     @Column(name = "ward_name")
     private String wardName;
 
     @Column(name = "address_detail")
     private String addressDetail;
 
+    @NonNull
     @Column(name = "user_id")
     private Long userId;
 }

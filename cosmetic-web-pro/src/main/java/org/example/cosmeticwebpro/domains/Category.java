@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Builder
@@ -28,6 +29,7 @@ public class Category {
   @Column(name = "id")
   private Long id;
 
+  @NonNull
   @Column(name = "category_name")
   private String categoryName;
 

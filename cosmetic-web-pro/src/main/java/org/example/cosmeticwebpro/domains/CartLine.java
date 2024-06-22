@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,6 +36,7 @@ public class CartLine {
   @Column(name = "id")
   private Long id;
 
+  @NonNull
   @Column(name = "quantity")
   private Integer quantity;
 
@@ -46,9 +48,11 @@ public class CartLine {
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime modifiedDate;
 
+  @NonNull
   @Column(name = "cart_id")
   private Long cartId;
 
+  @NonNull
   @Column(name = "product_id")
   private Long productId;
 }

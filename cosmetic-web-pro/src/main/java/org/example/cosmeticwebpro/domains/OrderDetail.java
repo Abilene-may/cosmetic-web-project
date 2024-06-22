@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,12 +34,14 @@ public class OrderDetail {
   @Column(name = "id")
   private Long id;
 
+  @NonNull
   @Column(name = "product_title")
   private String productTitle;
 
   @Column(name = "product_image_url")
   private String productImageUrl;
 
+  @NonNull
   @Column(name = "product_cost")
   private Integer productCost;
 

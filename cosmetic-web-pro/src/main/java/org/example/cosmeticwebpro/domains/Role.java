@@ -25,6 +25,7 @@ public class Role {
     @Column(name = "id")
     private Long id;
 
+    @NonNull
     @Column(name = "role_name")
     private String roleName;
 
