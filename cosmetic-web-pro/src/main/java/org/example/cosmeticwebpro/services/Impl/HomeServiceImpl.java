@@ -27,7 +27,7 @@ public class HomeServiceImpl implements HomeService {
   private final BrandService brandService;
 
   @Override
-  public HomeDisplayDTO displayHomeScreen(Long userId) throws CosmeticException {
+  public HomeDisplayDTO displayHomeScreen() throws CosmeticException {
     // find all product are on sale
     var listProductOnSale = productRepository.findAllProductOnSale(Constants.PRODUCT_HIDDEN);
     var displayListOneSale = productService.productOverviewDTOS(listProductOnSale);
@@ -36,10 +36,6 @@ public class HomeServiceImpl implements HomeService {
     var listProductTheMostView = productRepository.findAllProductTheMostView(Constants.PRODUCT_HIDDEN);
     var displayListTheMostView = productService.productOverviewDTOS(listProductTheMostView);
     Integer totalQuantityCart = 0;
-    if(userId != null){
-      totalQuantityCart =  cartService.getTotalQuantityCart(userId);
-    }
-
     var listCategory = categoryService.getAll();
     var listBrand = brandService.getAllBrand();
     return HomeDisplayDTO.builder()

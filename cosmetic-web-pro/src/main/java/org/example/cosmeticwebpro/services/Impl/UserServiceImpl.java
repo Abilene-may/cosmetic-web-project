@@ -28,8 +28,8 @@ public class UserServiceImpl implements UserService {
     var user = userRepository.findById(userId);
     if (user.isEmpty()) {
       throw new CosmeticException(
-          ExceptionUtils.USER_IS_NOT_EMPTY,
-          ExceptionUtils.messages.get(ExceptionUtils.USER_IS_NOT_EMPTY));
+          ExceptionUtils.USER_NOT_FOUND,
+          ExceptionUtils.messages.get(ExceptionUtils.USER_NOT_FOUND));
     }
     return user.get();
   }

@@ -27,5 +27,6 @@ public class Constants {
     public static final String DELIVERY_FAILED = "Delivery Failed";
     public static final String ORDER_RECEIVED = "Order Received";
     public static final String RETURNED_AND_REFUNDED = "Returned and Refunded";
+    public static final String ORDER = "order";
 
 }

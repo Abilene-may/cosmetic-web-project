@@ -26,9 +26,9 @@ public class HomeController {
    * @return homeDisplayDTO
    */
   @GetMapping("/{userId}")
-  public ResponseEntity<Object> displayHomeScreen(@PathVariable Long userId){
+  public ResponseEntity<Object> displayHomeScreen(){
     try {
-      var homeDisplayDTO = homeService.displayHomeScreen(userId);
+      var homeDisplayDTO = homeService.displayHomeScreen();
       return new ResponseEntity<>(homeDisplayDTO, HttpStatus.OK);
     } catch (CosmeticException e) {
       return new ResponseEntity<>(

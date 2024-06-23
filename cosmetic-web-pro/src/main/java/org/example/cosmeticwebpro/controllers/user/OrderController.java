@@ -40,5 +40,24 @@ public class OrderController {
           HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+  /**
+   * display detail an order
+   */
+  @GetMapping("/show-order-detail/{orderId}")
+  public ResponseEntity<Object> displayDetailAnOrder(@PathVariable Long orderId){
+    try{
+      var orderDetailDTO = orderService.showDetailAnOrder(orderId);
+      return new ResponseEntity<>(orderDetailDTO, HttpStatus.OK);
+    } catch (CosmeticException e){
+      return new ResponseEntity<>(
+          new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+    } catch (Exception ex){
+      log.error(ex.getMessage(), ex);
+      return new ResponseEntity<>(
+          ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
 
 }

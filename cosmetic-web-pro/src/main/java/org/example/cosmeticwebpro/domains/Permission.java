@@ -26,35 +26,16 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 @Entity
-@Table(name = "permission")
+@Table(name = "permissions")
 public class Permission {
   @Id
   @SequenceGenerator(
-      name = "permission_seq",
-      sequenceName = "permission_seq",
+      name = "permissions_seq",
+      sequenceName = "permissions_seq",
       allocationSize = 1)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "permission_seq")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "permissions_seq")
   @Column(name = "id")
   private Long id;
-
-  @NonNull
-  @Column(name = "permission_name")
-  private String permissionName;
-
-  @Column(name = "description")
-  private String description;
-
-  @Column(name = "create")
-  private Boolean create;
-
-  @Column(name = "view")
-  private Boolean view;
-
-  @Column(name = "update")
-  private Boolean update;
-
-  @Column(name = "delete")
-  private Boolean delete;
 
   @OneToMany(mappedBy = "permission")
   private Set<RolePermission> rolePermissions = new HashSet<>();

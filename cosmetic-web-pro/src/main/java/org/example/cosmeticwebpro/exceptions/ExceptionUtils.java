@@ -12,12 +12,12 @@ public class ExceptionUtils {
   public static final String SIGNUP_ERROR_NULL_2 = "SIGNUP_ERROR_NULL_2";
 
   // user
-  public static final String USER_IS_NOT_EMPTY = "USER_IS_NOT_EMPTY";
+  public static final String USER_NOT_FOUND = "USER_IS_NOT_EMPTY";
   public static final String USERNAME_HAS_ALREADY = "USERNAME_HAS_ALREADY";
 
   // role
   public static final String ROLE_NAME_IS_NOT_BLANK = "ROLE_NAME_IS_NOT_BLANK";
-  public static final String ROLE_NOT_FOUND ="ROLE_NOT_FOUND";
+  public static final String ROLE_NOT_FOUND = "ROLE_NOT_FOUND";
 
   // product
   public static final String PRODUCT_ID_IS_NOT_EXIST = "PRODUCT_ID_IS_NOT_EXIST";
@@ -35,7 +35,6 @@ public class ExceptionUtils {
   public static final String CATEGORY_NOT_FOUND = "CATEGORY_NOT_FOUND";
   public static final String CATEGORY_NAME_NOT_FOUND = "CATEGORY_NAME_NOT_FOUND";
 
-
   // cart
   public static final String PRODUCT_IS_NOT_FOUND_IN_THE_CART = "PRODUCT_IS_NOT_FOUND_IN_THE_CART";
 
@@ -49,8 +48,9 @@ public class ExceptionUtils {
   public static final String USER_ID_IS_NOT_EMPTY = "USER_ID_IS_NOT_EMPTY";
 
   // order
-
-
+  public static final String ORDER_NOT_FOUND = "ORDER_NOT_FOUND";
+  public static final String ORDER_ERROR_1 = "ORDER_ERROR_1";
+  public static final String ORDER_ERROR_2 = "ORDER_ERROR_2";
 
   public static Map<String, String> messages;
 
@@ -63,13 +63,15 @@ public class ExceptionUtils {
 
     // user
     messages.put(
-        ExceptionUtils.USER_IS_NOT_EMPTY,
+        ExceptionUtils.USER_NOT_FOUND,
         "Không tìm thấy thông tin người dùng hoặc người dùng không tồn tại.");
-    messages.put(ExceptionUtils.USERNAME_HAS_ALREADY, "username đã tồn tại vui lòng chọn username khác.");
+    messages.put(
+        ExceptionUtils.USERNAME_HAS_ALREADY, "username đã tồn tại vui lòng chọn username khác.");
 
     // role
     messages.put(ExceptionUtils.ROLE_NAME_IS_NOT_BLANK, "Tên vai trò không được bỏ trống.");
-    messages.put(ExceptionUtils.ROLE_NOT_FOUND, "Không tìm thấy vai trò hoặc vai trò không tồn tại.");
+    messages.put(
+        ExceptionUtils.ROLE_NOT_FOUND, "Không tìm thấy vai trò hoặc vai trò không tồn tại.");
 
     // product
     messages.put(
@@ -108,5 +110,11 @@ public class ExceptionUtils {
     messages.put(ExceptionUtils.ADDRESS_ERROR_5, "Vui lòng nhập Xã/Phường.");
     messages.put(ExceptionUtils.USER_ID_IS_NOT_EMPTY, "Trường userId không được bỏ trống.");
 
+    // order
+    messages.put(
+        ExceptionUtils.ORDER_NOT_FOUND,
+        "Không tìm thấy thông tin đơn hàng hoặc đơn hàng không tồn tại.");
+    messages.put(ExceptionUtils.ORDER_ERROR_1, "orderId không được bỏ trống.");
+    messages.put(ExceptionUtils.ORDER_ERROR_2, "userId và addressId không được bỏ trống.");
   }
 }

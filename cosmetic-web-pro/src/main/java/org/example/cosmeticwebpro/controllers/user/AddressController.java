@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/address")
+@RequestMapping("/user/address")
 public class AddressController {
   private final AddressService addressService;
   /**

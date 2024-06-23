@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -56,4 +57,10 @@ public class OrderDetail {
 
   @Column(name = "order_id")
   private Long orderId;
+
+  @Column(name = "created_date")
+  private LocalDateTime createdDate;
+
+  @Column(name = "modified_date")
+  private LocalDateTime modifiedDate;
 }

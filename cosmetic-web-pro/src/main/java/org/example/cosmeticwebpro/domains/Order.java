@@ -22,11 +22,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 public class Order {
   @Id
-  @SequenceGenerator(name = "order_seq", sequenceName = "order_seq", allocationSize = 1)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
+  @SequenceGenerator(name = "orders_seq", sequenceName = "orders_seq", allocationSize = 1)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "orders_seq")
   @Column(name = "id")
   private Long id;
 
@@ -47,13 +47,13 @@ public class Order {
 
   @NonNull
   @Column(name = "total_cost")
-  private Integer totalCost;
+  private double totalCost;
 
   @Column(name = "discount_order")
   private Integer discountOrder;
 
   @Column(name = "shipping_cost")
-  private Integer shippingCost;
+  private double shippingCost;
 
   @Column(name = "note")
   private String note;
