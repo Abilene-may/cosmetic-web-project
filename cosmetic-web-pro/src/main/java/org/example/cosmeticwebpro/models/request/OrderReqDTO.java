@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.cosmeticwebpro.domains.Address;
+import org.example.cosmeticwebpro.domains.Discount;
 
 @Setter
 @Getter
@@ -17,5 +18,5 @@ public class OrderReqDTO {
 
   private Address address;
 
-  private Long discountId;
+  private Discount discount;
 }

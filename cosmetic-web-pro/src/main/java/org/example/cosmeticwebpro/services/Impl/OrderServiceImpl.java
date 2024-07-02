@@ -82,7 +82,7 @@ public class OrderServiceImpl implements OrderService {
 
   // create an order for a user
   @Override
-  public OrderDetailDTO createAnOrder(Long userId, Address address, Long discountId)
+  public OrderDetailDTO createAnOrder(Long userId, Address address, Discount discount)
       throws CosmeticException {
     if (userId == null || address.getId() == null) {
       throw new CosmeticException(
@@ -133,12 +133,6 @@ public class OrderServiceImpl implements OrderService {
       order.setShippingCost(Constants.SHIPPING_COST);
     }
 
-    // Fetch the discount if provided
-    Discount discount = null;
-    if (discountId != null && discountId != 0) {
-      discount = discountRepository.findById(discountId).orElse(null);
-    }
-
     // Apply discount if available
     double discountAmount = 0.0;
     if (discount != null) {
@@ -183,7 +177,7 @@ public class OrderServiceImpl implements OrderService {
               ExceptionUtils.DISCOUNT_NOT_FOUND,
               ExceptionUtils.messages.get(ExceptionUtils.DISCOUNT_NOT_FOUND));
         }
-        productCost = productCost - productCost * (discount.get().getDiscountPercent() / 100);
+        productCost = productCost - productCost * ((double) discount.get().getDiscountPercent() / 100);
       }
       LocalDateTime today = LocalDateTime.now();
       OrderDetail orderDetail =

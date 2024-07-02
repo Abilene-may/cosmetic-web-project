@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin("*")
@@ -41,10 +40,9 @@ public class HomeController {
   }
 
   /**
-   * API home screen
-   * @return homeDisplayDTO
+   * API show detail a product
    */
-  @GetMapping("/view-a-product")
+  @GetMapping("/view-a-product/{productId}")
   public ResponseEntity<Object> displayProductDetail(@PathVariable Long productId){
     try {
       var productDisplayDTO = homeService.viewAProductDetail(productId);

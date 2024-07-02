@@ -72,7 +72,7 @@ public class OrderController {
     try{
       var order =
           orderService.createAnOrder(
-              orderReqDTO.getUserId(), orderReqDTO.getAddress(), orderReqDTO.getDiscountId());
+              orderReqDTO.getUserId(), orderReqDTO.getAddress(), orderReqDTO.getDiscount());
       return new ResponseEntity<>(order, HttpStatus.OK);
     } catch (CosmeticException e){
       return new ResponseEntity<>(
