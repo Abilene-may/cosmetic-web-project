@@ -25,7 +25,7 @@ public class HomeController {
    * API home screen
    * @return homeDisplayDTO
    */
-  @GetMapping("/{userId}")
+  @GetMapping("/")
   public ResponseEntity<Object> displayHomeScreen(){
     try {
       var homeDisplayDTO = homeService.displayHomeScreen();

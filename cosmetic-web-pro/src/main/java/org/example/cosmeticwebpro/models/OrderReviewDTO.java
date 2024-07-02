@@ -6,18 +6,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.cosmeticwebpro.domains.Order;
-import org.example.cosmeticwebpro.domains.OrderDetail;
+import org.example.cosmeticwebpro.domains.Address;
+import org.example.cosmeticwebpro.domains.Discount;
 
 @Builder
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDetailDTO {
-  private Order order;
+public class OrderReviewDTO {
+  private List<Address> addressList;
 
-  private List<OrderDetail> orderDetail;
-
-  private double totalAmount;
+  private Discount discount;
 }

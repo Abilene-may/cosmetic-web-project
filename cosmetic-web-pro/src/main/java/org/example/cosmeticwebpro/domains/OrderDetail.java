@@ -44,7 +44,7 @@ public class OrderDetail {
 
   @NonNull
   @Column(name = "product_cost")
-  private Integer productCost;
+  private double productCost;
 
   @Column(name = "quantity")
   private Integer quantity;

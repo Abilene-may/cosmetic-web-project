@@ -32,7 +32,7 @@ public class Product {
     private String description;
 
     @Column(name = "current_cost")
-    private Integer currentCost;
+    private double currentCost;
 
     @Column(name = "made_in")
     private String madeIn;

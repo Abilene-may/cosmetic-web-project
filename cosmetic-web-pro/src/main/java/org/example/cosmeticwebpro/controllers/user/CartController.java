@@ -31,10 +31,10 @@ public class CartController {
   /**
    * get all product in a cart
    */
-  @GetMapping("/get-all")
+  @GetMapping("/get-all/{cartId}")
   public ResponseEntity<Object> getAll(@PathVariable Long cartId){
     try{
-      var cartLines = cartService.getAllByCartId(cartId);
+      var cartLines = cartService.getAllCartLineByCartId(cartId);
       return new ResponseEntity<>(cartLines, HttpStatus.OK);
     } catch (CosmeticException e){
       return new ResponseEntity<>(

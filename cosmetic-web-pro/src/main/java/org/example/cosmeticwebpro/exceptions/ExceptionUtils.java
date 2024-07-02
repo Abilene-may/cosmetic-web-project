@@ -28,6 +28,9 @@ public class ExceptionUtils {
   public static final String PRODUCT_ERROR_2 = "PRODUCT_ERROR_2";
   public static final String PRODUCT_ERROR_3 = "PRODUCT_ERROR_3";
 
+  // discount
+  public static final String DISCOUNT_NOT_FOUND = "DISCOUNT_NOT_FOUND";
+
   // brand
   public static final String BRAND_ID_NOT_FOUND = "BRAND_ID_NOT_FOUND";
 
@@ -83,6 +86,9 @@ public class ExceptionUtils {
     messages.put(ExceptionUtils.PRODUCT_ERROR_1, "Vui lòng nhập Tiêu đề của sản phẩm.");
     messages.put(ExceptionUtils.PRODUCT_ERROR_2, "Vui lòng nhập giá của sản phẩm.");
     messages.put(ExceptionUtils.PRODUCT_ERROR_3, "Vui lòng nhập Made in của sản phẩm.");
+
+    // discount
+    messages.put(ExceptionUtils.DISCOUNT_NOT_FOUND, "Không tìm thấy thông tin mã giảm giá.");
 
     // brand
     messages.put(

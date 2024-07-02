@@ -1,16 +1,26 @@
 package org.example.cosmeticwebpro.services.Impl;
 
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.Cart;
 import org.example.cosmeticwebpro.domains.CartLine;
+import org.example.cosmeticwebpro.domains.Discount;
+import org.example.cosmeticwebpro.domains.Product;
 import org.example.cosmeticwebpro.domains.User;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
+import org.example.cosmeticwebpro.models.CartLineDTO;
+import org.example.cosmeticwebpro.models.request.CartDisplayDTO;
 import org.example.cosmeticwebpro.models.request.CartReqDTO;
+import org.example.cosmeticwebpro.models.request.ProductDetailDTO;
 import org.example.cosmeticwebpro.repositories.CartLineRepository;
 import org.example.cosmeticwebpro.repositories.CartRepository;
+import org.example.cosmeticwebpro.repositories.DiscountRepository;
+import org.example.cosmeticwebpro.repositories.ProductImageRepository;
+import org.example.cosmeticwebpro.repositories.ProductRepository;
 import org.example.cosmeticwebpro.services.CartService;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +31,9 @@ import java.time.LocalDateTime;
 public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final CartLineRepository cartLineRepository;
+    private final DiscountRepository discountRepository;
+    private final ProductRepository productRepository;
+    private final ProductImageRepository productImageRepository;
 
     /**
      * Create a shopping cart when customer successfully registers for an  account
@@ -44,12 +57,56 @@ public class CartServiceImpl implements CartService {
     }
 
     /**
-     * find all product in a cart
+     * show all products in a cart
      */
     @Override
-    public List<CartLine> getAllByCartId(Long cartId) throws CosmeticException {
-        var cartDetails = cartLineRepository.findAllByCartId(cartId);
-        return cartDetails;
+    public CartDisplayDTO getAllCartLineByCartId(Long cartId) throws CosmeticException {
+      var cartLines = cartLineRepository.findAllByCartId(cartId);
+
+      CartDisplayDTO cartDisplayDTO = new CartDisplayDTO();
+      List<CartLineDTO> cartLineDTOS = new ArrayList<>();
+
+      Integer totalItems = 0;
+      double totalCost = 0.0;
+      double totalFinalPrice = 0.0;
+
+      double totalAmount = 0.0;
+      for (CartLine cartLine : cartLines) {
+        Long productId = cartLine.getProductId();
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new CosmeticException("Product not found with id: " + productId));
+
+        double discount = 0;
+        var discountProduct = discountRepository.findById(product.getDisCountId());
+        if(discountProduct.isPresent()){
+          discount = (double) discountProduct.get().getDiscountPercent() /100;
+        }
+        // cost after discount
+        double cost = (product.getCurrentCost() - product.getCurrentCost() * discount)*cartLine.getQuantity();
+
+        var productImages = productImageRepository.findProductImagesByProductId(productId);
+        // get an image from a list
+        String imageUrl = productImages.isEmpty() ? null : productImages.get(0).getImageUrl();
+        totalItems++;
+        totalCost = totalCost + cost;
+        CartLineDTO cartLineDTO = CartLineDTO.builder()
+            .imageUrl(imageUrl)
+            .title(product.getTitle())
+            .price(cost)
+            .quantity(cartLine.getQuantity()).build();
+        cartLineDTOS.add(cartLineDTO);
+      }
+      totalFinalPrice = totalCost;
+      // Find the appropriate discount
+      var bestDiscount = discountRepository.findBestDiscountForOrder(totalAmount, Constants.ORDER);
+      if (bestDiscount.isPresent()) {
+        cartDisplayDTO.setDiscount(bestDiscount.get());
+        totalFinalPrice = totalCost - (totalCost*((double) bestDiscount.get().getDiscountPercent() /100));
+      }
+      cartDisplayDTO.setTotalItems(totalItems);
+      cartDisplayDTO.setTotalCost(totalCost);
+      cartDisplayDTO.setTotalFinalPrice(totalFinalPrice);
+      return cartDisplayDTO;
     }
 
     /**
@@ -72,14 +129,14 @@ public class CartServiceImpl implements CartService {
                 .build();
         return this.updateCart(reqDTO);
       }
-      CartLine newCartDetail = CartLine.builder()
+      CartLine cartLine = CartLine.builder()
           .productId(cartReqDTO.getProductId())
           .cartId(cartReqDTO.getCartId())
           .quantity(cartReqDTO.getQuantity())
           .createdDate(localDateTime)
           .modifiedDate(localDateTime)
           .build();
-      return cartLineRepository.save(newCartDetail);
+      return cartLineRepository.save(cartLine);
     }
 
     @Override
@@ -96,8 +153,8 @@ public class CartServiceImpl implements CartService {
    */
   @Override
   public void deleteAProduct(Long productId, Long cartId) throws CosmeticException {
-    var cartDetail = this.checkExistProduct(productId, cartId);
-    cartLineRepository.delete(cartDetail);
+    var cartLine = this.checkExistProduct(productId, cartId);
+    cartLineRepository.delete(cartLine);
   }
 
   CartLine checkExistProduct(Long productId, Long cartId) throws CosmeticException{
