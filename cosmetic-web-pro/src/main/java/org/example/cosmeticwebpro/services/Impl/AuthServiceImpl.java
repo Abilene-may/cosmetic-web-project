@@ -43,11 +43,17 @@ public class AuthServiceImpl implements AuthService {
         authenticate(loginDto.getUsernameOrEmail(), loginDto.getPassword());
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
+    var user =
+        userRepository.findByUserNameOrEmail(
+            loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail());
+    var cart = cartService.getCartByUserId(user.get().getId());
     String token = jwtTokenProvider.generateToken(authentication);
     String refreshToken = jwtTokenProvider.generateRefreshToken(new HashMap<>(), authentication);
     TokenAuthDTO tokenAuthDTO = new TokenAuthDTO();
     tokenAuthDTO.setAccessToken(token);
     tokenAuthDTO.setRefreshToken(refreshToken);
+    tokenAuthDTO.setUser(user.get());
+    tokenAuthDTO.setCart(cart);
     return tokenAuthDTO;
   }
 

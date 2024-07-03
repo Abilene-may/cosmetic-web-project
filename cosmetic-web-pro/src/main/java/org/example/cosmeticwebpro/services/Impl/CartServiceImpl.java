@@ -68,7 +68,7 @@ public class CartServiceImpl implements CartService {
     Integer totalItems = 0;
     double totalCost = 0.0;
     double totalFinalPrice = 0.0;
-    if(cartLines.isEmpty()){
+    if (cartLines.isEmpty()) {
       cartDisplayDTO.setCartLineDTOS(cartLineDTOS);
       cartDisplayDTO.setTotalItems(totalItems);
       cartDisplayDTO.setTotalCost(totalCost);
@@ -85,7 +85,7 @@ public class CartServiceImpl implements CartService {
               .orElseThrow(() -> new CosmeticException("Product not found with id: " + productId));
 
       double discount = 0;
-      if(product.getDisCountId() != null){
+      if (product.getDisCountId() != null) {
         var discountProduct = discountRepository.findById(product.getDisCountId());
         if (discountProduct.isPresent()) {
           discount = (double) discountProduct.get().getDiscountPercent() / 100;
@@ -165,6 +165,18 @@ public class CartServiceImpl implements CartService {
   public void deleteAProduct(Long productId, Long cartId) throws CosmeticException {
     var cartLine = this.checkExistProduct(productId, cartId);
     cartLineRepository.delete(cartLine);
+  }
+
+  // get cart by user id
+  @Override
+  public Cart getCartByUserId(Long userId) throws CosmeticException {
+    var cart = cartRepository.findByUserId(userId);
+    if (cart.isEmpty()) {
+      throw new CosmeticException(
+          ExceptionUtils.CART_DOES_NOT_EXIST,
+          ExceptionUtils.messages.get(ExceptionUtils.CART_DOES_NOT_EXIST));
+    }
+    return null;
   }
 
   CartLine checkExistProduct(Long productId, Long cartId) throws CosmeticException {

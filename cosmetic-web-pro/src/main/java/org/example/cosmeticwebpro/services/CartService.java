@@ -1,5 +1,6 @@
 package org.example.cosmeticwebpro.services;
 
+import org.example.cosmeticwebpro.domains.Cart;
 import org.example.cosmeticwebpro.domains.CartLine;
 import org.example.cosmeticwebpro.domains.User;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
@@ -18,4 +19,6 @@ public interface CartService {
     CartLine updateCart(CartReqDTO cartReqDTO) throws CosmeticException;
 
     void deleteAProduct(Long productId, Long cartId) throws CosmeticException;
+
+    Cart getCartByUserId(Long userId) throws CosmeticException;
 }
