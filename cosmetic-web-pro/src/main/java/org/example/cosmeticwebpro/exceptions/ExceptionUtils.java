@@ -39,6 +39,7 @@ public class ExceptionUtils {
   public static final String CATEGORY_NAME_NOT_FOUND = "CATEGORY_NAME_NOT_FOUND";
 
   // cart
+  public static final String CART_DOES_NOT_EXIST = "CART_DOES_NOT_EXIST";
   public static final String PRODUCT_IS_NOT_FOUND_IN_THE_CART = "PRODUCT_IS_NOT_FOUND_IN_THE_CART";
 
   // address
@@ -100,6 +101,9 @@ public class ExceptionUtils {
     messages.put(ExceptionUtils.CATEGORY_NAME_NOT_FOUND, "Tên danh mục không được bỏ trống.");
 
     // cart
+    messages.put(
+        ExceptionUtils.CART_DOES_NOT_EXIST,
+        "Không tìm thấy thông tin giỏ hàng hoặc giỏ hàng không tồn tại.");
     messages.put(
         ExceptionUtils.PRODUCT_IS_NOT_FOUND_IN_THE_CART,
         "Không tìm thấy thông tin sản phẩm trong giỏ hàng.");
