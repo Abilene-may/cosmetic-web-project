@@ -53,7 +53,7 @@ public class Discount {
 
   @NonNull
   @Column(name = "start_hour")
-  private Integer start_hour;
+  private Integer startHour;
 
   @NonNull
   @Column(name = "start_minute")

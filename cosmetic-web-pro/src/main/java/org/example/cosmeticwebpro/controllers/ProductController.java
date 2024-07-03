@@ -84,7 +84,7 @@ public class ProductController {
     }
 
     /**
-     * API update all prodcut status
+     * API update all product status
      */
     @PutMapping("/update-all-product-status")
     private ResponseEntity<Object> updateAllProductStatus(){
@@ -124,8 +124,7 @@ public class ProductController {
     }
 
     /**
-     * API show detail information for 1 product
-     * @return
+     * API get all products for admin
      */
     @GetMapping("/get-all")
     public ResponseEntity<Object> displayProductForAdmin(){

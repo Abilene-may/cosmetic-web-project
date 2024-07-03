@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.Cart;
 import org.example.cosmeticwebpro.domains.CartLine;
-import org.example.cosmeticwebpro.domains.Discount;
 import org.example.cosmeticwebpro.domains.Product;
 import org.example.cosmeticwebpro.domains.User;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
@@ -15,7 +14,6 @@ import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.CartLineDTO;
 import org.example.cosmeticwebpro.models.request.CartDisplayDTO;
 import org.example.cosmeticwebpro.models.request.CartReqDTO;
-import org.example.cosmeticwebpro.models.request.ProductDetailDTO;
 import org.example.cosmeticwebpro.repositories.CartLineRepository;
 import org.example.cosmeticwebpro.repositories.CartRepository;
 import org.example.cosmeticwebpro.repositories.DiscountRepository;
@@ -75,7 +73,6 @@ public class CartServiceImpl implements CartService {
       cartDisplayDTO.setTotalFinalPrice(totalFinalPrice);
       return cartDisplayDTO;
     }
-
     double totalAmount = 0.0;
     for (CartLine cartLine : cartLines) {
       Long productId = cartLine.getProductId();
@@ -117,6 +114,7 @@ public class CartServiceImpl implements CartService {
       totalFinalPrice =
           totalCost - (totalCost * ((double) bestDiscount.get().getDiscountPercent() / 100));
     }
+    cartDisplayDTO.setCartLineDTOS(cartLineDTOS);
     cartDisplayDTO.setTotalItems(totalItems);
     cartDisplayDTO.setTotalCost(totalCost);
     cartDisplayDTO.setTotalFinalPrice(totalFinalPrice);

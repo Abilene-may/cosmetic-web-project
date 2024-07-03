@@ -1,38 +1,44 @@
-package org.example.cosmeticwebpro.controllers;
+package org.example.cosmeticwebpro.controllers.admin;
+
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.common.ErrorDTO;
-import org.example.cosmeticwebpro.services.HomeService;
+import org.example.cosmeticwebpro.models.request.DiscountReqDTO;
+import org.example.cosmeticwebpro.models.request.RoleAndPermissionReqDTO;
+import org.example.cosmeticwebpro.services.DiscountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin("*")
 @RestController
+@Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/home")
-public class HomeController {
-  private final HomeService homeService;
+@RequestMapping("/admin/discount")
+public class DiscountController {
+  private final DiscountService discountService;
 
   /**
-   * API home screen
-   * @return homeDisplayDTO
+   * API get all discounts
    */
-  @GetMapping("/")
-  public ResponseEntity<Object> displayHomeScreen(){
+  @GetMapping("/get-all")
+  public ResponseEntity<Object> getAllRoleAndPermission(){
     try {
-      var homeDisplayDTO = homeService.displayHomeScreen();
-      return new ResponseEntity<>(homeDisplayDTO, HttpStatus.OK);
+      var allDiscounts = discountService.getAllDiscounts();
+      return new ResponseEntity<>(allDiscounts, HttpStatus.OK);
     } catch (CosmeticException e) {
       return new ResponseEntity<>(
           new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
     } catch (Exception ex) {
+      log.error(ex.getMessage(), ex);
       return new ResponseEntity<>(
           ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
           HttpStatus.INTERNAL_SERVER_ERROR);
@@ -40,21 +46,21 @@ public class HomeController {
   }
 
   /**
-   * API show detail a product for user
+   * update a role and permissions of a role
    */
-  @GetMapping("/view-a-product/{productId}")
-  public ResponseEntity<Object> displayProductDetail(@PathVariable Long productId){
-    try {
-      var productDisplayDTO = homeService.viewAProductDetail(productId);
-      return new ResponseEntity<>(productDisplayDTO, HttpStatus.OK);
-    } catch (CosmeticException e) {
+  @PostMapping("/create")
+  public ResponseEntity<Object> createRoleAndPermission(@RequestBody DiscountReqDTO reqDTO){
+    try{
+      discountService.createADiscount(reqDTO);
+      return new ResponseEntity<>(HttpStatus.OK);
+    } catch (CosmeticException e){
       return new ResponseEntity<>(
           new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
-    } catch (Exception ex) {
+    } catch (Exception ex){
+      log.error(ex.getMessage(), ex);
       return new ResponseEntity<>(
           ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
           HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
 }
