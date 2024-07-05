@@ -9,4 +9,8 @@ public interface DiscountService {
   void createADiscount(DiscountReqDTO discountReqDTO) throws CosmeticException;
 
   List<Discount> getAllDiscounts() throws CosmeticException;
+
+  void updateADiscount(Discount discount, List<Long> productIdList) throws CosmeticException;
+
+  Discount getByDiscountId(Long discountId) throws CosmeticException;
 }
