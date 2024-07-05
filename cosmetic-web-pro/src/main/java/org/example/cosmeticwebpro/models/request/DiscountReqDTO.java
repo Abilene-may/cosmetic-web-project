@@ -27,4 +27,5 @@ public class DiscountReqDTO {
   private Integer minAmount;
   private Integer maxUsage;
   private Integer totalUsage;
+  private String discountStatus;
 }

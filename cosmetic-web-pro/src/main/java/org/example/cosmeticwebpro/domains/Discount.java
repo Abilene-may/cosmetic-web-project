@@ -87,6 +87,9 @@ public class Discount {
   @Column(name = "total_usage")
   private Integer totalUsage;
 
+  @Column(name = "discount_status")
+  private String discountStatus;
+
   @OneToMany(mappedBy = "discount")
   private Set<ProductDiscount> productDiscounts = new HashSet<>();
 }

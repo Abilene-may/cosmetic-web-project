@@ -1,7 +1,11 @@
 package org.example.cosmeticwebpro.services.Impl;
 
 import jakarta.transaction.Transactional;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.cosmeticwebpro.commons.Constants;
@@ -73,14 +77,12 @@ public class CartServiceImpl implements CartService {
       cartDisplayDTO.setTotalFinalPrice(totalFinalPrice);
       return cartDisplayDTO;
     }
-    double totalAmount = 0.0;
     for (CartLine cartLine : cartLines) {
       Long productId = cartLine.getProductId();
       Product product =
           productRepository
               .findById(productId)
               .orElseThrow(() -> new CosmeticException("Product not found with id: " + productId));
-
       double discount = 0;
       if (product.getDisCountId() != null) {
         var discountProduct = discountRepository.findById(product.getDisCountId());
@@ -108,11 +110,17 @@ public class CartServiceImpl implements CartService {
     }
     totalFinalPrice = totalCost;
     // Find the appropriate discount
-    var bestDiscount = discountRepository.findBestDiscountForOrder(totalAmount, Constants.ORDER);
-    if (bestDiscount.isPresent()) {
-      cartDisplayDTO.setDiscount(bestDiscount.get());
+    // Get the current LocalDateTime
+    LocalDateTime today = LocalDateTime.now();
+
+    ZonedDateTime zonedDateTime = today.atZone(ZoneId.systemDefault());
+    Date todayDate = Date.from(zonedDateTime.toInstant());
+    // Convert LocalDateTime to Date
+    var bestDiscountForOrder = discountRepository.findBestDiscountForOrder(totalFinalPrice, Constants.ORDER, todayDate);
+    if (bestDiscountForOrder.isPresent()) {
+      cartDisplayDTO.setDiscount(bestDiscountForOrder.get());
       totalFinalPrice =
-          totalCost - (totalCost * ((double) bestDiscount.get().getDiscountPercent() / 100));
+          totalCost - (totalCost * ((double) bestDiscountForOrder.get().getDiscountPercent() / 100));
     }
     cartDisplayDTO.setCartLineDTOS(cartLineDTOS);
     cartDisplayDTO.setTotalItems(totalItems);
@@ -174,7 +182,7 @@ public class CartServiceImpl implements CartService {
           ExceptionUtils.CART_DOES_NOT_EXIST,
           ExceptionUtils.messages.get(ExceptionUtils.CART_DOES_NOT_EXIST));
     }
-    return null;
+    return cart.get();
   }
 
   CartLine checkExistProduct(Long productId, Long cartId) throws CosmeticException {

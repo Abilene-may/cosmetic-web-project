@@ -92,7 +92,7 @@ public class CartController {
   public ResponseEntity<Object> deleteAProduct(@RequestParam Long productId, @RequestParam Long cartId){
     try{
       cartService.deleteAProduct(productId, cartId);
-      return new ResponseEntity<>(HttpStatus.OK);
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     } catch (CosmeticException e){
       return new ResponseEntity<>(
           new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);

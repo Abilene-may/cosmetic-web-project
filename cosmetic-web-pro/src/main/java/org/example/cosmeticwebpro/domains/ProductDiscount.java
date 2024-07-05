@@ -22,14 +22,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "product_history")
+@Table(name = "product_discount")
 public class ProductDiscount {
   @Id
   @SequenceGenerator(
-      name = "product_history_seq",
-      sequenceName = "product_history_seq",
+      name = "product_discount_seq",
+      sequenceName = "product_discount_seq",
       allocationSize = 1)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_history_seq")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_discount_seq")
   @Column(name = "id")
   private Long id;
 
