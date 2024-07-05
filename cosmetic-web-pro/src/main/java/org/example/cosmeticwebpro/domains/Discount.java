@@ -45,26 +45,11 @@ public class Discount {
 
   @NonNull
   @Column(name = "from_date")
-  private Date fromDate;
+  private LocalDateTime fromDate;
 
   @NonNull
   @Column(name = "to_date")
-  private Date toDate;
-
-  @NonNull
-  @Column(name = "start_hour")
-  private Integer startHour;
-
-  @NonNull
-  @Column(name = "start_minute")
-  private Integer startMinute;
-
-  @NonNull
-  @Column(name = "end_hour")
-  private Integer endHour;
-
-  @Column(name = "end_minute")
-  private Integer endMinute;
+  private LocalDateTime toDate;
 
   @Column(name = "created_date")
   @Temporal(TemporalType.TIMESTAMP)
@@ -74,7 +59,6 @@ public class Discount {
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime modifiedDate;
 
-  @NonNull
   @Column(name = "apply_to")
   private String applyTo;
 

@@ -1,5 +1,7 @@
 package org.example.cosmeticwebpro.repositories;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 import javax.xml.crypto.Data;
@@ -14,16 +16,16 @@ public interface DiscountRepository
 
   @Query(
       value = "SELECT * FROM Discount d " +
-          "WHERE d.min_amount <= :totalAmount " +
+          "WHERE d.min_amount <= :totalFinalPrice " +
           "AND d.apply_to = :applyTo " +
-          "AND :today BETWEEN d.from_date AND d.to_date " +
-          "AND (EXTRACT(HOUR FROM :today) > d.start_hour " +
-          "OR (EXTRACT(HOUR FROM :today) = d.start_hour AND EXTRACT(MINUTE FROM :today) >= d.start_minute)) " +
-          "AND (EXTRACT(HOUR FROM :today) < d.end_hour " +
-          "OR (EXTRACT(HOUR FROM :today) = d.end_hour AND EXTRACT(MINUTE FROM :today) <= d.end_minute)) " +
+          "AND CAST(:today AS timestamp) BETWEEN d.from_date AND d.to_date " +
+          "AND d.discount_status = :discountStatus " +
           "ORDER BY d.min_amount DESC " +
           "LIMIT 1",
       nativeQuery = true)
   Optional<Discount> findBestDiscountForOrder(
-      @Param("totalAmount") double totalAmount, @Param("applyTo") String applyTo, @Param("today") Date today);
+      @Param("totalFinalPrice") double totalFinalPrice,
+      @Param("discountStatus") String discountStatus,
+      @Param("applyTo") String applyTo,
+      @Param("today") LocalDateTime today);
 }

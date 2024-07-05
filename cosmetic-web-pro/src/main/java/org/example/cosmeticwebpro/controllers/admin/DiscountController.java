@@ -30,7 +30,7 @@ public class DiscountController {
    * API get all discounts
    */
   @GetMapping("/get-all")
-  public ResponseEntity<Object> getAllRoleAndPermission(){
+  public ResponseEntity<Object> getAllDiscount(){
     try {
       var allDiscounts = discountService.getAllDiscounts();
       return new ResponseEntity<>(allDiscounts, HttpStatus.OK);
@@ -49,7 +49,7 @@ public class DiscountController {
    * update a role and permissions of a role
    */
   @PostMapping("/create")
-  public ResponseEntity<Object> createRoleAndPermission(@RequestBody DiscountReqDTO reqDTO){
+  public ResponseEntity<Object> createADiscount(@RequestBody DiscountReqDTO reqDTO){
     try{
       discountService.createADiscount(reqDTO);
       return new ResponseEntity<>(HttpStatus.OK);

@@ -2,11 +2,13 @@ package org.example.cosmeticwebpro.models.request;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.cosmeticwebpro.domains.ProductDiscount;
 
 @Builder
 @Setter
@@ -15,12 +17,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DiscountReqDTO {
   private Integer discountPercent;
-  private Date fromDate;
-  private Date toDate;
-  private Integer startHour;
-  private Integer startMinute;
-  private Integer endHour;
-  private Integer endMinute;
+  private LocalDateTime fromDate;
+  private LocalDateTime toDate;
   private LocalDateTime createdDate;
   private LocalDateTime modifiedDate;
   private String applyTo;
@@ -28,4 +26,5 @@ public class DiscountReqDTO {
   private Integer maxUsage;
   private Integer totalUsage;
   private String discountStatus;
+  private List<Long> productIdList;
 }

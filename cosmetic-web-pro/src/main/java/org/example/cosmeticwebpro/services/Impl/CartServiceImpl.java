@@ -1,6 +1,7 @@
 package org.example.cosmeticwebpro.services.Impl;
 
 import jakarta.transaction.Transactional;
+import java.sql.Timestamp;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.LocalDateTime;
@@ -112,15 +113,13 @@ public class CartServiceImpl implements CartService {
     // Find the appropriate discount
     // Get the current LocalDateTime
     LocalDateTime today = LocalDateTime.now();
-
-    ZonedDateTime zonedDateTime = today.atZone(ZoneId.systemDefault());
-    Date todayDate = Date.from(zonedDateTime.toInstant());
-    // Convert LocalDateTime to Date
-    var bestDiscountForOrder = discountRepository.findBestDiscountForOrder(totalFinalPrice, Constants.ORDER, todayDate);
+    var bestDiscountForOrder =
+        discountRepository.findBestDiscountForOrder(totalFinalPrice, Constants.ACTIVE, Constants.ORDER, today);
     if (bestDiscountForOrder.isPresent()) {
       cartDisplayDTO.setDiscount(bestDiscountForOrder.get());
       totalFinalPrice =
-          totalCost - (totalCost * ((double) bestDiscountForOrder.get().getDiscountPercent() / 100));
+          totalCost
+              - (totalCost * ((double) bestDiscountForOrder.get().getDiscountPercent() / 100));
     }
     cartDisplayDTO.setCartLineDTOS(cartLineDTOS);
     cartDisplayDTO.setTotalItems(totalItems);
