@@ -1,28 +1,29 @@
 package org.example.cosmeticwebpro.services.Impl;
 
+import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.example.cosmeticwebpro.commons.Constants;
-import org.example.cosmeticwebpro.domains.Address;
 import org.example.cosmeticwebpro.domains.CartLine;
-import org.example.cosmeticwebpro.domains.Discount;
 import org.example.cosmeticwebpro.domains.Order;
 import org.example.cosmeticwebpro.domains.OrderDetail;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.OrderDetailDTO;
 import org.example.cosmeticwebpro.models.OrderReviewDTO;
+import org.example.cosmeticwebpro.models.request.OrderReqDTO;
 import org.example.cosmeticwebpro.repositories.CartLineRepository;
 import org.example.cosmeticwebpro.repositories.DiscountRepository;
 import org.example.cosmeticwebpro.repositories.OrderDetailRepository;
 import org.example.cosmeticwebpro.repositories.OrderRepository;
-import org.example.cosmeticwebpro.repositories.UserRepository;
 import org.example.cosmeticwebpro.services.AddressService;
+import org.example.cosmeticwebpro.services.CartService;
 import org.example.cosmeticwebpro.services.OrderService;
 import org.example.cosmeticwebpro.services.ProductService;
+import org.example.cosmeticwebpro.services.UserService;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -32,10 +33,11 @@ public class OrderServiceImpl implements OrderService {
   private final OrderRepository orderRepository;
   private final OrderDetailRepository orderDetailRepository;
   private final DiscountRepository discountRepository;
-  private final UserRepository userRepository;
+  private final UserService userService;
   private final CartLineRepository cartLineRepository;
   private final ProductService productService;
   private final AddressService addressService;
+  private final CartService cartService;
 
   // find a list order for a user
   @Override
@@ -57,12 +59,7 @@ public class OrderServiceImpl implements OrderService {
       throw new CosmeticException(
           ExceptionUtils.ORDER_ERROR_1, ExceptionUtils.messages.get(ExceptionUtils.ORDER_ERROR_1));
     }
-    var order = orderRepository.findById(orderId);
-    if (order.isEmpty()) {
-      throw new CosmeticException(
-          ExceptionUtils.ORDER_NOT_FOUND,
-          ExceptionUtils.messages.get(ExceptionUtils.ORDER_NOT_FOUND));
-    }
+    var order = this.getByOrderId(orderId);
     var orderDetailList = orderDetailRepository.findAllByOrderId(orderId);
 
     // Calculate total amount of the order
@@ -71,7 +68,7 @@ public class OrderServiceImpl implements OrderService {
             .mapToDouble(od -> od.getProductCost() * od.getQuantity() - od.getDiscountProduct())
             .sum();
     return OrderDetailDTO.builder()
-        .order(order.get())
+        .order(order)
         .orderDetail(orderDetailList)
         .totalAmount(totalAmount)
         .build();
@@ -82,25 +79,18 @@ public class OrderServiceImpl implements OrderService {
   public void updateStatusOfAnOrder(Long orderId) throws CosmeticException {}
 
   // create an order for a user
+  @Transactional
   @Override
-  public OrderDetailDTO createAnOrder(Long userId, Address address, Discount discount)
-      throws CosmeticException {
-    if (userId == null || address.getId() == null) {
+  public OrderDetailDTO createAnOrder(OrderReqDTO orderReqDTO) throws CosmeticException {
+    var address = orderReqDTO.getAddress();
+    if (orderReqDTO.getUserId() == null || address.getId() == null) {
       throw new CosmeticException(
           ExceptionUtils.ORDER_ERROR_2, ExceptionUtils.messages.get(ExceptionUtils.ORDER_ERROR_2));
     }
-    // Fetch the user
-    var user =
-        userRepository
-            .findById(userId)
-            .orElseThrow(
-                () ->
-                    new CosmeticException(
-                        ExceptionUtils.USER_NOT_FOUND,
-                        ExceptionUtils.messages.get(ExceptionUtils.USER_NOT_FOUND)));
-
+    // check user exist
+    userService.viewDetailAUser(orderReqDTO.getUserId());
     // Create a new order
-    Order order =
+    Order orderSetUp =
         Order.builder()
             .fullName(address.getFullName())
             .phoneNumber(address.getPhoneNumber())
@@ -116,51 +106,65 @@ public class OrderServiceImpl implements OrderService {
             .build();
 
     // Save the order first to get the generated ID
-    order = orderRepository.save(order);
+    var order = orderRepository.save(orderSetUp);
 
     // Calculate the total cost (dummy data for order details here, you should fetch actual
     // products)
-    List<OrderDetail> orderDetailList = createOrderDetailsForUser(order.getId(), userId);
+    List<OrderDetail> orderDetailList =
+        createOrderDetailsForUser(order.getId(), orderReqDTO.getUserId());
     // You should implement this method to fetch actual order details
     double totalCost = 0.0;
 
+    // todo
+    // check - product discount
     for (OrderDetail od : orderDetailList) {
       od.setOrderId(order.getId());
       totalCost += od.getProductCost() * od.getQuantity();
       orderDetailRepository.save(od);
     }
+    double shippingCost = 0;
     // set shipping cost
     if (totalCost < Constants.ORDER_THRESHOLD_FOR_SHIPPING_COST) {
-      order.setShippingCost(Constants.SHIPPING_COST);
+      shippingCost = Constants.SHIPPING_COST;
     }
+    order.setShippingCost(shippingCost);
+    order.setTotalItem(orderDetailList.size() - 1);
+    order.setNote(orderReqDTO.getNote());
+    order.setStatus(Constants.ORDER_PLACED_SUCCESS);
+    order.setPaymentMethod(Constants.PAYMENT_CASH);
+    order.setUserId(orderReqDTO.getUserId());
+
+    OrderDetailDTO orderDetailDTO =
+        OrderDetailDTO.builder().order(order).orderDetail(orderDetailList).build();
 
     // Apply discount if available
     double discountAmount = 0.0;
+    var discount = orderReqDTO.getDiscount();
     if (discount != null) {
       discountAmount = totalCost * discount.getDiscountPercent() / 100;
-      totalCost -= discountAmount;
+      totalCost = totalCost - discountAmount;
       order.setDiscountOrder(discount.getDiscountPercent());
+      orderDetailDTO.setDiscountOrder(discount);
     }
     order.setTotalCost(totalCost);
-    order.setStatus(Constants.ORDER_PLACED_SUCCESS);
+    orderDetailDTO.setTotalAmount(totalCost);
     orderRepository.save(order);
-
-    return OrderDetailDTO.builder()
-        .order(order)
-        .orderDetail(orderDetailList)
-        .totalAmount(totalCost)
-        .build();
+    // clear shopping cart by userId
+    cartService.clearCartLine(orderReqDTO.getUserId());
+    return orderDetailDTO;
   }
 
-  // review the order before creating a new order
+  // cancel an order
+  @Transactional
   @Override
-  public OrderReviewDTO orderReview(Long userId) throws CosmeticException {
-    var addressList = addressService.getAllAddress(userId);
-
-    return null;
+  public Order cancelAnOrder(Long orderId) throws CosmeticException {
+    var order = this.getByOrderId(orderId);
+    order.setStatus(Constants.ORDER_CANCELLED);
+    return order;
   }
 
-  private List<OrderDetail> createOrderDetailsForUser(Long orderId, Long userId)
+  @Transactional
+  protected List<OrderDetail> createOrderDetailsForUser(Long orderId, Long userId)
       throws CosmeticException {
     List<OrderDetail> orderDetails = new ArrayList<>();
     // Implement this method to fetch actual order details for the user
@@ -171,6 +175,17 @@ public class OrderServiceImpl implements OrderService {
       var p = productDetail.getProductDTO();
       var i = productDetail.getProductImages();
       var productCost = p.getCurrentCost();
+      LocalDateTime today = LocalDateTime.now();
+      OrderDetail orderDetail =
+          OrderDetail.builder()
+              .productId(c.getProductId())
+              .orderId(orderId)
+              .productTitle(p.getTitle())
+              .productImageUrl(String.valueOf(i.get(0)))
+              .quantity(c.getQuantity())
+              .createdDate(today)
+              .modifiedDate(today)
+              .build();
       if (p.getProductDiscount() != null) {
         var discount =
             discountRepository.findByIdAndStatus(p.getProductDiscount().getId(), Constants.ACTIVE);
@@ -178,22 +193,25 @@ public class OrderServiceImpl implements OrderService {
             & Objects.equals(discount.get().getDiscountStatus(), Constants.ACTIVE)) {
           productCost =
               productCost - productCost * ((double) discount.get().getDiscountPercent() / 100);
+          orderDetail.setDiscountProduct(discount.get().getDiscountPercent());
         }
       }
-      LocalDateTime today = LocalDateTime.now();
-      OrderDetail orderDetail =
-          OrderDetail.builder()
-              .productId(c.getProductId())
-              .orderId(orderId)
-              .productTitle(p.getTitle())
-              .productImageUrl(String.valueOf(i.get(1)))
-              .productCost(productCost)
-              .createdDate(today)
-              .modifiedDate(today)
-              .build();
+      orderDetail.setProductCost(productCost);
       orderDetails.add(orderDetail);
+      var quantity = productDetail.getProductDTO().getQuantity();
+      productDetail.getProductDTO().setQuantity(quantity - c.getQuantity());
     }
     // Add logic to fetch actual order details
     return orderDetails;
+  }
+
+  private Order getByOrderId(Long orderId) throws CosmeticException {
+    var order = orderRepository.findById(orderId);
+    if (order.isEmpty()) {
+      throw new CosmeticException(
+          ExceptionUtils.ORDER_NOT_FOUND,
+          ExceptionUtils.messages.get(ExceptionUtils.ORDER_NOT_FOUND));
+    }
+    return order.get();
   }
 }

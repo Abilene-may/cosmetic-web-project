@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import org.example.cosmeticwebpro.domains.Product;
 import org.example.cosmeticwebpro.domains.Role;
+import org.example.cosmeticwebpro.models.CartLineDTO;
 import org.example.cosmeticwebpro.models.DisplayRoleDTO;
 import org.example.cosmeticwebpro.models.ProductDTO;
 import org.example.cosmeticwebpro.models.ProductOverviewDTO;
@@ -31,4 +32,5 @@ public interface MapStruct {
   List<ProductDTO> mapToProductDTOList(List<Product> products);
 
   DisplayRoleDTO mapToDisplayRoleDTO(Role role);
+  CartLineDTO mapToCartLineDTO(Product product);
 }

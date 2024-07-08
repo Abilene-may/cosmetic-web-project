@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,36 +28,33 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
   private final OrderService orderService;
 
-  /**
-   * get all product in a cart
-   */
+  /** get all product in a cart */
   @GetMapping("/get-all/{userId}")
-  public ResponseEntity<Object> getAll(@PathVariable Long userId){
-    try{
+  public ResponseEntity<Object> getAll(@PathVariable Long userId) {
+    try {
       var orders = orderService.getAllOrderForAUser(userId);
       return new ResponseEntity<>(orders, HttpStatus.OK);
-    } catch (CosmeticException e){
+    } catch (CosmeticException e) {
       return new ResponseEntity<>(
           new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
-    } catch (Exception ex){
+    } catch (Exception ex) {
       log.error(ex.getMessage(), ex);
       return new ResponseEntity<>(
           ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
           HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-  /**
-   * display detail an order
-   */
+
+  /** display detail an order */
   @GetMapping("/show-order-detail/{orderId}")
-  public ResponseEntity<Object> displayDetailAnOrder(@PathVariable Long orderId){
-    try{
+  public ResponseEntity<Object> displayDetailAnOrder(@PathVariable Long orderId) {
+    try {
       var orderDetailDTO = orderService.showDetailAnOrder(orderId);
       return new ResponseEntity<>(orderDetailDTO, HttpStatus.OK);
-    } catch (CosmeticException e){
+    } catch (CosmeticException e) {
       return new ResponseEntity<>(
           new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
-    } catch (Exception ex){
+    } catch (Exception ex) {
       log.error(ex.getMessage(), ex);
       return new ResponseEntity<>(
           ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
@@ -64,20 +62,17 @@ public class OrderController {
     }
   }
 
-  /**
-   * create a new order
-   */
+  /** create a new order */
   @PostMapping("/create")
-  public ResponseEntity<Object> createAnAddress(@RequestBody OrderReqDTO orderReqDTO){
-    try{
+  public ResponseEntity<Object> createAnAddress(@RequestBody OrderReqDTO orderReqDTO) {
+    try {
       var order =
-          orderService.createAnOrder(
-              orderReqDTO.getUserId(), orderReqDTO.getAddress(), orderReqDTO.getDiscount());
+          orderService.createAnOrder(orderReqDTO);
       return new ResponseEntity<>(order, HttpStatus.OK);
-    } catch (CosmeticException e){
+    } catch (CosmeticException e) {
       return new ResponseEntity<>(
           new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
-    } catch (Exception ex){
+    } catch (Exception ex) {
       log.error(ex.getMessage(), ex);
       return new ResponseEntity<>(
           ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
@@ -85,4 +80,20 @@ public class OrderController {
     }
   }
 
+  // cancel an order
+  @PutMapping("/cancel")
+  public ResponseEntity<Object> CancelAnOrder(@PathVariable Long orderId) {
+    try {
+      var order = orderService.cancelAnOrder(orderId);
+      return new ResponseEntity<>(order, HttpStatus.OK);
+    } catch (CosmeticException e) {
+      return new ResponseEntity<>(
+          new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+    } catch (Exception ex) {
+      log.error(ex.getMessage(), ex);
+      return new ResponseEntity<>(
+          ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 }

@@ -41,11 +41,9 @@ public class Order {
   @Column(name = "address_detail")
   private String addressDetail;
 
-  @NonNull
   @Column(name = "total_quantity")
-  private Integer totalQuantity;
+  private Integer totalItem;
 
-  @NonNull
   @Column(name = "total_cost")
   private double totalCost;
 
@@ -58,11 +56,9 @@ public class Order {
   @Column(name = "note")
   private String note;
 
-  @NonNull
   @Column(name = "status")
   private String status;
 
-  @NonNull
   @Column(name = "payment_method")
   private String paymentMethod;
 
@@ -75,7 +71,6 @@ public class Order {
   @Column(name = "complition_date")
   private LocalDateTime complitionDate;
 
-  @NonNull
   @Column(name = "user_id")
   private Long userId;
   

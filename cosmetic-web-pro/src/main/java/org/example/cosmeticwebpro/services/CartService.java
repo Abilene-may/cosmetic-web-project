@@ -21,4 +21,6 @@ public interface CartService {
     void deleteAProduct(Long productId, Long cartId) throws CosmeticException;
 
     Cart getCartByUserId(Long userId) throws CosmeticException;
+
+    void clearCartLine(Long userId) throws CosmeticException;
 }

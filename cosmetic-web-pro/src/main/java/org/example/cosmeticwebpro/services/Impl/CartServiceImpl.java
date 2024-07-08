@@ -1,12 +1,8 @@
 package org.example.cosmeticwebpro.services.Impl;
 
 import jakarta.transaction.Transactional;
-import java.sql.Timestamp;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.cosmeticwebpro.commons.Constants;
@@ -18,7 +14,6 @@ import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.mapper.MapStruct;
 import org.example.cosmeticwebpro.models.CartLineDTO;
-import org.example.cosmeticwebpro.models.ProductDTO;
 import org.example.cosmeticwebpro.models.request.CartDisplayDTO;
 import org.example.cosmeticwebpro.models.request.CartReqDTO;
 import org.example.cosmeticwebpro.repositories.CartLineRepository;
@@ -28,9 +23,8 @@ import org.example.cosmeticwebpro.repositories.ProductDiscountRepository;
 import org.example.cosmeticwebpro.repositories.ProductImageRepository;
 import org.example.cosmeticwebpro.repositories.ProductRepository;
 import org.example.cosmeticwebpro.services.CartService;
+import org.example.cosmeticwebpro.services.ProductService;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Service
@@ -42,6 +36,7 @@ public class CartServiceImpl implements CartService {
   private final ProductImageRepository productImageRepository;
   private final ProductDiscountRepository productDiscountRepository;
   private final MapStruct mapStruct;
+  private final ProductService productService;
 
   /** Create a shopping cart when customer successfully registers for an account */
   @Override
@@ -72,12 +67,12 @@ public class CartServiceImpl implements CartService {
     }
     var cartLines = cartLineRepository.findAllByCartId(cartId);
     CartDisplayDTO cartDisplayDTO = new CartDisplayDTO();
-    List<ProductDTO> productDTOS = new ArrayList<>();
+    List<CartLineDTO> cartLineDTOS = new ArrayList<>();
     Integer totalItems = 0;
     double totalCost = 0.0;
     double totalFinalPrice = 0.0;
     if (cartLines.isEmpty()) {
-      cartDisplayDTO.setProductDTOS(productDTOS);
+      cartDisplayDTO.setCartLineDTOS(cartLineDTOS);
       cartDisplayDTO.setTotalItems(totalItems);
       cartDisplayDTO.setTotalCost(totalCost);
       cartDisplayDTO.setTotalFinalPrice(totalFinalPrice);
@@ -89,24 +84,30 @@ public class CartServiceImpl implements CartService {
           productRepository
               .findById(productId)
               .orElseThrow(() -> new CosmeticException("Product not found with id: " + productId));
-      var productDTO = mapStruct.mapToProductDTO(product);
-      double discount = 0;
-      if (productDTO.getProductDiscount() != null) {
-        var discountProduct = discountRepository.findById(productDTO.getProductDiscount().getId());
+      var cartLineDTO = mapStruct.mapToCartLineDTO(product);
+      var discount = productService.getDiscountActiveForProduct(cartLineDTO.getProductId());
+      cartLineDTO.setPrice(product.getCurrentCost());
+      cartLineDTO.setQuantity(cartLine.getQuantity());
+      cartLineDTO.setProductDiscount(discount);
+      double discountPercent = 0;
+      if (cartLineDTO.getProductDiscount() != null) {
+        var discountProduct = discountRepository.findById(cartLineDTO.getProductDiscount().getId());
         if (discountProduct.isPresent()) {
-          discount = (double) discountProduct.get().getDiscountPercent() / 100;
+          discountPercent = (double) discountProduct.get().getDiscountPercent() / 100;
         }
       }
       // cost after discount
       double cost =
-          (product.getCurrentCost() - product.getCurrentCost() * discount) * cartLine.getQuantity();
+          (product.getCurrentCost() - product.getCurrentCost() * discountPercent)
+              * cartLine.getQuantity();
 
       var productImages = productImageRepository.findProductImagesByProductId(productId);
       // get an image from a list
       String imageUrl = productImages.isEmpty() ? null : productImages.get(0).getImageUrl();
+      cartLineDTO.setImageUrl(imageUrl);
       totalItems++;
       totalCost = totalCost + cost;
-      productDTOS.add(productDTO);
+      cartLineDTOS.add(cartLineDTO);
     }
     totalFinalPrice = totalCost;
     // Find the appropriate discount
@@ -121,7 +122,7 @@ public class CartServiceImpl implements CartService {
           totalCost
               - (totalCost * ((double) bestDiscountForOrder.get().getDiscountPercent() / 100));
     }
-    cartDisplayDTO.setProductDTOS(productDTOS);
+    cartDisplayDTO.setCartLineDTOS(cartLineDTOS);
     cartDisplayDTO.setTotalItems(totalItems);
     cartDisplayDTO.setTotalCost(totalCost);
     cartDisplayDTO.setTotalFinalPrice(totalFinalPrice);
@@ -182,6 +183,14 @@ public class CartServiceImpl implements CartService {
           ExceptionUtils.messages.get(ExceptionUtils.CART_DOES_NOT_EXIST));
     }
     return cart.get();
+  }
+
+  // clear all product in a cart for user
+  @Override
+  public void clearCartLine(Long userId) throws CosmeticException {
+    var cart  = this.getCartByUserId(userId);
+    var cartLines = cartLineRepository.findAllByCartId(cart.getId());
+    cartLineRepository.deleteAll(cartLines);
   }
 
   CartLine checkExistProduct(Long productId, Long cartId) throws CosmeticException {

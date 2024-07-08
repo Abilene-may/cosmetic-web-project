@@ -7,6 +7,7 @@ import org.example.cosmeticwebpro.domains.Order;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.models.OrderDetailDTO;
 import org.example.cosmeticwebpro.models.OrderReviewDTO;
+import org.example.cosmeticwebpro.models.request.OrderReqDTO;
 
 public interface OrderService {
   List<Order> getAllOrderForAUser(Long userId) throws CosmeticException;
@@ -15,7 +16,7 @@ public interface OrderService {
 
   void updateStatusOfAnOrder(Long orderId) throws CosmeticException;
 
-  OrderDetailDTO createAnOrder(Long userId, Address address, Discount discount) throws CosmeticException;
+  OrderDetailDTO createAnOrder(OrderReqDTO orderReqDTO) throws CosmeticException;
 
-  OrderReviewDTO orderReview(Long userId) throws CosmeticException;
+  Order cancelAnOrder(Long orderId) throws CosmeticException;
 }

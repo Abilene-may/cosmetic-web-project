@@ -15,8 +15,8 @@ import org.example.cosmeticwebpro.domains.Discount;
 @NoArgsConstructor
 public class OrderReqDTO {
   private Long userId;
-
   private Address address;
-
+  private String note;
+  private String paymentMethod;
   private Discount discount;
 }

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.cosmeticwebpro.domains.Discount;
 import org.example.cosmeticwebpro.domains.Order;
 import org.example.cosmeticwebpro.domains.OrderDetail;
 
@@ -16,8 +17,7 @@ import org.example.cosmeticwebpro.domains.OrderDetail;
 @NoArgsConstructor
 public class OrderDetailDTO {
   private Order order;
-
   private List<OrderDetail> orderDetail;
-
+  private Discount discountOrder;
   private double totalAmount;
 }
