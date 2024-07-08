@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.cosmeticwebpro.commons.Constants;
+import org.example.cosmeticwebpro.domains.Brand;
+import org.example.cosmeticwebpro.domains.Category;
 import org.example.cosmeticwebpro.domains.Product;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
@@ -32,9 +34,11 @@ public class HomeServiceImpl implements HomeService {
     // find all product are on sale
     var listProductOnSale = productRepository.findAllProductOnSale(Constants.PRODUCT_HIDDEN);
     var displayListOneSale = productService.productOverviewDTOS(listProductOnSale);
-    var listProductBestSeller = productRepository.findAllProductBestSeller(Constants.PRODUCT_HIDDEN);
+    var listProductBestSeller =
+        productRepository.findAllProductBestSeller(Constants.PRODUCT_HIDDEN);
     var displayListBestSeller = productService.productOverviewDTOS(listProductBestSeller);
-    var listProductTheMostView = productRepository.findAllProductTheMostView(Constants.PRODUCT_HIDDEN);
+    var listProductTheMostView =
+        productRepository.findAllProductTheMostView(Constants.PRODUCT_HIDDEN);
     var displayListTheMostView = productService.productOverviewDTOS(listProductTheMostView);
     Integer totalQuantityCart = 0;
     var listCategory = categoryService.getAll();
@@ -45,10 +49,11 @@ public class HomeServiceImpl implements HomeService {
         .listProductBestSeller(displayListBestSeller)
         .listProductTheMostView(displayListTheMostView)
         .categoryList(listCategory)
-        .brandList(listBrand).build();
+        .brandList(listBrand)
+        .build();
   }
 
-  public List<Product> checkNullPointer(List<Product> productList){
+  public List<Product> checkNullPointer(List<Product> productList) {
     if (productList == null) {
       return Collections.emptyList();
     }
@@ -69,14 +74,17 @@ public class HomeServiceImpl implements HomeService {
           ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN,
           ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN));
     }
-    var category = categoryService.getById(product.getCategoryId());
-    var brand = brandService.getById(product.getBrandId());
+    if(product.getCategoryId() != null){
+      var category = categoryService.getById(product.getCategoryId());
+      productDisplayDTO.setCategory(category);
+    }
+    if(product.getBrandId() != null){
+      var brand = brandService.getById(product.getBrandId());
+      productDisplayDTO.setBrand(brand);
+    }
     // increase view when customers view the product
     var view = product.getCountView() + 1;
     product.setCountView(view);
-    productDisplayDTO.setCategory(category);
-    productDisplayDTO.setBrand(brand);
     return productDisplayDTO;
   }
-
 }

@@ -64,13 +64,14 @@ public class CategoryServiceImpl implements CategoryService {
     return updateCategory;
   }
 
-  private void checkNotNull(String name) throws CosmeticException{
+  private void checkNotNull(String name) throws CosmeticException {
     if (name.isEmpty()) {
       throw new CosmeticException(
           ExceptionUtils.CATEGORY_NAME_NOT_FOUND,
           ExceptionUtils.messages.get(ExceptionUtils.CATEGORY_NAME_NOT_FOUND));
     }
   }
+
   // Delete a category
   @Override
   public void delete(Long categoryId) throws CosmeticException {
@@ -87,7 +88,7 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
-  public List<Category> getAll() throws CosmeticException{
+  public List<Category> getAll() throws CosmeticException {
     return categoryRepository.findAll();
   }
 }

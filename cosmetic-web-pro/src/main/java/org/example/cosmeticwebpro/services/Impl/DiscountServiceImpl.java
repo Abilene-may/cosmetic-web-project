@@ -54,7 +54,8 @@ public class DiscountServiceImpl implements DiscountService {
   }
 
   @Override
-  public void updateADiscount(Discount discount, List<Long> productIdList) throws CosmeticException {
+  public void updateADiscount(Discount discount, List<Long> productIdList)
+      throws CosmeticException {
     var checkDiscount = this.getByDiscountId(discount.getId());
     String status = setDiscountStatus(discount.getFromDate(), discount.getToDate());
     discount.setDiscountStatus(status);

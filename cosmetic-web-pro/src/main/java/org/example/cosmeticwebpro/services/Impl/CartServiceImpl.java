@@ -113,7 +113,8 @@ public class CartServiceImpl implements CartService {
     // Get the current LocalDateTime
     LocalDateTime today = LocalDateTime.now();
     var bestDiscountForOrder =
-        discountRepository.findBestDiscountForOrder(totalFinalPrice, Constants.ACTIVE, Constants.ORDER, today);
+        discountRepository.findBestDiscountForOrder(
+            totalFinalPrice, Constants.ACTIVE, Constants.ORDER, today);
     if (bestDiscountForOrder.isPresent()) {
       cartDisplayDTO.setDiscount(bestDiscountForOrder.get());
       totalFinalPrice =

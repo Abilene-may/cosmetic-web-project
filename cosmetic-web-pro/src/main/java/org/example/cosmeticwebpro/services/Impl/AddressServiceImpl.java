@@ -19,9 +19,13 @@ public class AddressServiceImpl implements AddressService {
   @Override
   public Address createAddress(AddressReqDTO addressReqDTO) throws CosmeticException {
     // check required fields
-    checkNullField(addressReqDTO.getFullName(), addressReqDTO.getPhoneNumber(),
-        addressReqDTO.getProvinceName(), addressReqDTO.getDistrictName(),
-        addressReqDTO.getWardName(), addressReqDTO.getUserId());
+    checkNullField(
+        addressReqDTO.getFullName(),
+        addressReqDTO.getPhoneNumber(),
+        addressReqDTO.getProvinceName(),
+        addressReqDTO.getDistrictName(),
+        addressReqDTO.getWardName(),
+        addressReqDTO.getUserId());
     Address address =
         Address.builder()
             .fullName(addressReqDTO.getFullName())
@@ -50,14 +54,22 @@ public class AddressServiceImpl implements AddressService {
     // check the address has to exist
     var address = this.getAddressById(addressReq.getId());
     // check required fields
-    checkNullField(addressReq.getFullName(), addressReq.getPhoneNumber(),
-        addressReq.getProvinceName(), addressReq.getDistrictName(), addressReq.getWardName(),
+    checkNullField(
+        addressReq.getFullName(),
+        addressReq.getPhoneNumber(),
+        addressReq.getProvinceName(),
+        addressReq.getDistrictName(),
+        addressReq.getWardName(),
         addressReq.getUserId());
-
   }
 
-  private void checkNullField(String fullName, String phoneNumber, String provinceName,
-      String districtName, String wardName, Long userId)
+  private void checkNullField(
+      String fullName,
+      String phoneNumber,
+      String provinceName,
+      String districtName,
+      String wardName,
+      Long userId)
       throws CosmeticException {
     this.checkRequiredField(fullName, ExceptionUtils.ADDRESS_ERROR_1);
     this.checkRequiredField(phoneNumber, ExceptionUtils.ADDRESS_ERROR_2);

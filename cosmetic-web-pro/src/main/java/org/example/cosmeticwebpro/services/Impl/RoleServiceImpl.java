@@ -41,23 +41,27 @@ public class RoleServiceImpl implements RoleService {
           ExceptionUtils.messages.get(ExceptionUtils.ROLE_NAME_IS_NOT_BLANK));
     }
     LocalDateTime today = LocalDateTime.now();
-    Role createRole = Role.builder()
-        .roleName(reqDTO.getRoleName())
-        .createdDate(today)
-        .modifiedDate(today)
-        .build();
+    Role createRole =
+        Role.builder()
+            .roleName(reqDTO.getRoleName())
+            .createdDate(today)
+            .modifiedDate(today)
+            .build();
     var role = roleRepository.save(createRole);
 
     for (Permission permission : permissions) {
-      var checkPermission = permissionRepository.findById(permission.getId())
-          .orElseThrow(() -> new RuntimeException("Permission not found"));
+      var checkPermission =
+          permissionRepository
+              .findById(permission.getId())
+              .orElseThrow(() -> new RuntimeException("Permission not found"));
 
-      RolePermission rolePermission = RolePermission.builder()
-          .roleId(role.getId())
-          .permissionId(checkPermission.getId())
-          .roleId(role.getId())
-          .permission(checkPermission)
-          .build();
+      RolePermission rolePermission =
+          RolePermission.builder()
+              .roleId(role.getId())
+              .permissionId(checkPermission.getId())
+              .roleId(role.getId())
+              .permission(checkPermission)
+              .build();
 
       rolePermissionRepository.save(rolePermission);
     }
@@ -85,15 +89,18 @@ public class RoleServiceImpl implements RoleService {
 
     // Add the new RolePermission records
     for (Permission permission : reqDTO.getPermissions()) {
-      var checkPermission = permissionRepository.findById(permission.getId())
-          .orElseThrow(() -> new RuntimeException("Permission not found"));
+      var checkPermission =
+          permissionRepository
+              .findById(permission.getId())
+              .orElseThrow(() -> new RuntimeException("Permission not found"));
 
-      RolePermission rolePermission = RolePermission.builder()
-          .roleId(updateRole.getId())
-          .permissionId(checkPermission.getId())
-          .role(updateRole)
-          .permission(checkPermission)
-          .build();
+      RolePermission rolePermission =
+          RolePermission.builder()
+              .roleId(updateRole.getId())
+              .permissionId(checkPermission.getId())
+              .role(updateRole)
+              .permission(checkPermission)
+              .build();
 
       rolePermissionRepository.save(rolePermission);
     }
@@ -124,7 +131,7 @@ public class RoleServiceImpl implements RoleService {
     List<Role> roles = roleRepository.findAll();
     List<DisplayRoleDTO> displayRoleDTOs = new ArrayList<>();
 
-    for(Role role: roles){
+    for (Role role : roles) {
       var displayRoleDTO = mapStruct.mapToDisplayRoleDTO(role);
       displayRoleDTOs.add(displayRoleDTO);
     }
@@ -135,12 +142,16 @@ public class RoleServiceImpl implements RoleService {
   @Override
   public void changeRole(Long oldRoleId, Long newRoleId) throws CosmeticException {
     // Fetch the existing old role
-    Role oldRole = roleRepository.findById(oldRoleId)
-        .orElseThrow(() -> new CosmeticException("Old role not found"));
+    Role oldRole =
+        roleRepository
+            .findById(oldRoleId)
+            .orElseThrow(() -> new CosmeticException("Old role not found"));
 
     // Fetch the existing new role
-    Role newRole = roleRepository.findById(newRoleId)
-        .orElseThrow(() -> new CosmeticException("New role not found"));
+    Role newRole =
+        roleRepository
+            .findById(newRoleId)
+            .orElseThrow(() -> new CosmeticException("New role not found"));
 
     // Fetch existing RolePermission records for the old role
     Set<RolePermission> oldRolePermissions = rolePermissionRepository.findByRoleId(oldRoleId);

@@ -8,13 +8,17 @@ import java.util.Optional;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 
 public interface ProductImageService {
-    List<ProductImage> list();
-    Optional<ProductImage> getOne(Long id);
-    void save(ProductImage productImage);
-    void delete(Long id) throws IOException;
-    boolean exists(Long id);
+  List<ProductImage> list();
 
-    List<ProductImage> getAllByProductId(Long productId) throws CosmeticException;
+  Optional<ProductImage> getOne(Long id);
 
-    List<ProductImage> getAll();
+  void save(ProductImage productImage);
+
+  void delete(Long id) throws IOException;
+
+  boolean exists(Long id);
+
+  List<ProductImage> getAllByProductId(Long productId) throws CosmeticException;
+
+  List<ProductImage> getAll();
 }
