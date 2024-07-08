@@ -81,7 +81,7 @@ public class OrderController {
   }
 
   // cancel an order
-  @PutMapping("/cancel")
+  @PutMapping("/cancel/{orderId}")
   public ResponseEntity<Object> CancelAnOrder(@PathVariable Long orderId) {
     try {
       var order = orderService.cancelAnOrder(orderId);
