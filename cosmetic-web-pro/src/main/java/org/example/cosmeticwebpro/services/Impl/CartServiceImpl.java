@@ -16,12 +16,15 @@ import org.example.cosmeticwebpro.domains.Product;
 import org.example.cosmeticwebpro.domains.User;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
+import org.example.cosmeticwebpro.mapper.MapStruct;
 import org.example.cosmeticwebpro.models.CartLineDTO;
+import org.example.cosmeticwebpro.models.ProductDTO;
 import org.example.cosmeticwebpro.models.request.CartDisplayDTO;
 import org.example.cosmeticwebpro.models.request.CartReqDTO;
 import org.example.cosmeticwebpro.repositories.CartLineRepository;
 import org.example.cosmeticwebpro.repositories.CartRepository;
 import org.example.cosmeticwebpro.repositories.DiscountRepository;
+import org.example.cosmeticwebpro.repositories.ProductDiscountRepository;
 import org.example.cosmeticwebpro.repositories.ProductImageRepository;
 import org.example.cosmeticwebpro.repositories.ProductRepository;
 import org.example.cosmeticwebpro.services.CartService;
@@ -37,6 +40,8 @@ public class CartServiceImpl implements CartService {
   private final DiscountRepository discountRepository;
   private final ProductRepository productRepository;
   private final ProductImageRepository productImageRepository;
+  private final ProductDiscountRepository productDiscountRepository;
+  private final MapStruct mapStruct;
 
   /** Create a shopping cart when customer successfully registers for an account */
   @Override
@@ -67,12 +72,12 @@ public class CartServiceImpl implements CartService {
     }
     var cartLines = cartLineRepository.findAllByCartId(cartId);
     CartDisplayDTO cartDisplayDTO = new CartDisplayDTO();
-    List<CartLineDTO> cartLineDTOS = new ArrayList<>();
+    List<ProductDTO> productDTOS = new ArrayList<>();
     Integer totalItems = 0;
     double totalCost = 0.0;
     double totalFinalPrice = 0.0;
     if (cartLines.isEmpty()) {
-      cartDisplayDTO.setCartLineDTOS(cartLineDTOS);
+      cartDisplayDTO.setProductDTOS(productDTOS);
       cartDisplayDTO.setTotalItems(totalItems);
       cartDisplayDTO.setTotalCost(totalCost);
       cartDisplayDTO.setTotalFinalPrice(totalFinalPrice);
@@ -84,9 +89,10 @@ public class CartServiceImpl implements CartService {
           productRepository
               .findById(productId)
               .orElseThrow(() -> new CosmeticException("Product not found with id: " + productId));
+      var productDTO = mapStruct.mapToProductDTO(product);
       double discount = 0;
-      if (product.getDisCountId() != null) {
-        var discountProduct = discountRepository.findById(product.getDisCountId());
+      if (productDTO.getProductDiscount() != null) {
+        var discountProduct = discountRepository.findById(productDTO.getProductDiscount().getId());
         if (discountProduct.isPresent()) {
           discount = (double) discountProduct.get().getDiscountPercent() / 100;
         }
@@ -100,14 +106,7 @@ public class CartServiceImpl implements CartService {
       String imageUrl = productImages.isEmpty() ? null : productImages.get(0).getImageUrl();
       totalItems++;
       totalCost = totalCost + cost;
-      CartLineDTO cartLineDTO =
-          CartLineDTO.builder()
-              .imageUrl(imageUrl)
-              .title(product.getTitle())
-              .price(cost)
-              .quantity(cartLine.getQuantity())
-              .build();
-      cartLineDTOS.add(cartLineDTO);
+      productDTOS.add(productDTO);
     }
     totalFinalPrice = totalCost;
     // Find the appropriate discount
@@ -121,7 +120,7 @@ public class CartServiceImpl implements CartService {
           totalCost
               - (totalCost * ((double) bestDiscountForOrder.get().getDiscountPercent() / 100));
     }
-    cartDisplayDTO.setCartLineDTOS(cartLineDTOS);
+    cartDisplayDTO.setProductDTOS(productDTOS);
     cartDisplayDTO.setTotalItems(totalItems);
     cartDisplayDTO.setTotalCost(totalCost);
     cartDisplayDTO.setTotalFinalPrice(totalFinalPrice);

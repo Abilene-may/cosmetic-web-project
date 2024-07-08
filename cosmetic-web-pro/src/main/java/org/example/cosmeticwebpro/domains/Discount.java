@@ -1,6 +1,7 @@
 package org.example.cosmeticwebpro.domains;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +13,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -74,6 +74,7 @@ public class Discount {
   @Column(name = "discount_status")
   private String discountStatus;
 
+  @JsonIgnore
   @OneToMany(mappedBy = "discount")
   private Set<ProductDiscount> productDiscounts = new HashSet<>();
 }

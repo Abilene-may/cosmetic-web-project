@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.cosmeticwebpro.domains.Product;
 
 @Builder
 @Setter
@@ -14,6 +13,6 @@ import org.example.cosmeticwebpro.domains.Product;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductOverviewDTO {
-  private Product product;
+  private ProductDTO productDTO;
   private List<String> imageUrls;
 }

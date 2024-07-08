@@ -1,5 +1,6 @@
 package org.example.cosmeticwebpro.services.Impl;
 
+import jakarta.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -57,22 +58,25 @@ public class HomeServiceImpl implements HomeService {
   /*
   function view a product detail
    */
+  @Transactional
   @Override
   public ProductDisplayDTO viewAProductDetail(Long productId) throws CosmeticException {
     var productDisplayDTO = productService.getByProductId(productId);
-    var product = productDisplayDTO.getProduct();
+    var product = productDisplayDTO.getProductDTO();
     // check for hidden product
     if (product.getProductStatus().equals(Constants.PRODUCT_HIDDEN)) {
       throw new CosmeticException(
           ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN,
           ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN));
     }
+    var category = categoryService.getById(product.getCategoryId());
+    var brand = brandService.getById(product.getBrandId());
     // increase view when customers view the product
     var view = product.getCountView() + 1;
     product.setCountView(view);
-    productRepository.save(product);
+    productDisplayDTO.setCategory(category);
+    productDisplayDTO.setBrand(brand);
     return productDisplayDTO;
   }
-
 
 }

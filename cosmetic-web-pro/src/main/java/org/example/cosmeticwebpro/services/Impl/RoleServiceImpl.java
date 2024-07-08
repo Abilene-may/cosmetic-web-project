@@ -2,6 +2,7 @@ package org.example.cosmeticwebpro.services.Impl;
 
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -11,6 +12,7 @@ import org.example.cosmeticwebpro.domains.Role;
 import org.example.cosmeticwebpro.domains.RolePermission;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
+import org.example.cosmeticwebpro.mapper.MapStruct;
 import org.example.cosmeticwebpro.models.DisplayRoleDTO;
 import org.example.cosmeticwebpro.models.request.RoleAndPermissionReqDTO;
 import org.example.cosmeticwebpro.repositories.PermissionRepository;
@@ -25,6 +27,7 @@ public class RoleServiceImpl implements RoleService {
   private final RoleRepository roleRepository;
   private final PermissionRepository permissionRepository;
   private final RolePermissionRepository rolePermissionRepository;
+  private final MapStruct mapStruct;
 
   /*
   create a new role and permission of role
@@ -119,19 +122,12 @@ public class RoleServiceImpl implements RoleService {
   public List<DisplayRoleDTO> getAllRoleAndPermission() throws CosmeticException {
     // Fetch all roles
     List<Role> roles = roleRepository.findAll();
+    List<DisplayRoleDTO> displayRoleDTOs = new ArrayList<>();
 
-    // Convert roles to DisplayRoleDTO including permissions
-    List<DisplayRoleDTO> displayRoleDTOs = roles.stream().map(role -> {
-      // Fetch permissions related to the current role
-      var permissions = permissionRepository.findAllByRoleId(role.getId());
-
-      // Build and return DisplayRoleDTO
-      return DisplayRoleDTO.builder()
-          .role(role)
-          .permissions(permissions)
-          .build();
-    }).collect(Collectors.toList());
-
+    for(Role role: roles){
+      var displayRoleDTO = mapStruct.mapToDisplayRoleDTO(role);
+      displayRoleDTOs.add(displayRoleDTO);
+    }
     return displayRoleDTOs;
   }
 

@@ -3,6 +3,7 @@ package org.example.cosmeticwebpro.services.Impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.Address;
@@ -49,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
 
   // show detail an order
 
-//  Sai cần xem lại
+  //  Sai cần xem lại
   @Override
   public OrderDetailDTO showDetailAnOrder(Long orderId) throws CosmeticException {
     if (orderId == null) {
@@ -119,7 +120,7 @@ public class OrderServiceImpl implements OrderService {
 
     // Calculate the total cost (dummy data for order details here, you should fetch actual
     // products)
-    List<OrderDetail> orderDetailList = getOrderDetailsForUser(order.getId(), userId);
+    List<OrderDetail> orderDetailList = createOrderDetailsForUser(order.getId(), userId);
     // You should implement this method to fetch actual order details
     double totalCost = 0.0;
 
@@ -159,7 +160,7 @@ public class OrderServiceImpl implements OrderService {
     return null;
   }
 
-  private List<OrderDetail> getOrderDetailsForUser(Long orderId, Long userId)
+  private List<OrderDetail> createOrderDetailsForUser(Long orderId, Long userId)
       throws CosmeticException {
     List<OrderDetail> orderDetails = new ArrayList<>();
     // Implement this method to fetch actual order details for the user
@@ -167,17 +168,17 @@ public class OrderServiceImpl implements OrderService {
     var cartLines = cartLineRepository.findAllByUserId(userId);
     for (CartLine c : cartLines) {
       var productDetail = productService.getByProductId(c.getProductId());
-      var p = productDetail.getProduct();
+      var p = productDetail.getProductDTO();
       var i = productDetail.getProductImages();
       var productCost = p.getCurrentCost();
-      if (p.getDisCountId() != null) {
-        var discount = discountRepository.findById(p.getDisCountId());
-        if (discount.isEmpty()) {
-          throw new CosmeticException(
-              ExceptionUtils.DISCOUNT_NOT_FOUND,
-              ExceptionUtils.messages.get(ExceptionUtils.DISCOUNT_NOT_FOUND));
+      if (p.getProductDiscount() != null) {
+        var discount =
+            discountRepository.findByIdAndStatus(p.getProductDiscount().getId(), Constants.ACTIVE);
+        if (discount.isPresent()
+            & Objects.equals(discount.get().getDiscountStatus(), Constants.ACTIVE)) {
+          productCost =
+              productCost - productCost * ((double) discount.get().getDiscountPercent() / 100);
         }
-        productCost = productCost - productCost * ((double) discount.get().getDiscountPercent() / 100);
       }
       LocalDateTime today = LocalDateTime.now();
       OrderDetail orderDetail =

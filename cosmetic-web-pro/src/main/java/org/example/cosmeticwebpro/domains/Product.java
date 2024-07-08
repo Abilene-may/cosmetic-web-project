@@ -1,5 +1,6 @@
 package org.example.cosmeticwebpro.domains;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -63,12 +64,10 @@ public class Product {
     @Column(name = "brand_id")
     private Long brandId;
 
-    @Column(name = "discount_id")
-    private Long disCountId;
-
     @Column(name = "category_id")
     private Long categoryId;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product")
     private Set<ProductDiscount> productDiscounts = new HashSet<>();
 }

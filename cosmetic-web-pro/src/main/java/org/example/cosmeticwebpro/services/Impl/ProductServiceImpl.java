@@ -4,17 +4,24 @@ import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cosmeticwebpro.commons.Constants;
+import org.example.cosmeticwebpro.domains.Discount;
 import org.example.cosmeticwebpro.domains.Product;
+import org.example.cosmeticwebpro.domains.ProductDiscount;
 import org.example.cosmeticwebpro.domains.ProductImage;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
+import org.example.cosmeticwebpro.mapper.MapStruct;
 import org.example.cosmeticwebpro.models.ProductDisplayDTO;
 import org.example.cosmeticwebpro.models.ProductOverviewDTO;
 import org.example.cosmeticwebpro.models.request.ProductReqDTO;
+import org.example.cosmeticwebpro.models.request.ProductUpdateReqDTO;
+import org.example.cosmeticwebpro.repositories.DiscountRepository;
+import org.example.cosmeticwebpro.repositories.ProductDiscountRepository;
 import org.example.cosmeticwebpro.repositories.ProductRepository;
 import org.example.cosmeticwebpro.repositories.ProductReviewRepository;
 import org.example.cosmeticwebpro.services.CategoryService;
@@ -40,6 +47,9 @@ public class ProductServiceImpl implements ProductService {
   private final ProductImageService productImageService;
   private final ProductReviewRepository productReviewRepository;
   private final CategoryService categoryService;
+  private final MapStruct mapStruct;
+  private final ProductDiscountRepository productDiscountRepository;
+  private final DiscountRepository discountRepository;
 
   @Transactional
   @Override
@@ -89,7 +99,14 @@ public class ProductServiceImpl implements ProductService {
             .categoryId(productReqDTO.getCategoryId())
             .build();
     Product savedProduct = productRepository.save(product);
-
+    if (productReqDTO.getDiscountId() != null) {
+      ProductDiscount productDiscount =
+          ProductDiscount.builder()
+              .productId(savedProduct.getId())
+              .discountId(productReqDTO.getDiscountId())
+              .build();
+      productDiscountRepository.save(productDiscount);
+    }
     this.updateProductImage(multipartFiles, savedProduct.getId());
   }
 
@@ -98,10 +115,11 @@ public class ProductServiceImpl implements ProductService {
   public ProductDisplayDTO getByProductId(Long productId) throws CosmeticException {
     // find information of product
     var product = this.getById(productId);
+    var productDTO = mapStruct.mapToProductDTO(product);
     var productReviews = productReviewRepository.findAllByProductId(product.getId());
     var productImages = productImageService.getAllByProductId(productId);
     return ProductDisplayDTO.builder()
-        .product(product)
+        .productDTO(productDTO)
         .productImages(productImages)
         .productReviews(productReviews)
         .build();
@@ -141,10 +159,11 @@ public class ProductServiceImpl implements ProductService {
   @Transactional
   @Override
   public void updateProduct(
-      Product updatedProduct, MultipartFile[] multipartFiles, Long[] imageIdDelete)
+      ProductUpdateReqDTO updatedProduct, MultipartFile[] multipartFiles, Long[] imageIdDelete)
       throws CosmeticException, IOException {
     Product existingProduct = this.getById(updatedProduct.getId());
 
+    LocalDateTime today = LocalDateTime.now();
     existingProduct.setTitle(updatedProduct.getTitle());
     existingProduct.setDescription(updatedProduct.getDescription());
     existingProduct.setCurrentCost(updatedProduct.getCurrentCost());
@@ -152,13 +171,26 @@ public class ProductServiceImpl implements ProductService {
     existingProduct.setCapacity(updatedProduct.getCapacity());
     existingProduct.setQuantity(updatedProduct.getQuantity());
     existingProduct.setProductStatus(updatedProduct.getProductStatus());
-    existingProduct.setCountView(updatedProduct.getCountView());
-    existingProduct.setCountPurchase(updatedProduct.getCountPurchase());
-    existingProduct.setModifiedDate(updatedProduct.getModifiedDate());
-    existingProduct.setDisCountId(updatedProduct.getDisCountId());
+    existingProduct.setModifiedDate(today);
     existingProduct.setBrandId(updatedProduct.getBrandId());
     existingProduct.setCategoryId(updatedProduct.getCategoryId());
+    if (updatedProduct.getDiscountId() != null) {
+      // find old discount that is still active
+      var productDiscounts = productDiscountRepository.findAllByProductId(updatedProduct.getId());
+      // delete old discount that is still active
+      var findOldDiscount =
+          discountRepository.findByListDiscountIdAndStatus(productDiscounts, Constants.ACTIVE);
+      var deleteOldDiscount =
+          productDiscountRepository.findByDiscountId(findOldDiscount.get().getId());
+      productDiscountRepository.delete(deleteOldDiscount.get());
 
+      ProductDiscount productDiscount =
+          ProductDiscount.builder()
+              .productId(existingProduct.getId())
+              .discountId(updatedProduct.getDiscountId())
+              .build();
+      productDiscountRepository.save(productDiscount);
+    }
     this.updateProductImage(multipartFiles, existingProduct.getId());
     var product = productRepository.save(existingProduct);
 
@@ -200,20 +232,24 @@ public class ProductServiceImpl implements ProductService {
 
   @Transactional
   @Override
-  public List<ProductOverviewDTO> productOverviewDTOS(List<Product> products){
+  public List<ProductOverviewDTO> productOverviewDTOS(List<Product> products) {
     // Map product IDs to their images
-    Map<Long, List<ProductImage>> productImagesMap = productImageService.getAll()
-        .stream()
-        .collect(Collectors.groupingBy(ProductImage::getProductId));
+    Map<Long, List<ProductImage>> productImagesMap =
+        productImageService.getAll().stream()
+            .collect(Collectors.groupingBy(ProductImage::getProductId));
     // Create a list of ProductOverviewDTO
     List<ProductOverviewDTO> productOverviewDTOs = new ArrayList<>();
 
     for (Product product : products) {
-      List<String> imageUrls = productImagesMap.getOrDefault(product.getId(), Collections.emptyList())
-          .stream()
-          .map(ProductImage::getImageUrl)
-          .collect(Collectors.toList());
-      productOverviewDTOs.add(new ProductOverviewDTO(product, imageUrls));
+      var p = product.getProductDiscounts();
+      var productDTO = mapStruct.mapToProductDTO(product);
+      var discount = getDiscountActiveForProduct(productDTO.getId());
+      productDTO.setProductDiscount(discount);
+      List<String> imageUrls =
+          productImagesMap.getOrDefault(product.getId(), Collections.emptyList()).stream()
+              .map(ProductImage::getImageUrl)
+              .collect(Collectors.toList());
+      productOverviewDTOs.add(new ProductOverviewDTO(productDTO, imageUrls));
     }
     return productOverviewDTOs;
   }
@@ -246,5 +282,17 @@ public class ProductServiceImpl implements ProductService {
           ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_ID_IS_NOT_EXIST));
     }
     return product.get();
+  }
+
+  @Override
+  public Discount getDiscountActiveForProduct(Long productId) {
+    var productDiscounts = productDiscountRepository.findAllByProductId(productId);
+    if (productDiscounts.isEmpty()) {
+      return null;
+    }
+    // Check to see which discount codes work
+    var discount =
+        discountRepository.findByListDiscountIdAndStatus(productDiscounts, Constants.ACTIVE);
+    return discount.get();
   }
 }

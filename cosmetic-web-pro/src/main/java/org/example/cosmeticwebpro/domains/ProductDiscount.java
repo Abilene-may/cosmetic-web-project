@@ -1,5 +1,6 @@
 package org.example.cosmeticwebpro.domains;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,18 +34,18 @@ public class ProductDiscount {
   @Column(name = "id")
   private Long id;
 
-  @NonNull
   @Column(name = "product_id")
   private Long productId;
 
-  @NonNull
   @Column(name = "discount_id")
   private Long discountId;
 
+  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "product_id", insertable = false, updatable = false)
   private Product product;
 
+  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "discount_id", insertable = false, updatable = false)
   private Discount discount;

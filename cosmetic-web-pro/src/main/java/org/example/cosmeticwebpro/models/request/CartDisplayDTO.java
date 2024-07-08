@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.cosmeticwebpro.domains.Discount;
-import org.example.cosmeticwebpro.models.CartLineDTO;
+import org.example.cosmeticwebpro.models.ProductDTO;
 
 @Builder
 @Setter
@@ -15,7 +15,7 @@ import org.example.cosmeticwebpro.models.CartLineDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartDisplayDTO {
-  private List<CartLineDTO> cartLineDTOS;
+  private List<ProductDTO> productDTOS;
 
   private Discount discount;
 

@@ -6,7 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.cosmeticwebpro.domains.Product;
+import org.example.cosmeticwebpro.domains.Brand;
+import org.example.cosmeticwebpro.domains.Category;
 import org.example.cosmeticwebpro.domains.ProductImage;
 import org.example.cosmeticwebpro.domains.ProductReview;
 
@@ -16,9 +17,9 @@ import org.example.cosmeticwebpro.domains.ProductReview;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDisplayDTO {
-  private Product product;
-
+  private ProductDTO productDTO;
+  private Category category;
+  private Brand brand;
   private List<ProductImage> productImages;
-
   private List<ProductReview> productReviews;
 }

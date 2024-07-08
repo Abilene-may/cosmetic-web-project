@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.cosmeticwebpro.domains.Discount;
 
 @Builder
 @Setter
@@ -12,11 +13,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartLineDTO {
+  private Long productId;
   private String imageUrl;
-
   private String title;
-
   private double price;
-
   private Integer quantity;
+  private Discount productDiscount;
 }

@@ -41,7 +41,7 @@ public class DiscountServiceImpl implements DiscountService {
     // Associate productIdList with ProductDiscount entities
     for (Long productId : discountReqDTO.getProductIdList()) {
       ProductDiscount productDiscount = new ProductDiscount();
-      productDiscount.setDiscount(discount);
+      productDiscount.setDiscountId(discount.getId());
       productDiscount.setProductId(productId);
       // You may want to set other fields in ProductDiscount if needed
       productDiscountRepository.save(productDiscount);
@@ -62,7 +62,7 @@ public class DiscountServiceImpl implements DiscountService {
     // Associate productIdList with ProductDiscount entities
     for (Long productId : productIdList) {
       ProductDiscount productDiscount = new ProductDiscount();
-      productDiscount.setDiscount(discount);
+      productDiscount.setDiscountId(discount.getId());
       productDiscount.setProductId(productId);
       // You may want to set other fields in ProductDiscount if needed
       productDiscountRepository.save(productDiscount);
