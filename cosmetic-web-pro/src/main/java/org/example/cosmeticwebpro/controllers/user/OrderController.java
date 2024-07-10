@@ -2,11 +2,9 @@ package org.example.cosmeticwebpro.controllers.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cosmeticwebpro.domains.Address;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.common.ErrorDTO;
-import org.example.cosmeticwebpro.models.request.AddressReqDTO;
 import org.example.cosmeticwebpro.models.request.OrderReqDTO;
 import org.example.cosmeticwebpro.services.OrderService;
 import org.springframework.http.HttpStatus;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -66,8 +65,7 @@ public class OrderController {
   @PostMapping("/create")
   public ResponseEntity<Object> createAnAddress(@RequestBody OrderReqDTO orderReqDTO) {
     try {
-      var order =
-          orderService.createAnOrder(orderReqDTO);
+      var order = orderService.createAnOrder(orderReqDTO);
       return new ResponseEntity<>(order, HttpStatus.OK);
     } catch (CosmeticException e) {
       return new ResponseEntity<>(
@@ -81,10 +79,11 @@ public class OrderController {
   }
 
   // cancel an order
-  @PutMapping("/cancel/{orderId}")
-  public ResponseEntity<Object> CancelAnOrder(@PathVariable Long orderId) {
+  @PutMapping("/cancel")
+  public ResponseEntity<Object> CancelAnOrder(
+      @RequestParam Long orderId, @RequestParam String status) {
     try {
-      var order = orderService.cancelAnOrder(orderId);
+      var order = orderService.updateStatusAnOrderForUser(orderId, status);
       return new ResponseEntity<>(order, HttpStatus.OK);
     } catch (CosmeticException e) {
       return new ResponseEntity<>(

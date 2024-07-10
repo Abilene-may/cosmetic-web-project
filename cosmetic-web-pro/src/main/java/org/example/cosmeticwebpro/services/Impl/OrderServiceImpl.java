@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.example.cosmeticwebpro.commons.Constants;
@@ -73,10 +74,6 @@ public class OrderServiceImpl implements OrderService {
         .totalAmount(totalAmount)
         .build();
   }
-
-  // update status of an order
-  @Override
-  public void updateStatusOfAnOrder(Long orderId) throws CosmeticException {}
 
   // create an order for a user
   @Transactional
@@ -154,13 +151,45 @@ public class OrderServiceImpl implements OrderService {
     return orderDetailDTO;
   }
 
-  // cancel an order
+  // update status an order for a user
   @Transactional
   @Override
-  public Order cancelAnOrder(Long orderId) throws CosmeticException {
+  public Order updateStatusAnOrderForUser(Long orderId, String newStatus) throws CosmeticException {
+    // Fetch the current order
     var order = this.getByOrderId(orderId);
-    order.setStatus(Constants.ORDER_CANCELLED);
-    return order;
+    String currentOrderStatus = order.getStatus();
+
+    // Define valid status transitions for user updates
+    Map<String, List<String>> validStatusCancel = Map.of(
+        Constants.ORDER_PLACED_SUCCESS, List.of(Constants.ORDER_CANCELLED),
+        Constants.SELLER_PREPARING_ORDER, List.of(Constants.ORDER_CANCELLED),
+        Constants.IN_TRANSIT, List.of(),
+        Constants.DELIVERY_SUCCESSFUL, List.of(Constants.ORDER_RECEIVED, Constants.RETURNED_AND_REFUNDED),
+        Constants.DELIVERY_FAILED, List.of(),
+        Constants.ORDER_RECEIVED, List.of(),
+        Constants.RETURNED_AND_REFUNDED, List.of(),
+        Constants.ORDER_CANCELLED, List.of()
+    );
+
+    // Check if the new status is one of the allowed statuses for user updates
+    if (!newStatus.equals(Constants.ORDER_CANCELLED)
+        && !newStatus.equals(Constants.ORDER_RECEIVED)
+        && !newStatus.equals(Constants.RETURNED_AND_REFUNDED)) {
+      throw new CosmeticException(
+          ExceptionUtils.NOT_PERMISSION,
+          ExceptionUtils.messages.get(ExceptionUtils.NOT_PERMISSION));
+    }
+
+    // Check if the transition is valid
+    if (!validStatusCancel.getOrDefault(currentOrderStatus, List.of()).contains(newStatus)) {
+      throw new CosmeticException(
+          ExceptionUtils.NOT_PERMISSION,
+          ExceptionUtils.messages.get(ExceptionUtils.NOT_PERMISSION));
+    }
+
+    // Update the order status
+    order.setStatus(newStatus);
+    return orderRepository.save(order);
   }
 
   @Transactional

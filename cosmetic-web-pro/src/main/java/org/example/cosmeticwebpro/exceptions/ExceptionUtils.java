@@ -55,6 +55,7 @@ public class ExceptionUtils {
   public static final String ORDER_NOT_FOUND = "ORDER_NOT_FOUND";
   public static final String ORDER_ERROR_1 = "ORDER_ERROR_1";
   public static final String ORDER_ERROR_2 = "ORDER_ERROR_2";
+  public static final String NOT_PERMISSION = "NOT_PERMISSION";
 
   public static Map<String, String> messages;
 
@@ -126,5 +127,6 @@ public class ExceptionUtils {
         "Không tìm thấy thông tin đơn hàng hoặc đơn hàng không tồn tại.");
     messages.put(ExceptionUtils.ORDER_ERROR_1, "orderId không được bỏ trống.");
     messages.put(ExceptionUtils.ORDER_ERROR_2, "userId và addressId không được bỏ trống.");
+    messages.put(ExceptionUtils.NOT_PERMISSION, "Không có quyền.");
   }
 }

@@ -53,13 +53,6 @@ public class HomeServiceImpl implements HomeService {
         .build();
   }
 
-  public List<Product> checkNullPointer(List<Product> productList) {
-    if (productList == null) {
-      return Collections.emptyList();
-    }
-    return productList;
-  }
-
   /*
   function view a product detail
    */
