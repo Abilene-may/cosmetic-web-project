@@ -56,6 +56,7 @@ public class ExceptionUtils {
   public static final String ORDER_ERROR_1 = "ORDER_ERROR_1";
   public static final String ORDER_ERROR_2 = "ORDER_ERROR_2";
   public static final String NOT_PERMISSION = "NOT_PERMISSION";
+  public static final String INVALID_STATUS_TRANSITION = "INVALID_STATUS_TRANSITION";
 
   public static Map<String, String> messages;
 
@@ -128,5 +129,6 @@ public class ExceptionUtils {
     messages.put(ExceptionUtils.ORDER_ERROR_1, "orderId không được bỏ trống.");
     messages.put(ExceptionUtils.ORDER_ERROR_2, "userId và addressId không được bỏ trống.");
     messages.put(ExceptionUtils.NOT_PERMISSION, "Không có quyền.");
+    messages.put(ExceptionUtils.INVALID_STATUS_TRANSITION, "Chuyển trạng thái không hợp lệ.");
   }
 }

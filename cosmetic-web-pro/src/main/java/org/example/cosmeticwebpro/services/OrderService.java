@@ -14,4 +14,8 @@ public interface OrderService {
   OrderDetailDTO createAnOrder(OrderReqDTO orderReqDTO) throws CosmeticException;
 
   Order updateStatusAnOrderForUser(Long orderId, String status) throws CosmeticException;
+
+  List<Order> searchOrderByStatusForAdmin(String orderStatus) throws CosmeticException;
+
+  Order updateStatusAnOrderForAdmin(Long orderId, String status) throws CosmeticException;
 }

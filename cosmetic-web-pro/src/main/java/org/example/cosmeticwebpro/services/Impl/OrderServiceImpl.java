@@ -14,7 +14,6 @@ import org.example.cosmeticwebpro.domains.OrderDetail;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.OrderDetailDTO;
-import org.example.cosmeticwebpro.models.OrderReviewDTO;
 import org.example.cosmeticwebpro.models.request.OrderReqDTO;
 import org.example.cosmeticwebpro.repositories.CartLineRepository;
 import org.example.cosmeticwebpro.repositories.DiscountRepository;
@@ -160,16 +159,17 @@ public class OrderServiceImpl implements OrderService {
     String currentOrderStatus = order.getStatus();
 
     // Define valid status transitions for user updates
-    Map<String, List<String>> validStatusCancel = Map.of(
-        Constants.ORDER_PLACED_SUCCESS, List.of(Constants.ORDER_CANCELLED),
-        Constants.SELLER_PREPARING_ORDER, List.of(Constants.ORDER_CANCELLED),
-        Constants.IN_TRANSIT, List.of(),
-        Constants.DELIVERY_SUCCESSFUL, List.of(Constants.ORDER_RECEIVED, Constants.RETURNED_AND_REFUNDED),
-        Constants.DELIVERY_FAILED, List.of(),
-        Constants.ORDER_RECEIVED, List.of(),
-        Constants.RETURNED_AND_REFUNDED, List.of(),
-        Constants.ORDER_CANCELLED, List.of()
-    );
+    Map<String, List<String>> validStatusCancel =
+        Map.of(
+            Constants.ORDER_PLACED_SUCCESS, List.of(Constants.ORDER_CANCELLED),
+            Constants.SELLER_PREPARING_ORDER, List.of(Constants.ORDER_CANCELLED),
+            Constants.IN_TRANSIT, List.of(),
+            Constants.DELIVERY_SUCCESSFUL,
+                List.of(Constants.ORDER_RECEIVED, Constants.RETURNED_AND_REFUNDED),
+            Constants.DELIVERY_FAILED, List.of(),
+            Constants.ORDER_RECEIVED, List.of(),
+            Constants.RETURNED_AND_REFUNDED, List.of(),
+            Constants.ORDER_CANCELLED, List.of());
 
     // Check if the new status is one of the allowed statuses for user updates
     if (!newStatus.equals(Constants.ORDER_CANCELLED)
@@ -190,6 +190,15 @@ public class OrderServiceImpl implements OrderService {
     // Update the order status
     order.setStatus(newStatus);
     return orderRepository.save(order);
+  }
+
+  @Override
+  public List<Order> searchOrderByStatusForAdmin(String orderStatus) throws CosmeticException {
+    if (orderStatus == null || orderStatus.isEmpty()) {
+      return orderRepository.findAll();
+    }
+    // otherwise, filter orders by the given status
+    return orderRepository.findAllByStatus(orderStatus);
   }
 
   @Transactional
@@ -242,5 +251,62 @@ public class OrderServiceImpl implements OrderService {
           ExceptionUtils.messages.get(ExceptionUtils.ORDER_NOT_FOUND));
     }
     return order.get();
+  }
+
+  @Transactional
+  @Override
+  public Order updateStatusAnOrderForAdmin(Long orderId, String newStatus)
+      throws CosmeticException {
+    // Fetch the order
+    Order order = this.getByOrderId(orderId);
+
+    // Get current status
+    List<String> allowedStatuses = checkAllowesStatus(order);
+    if (allowedStatuses == null || !allowedStatuses.contains(newStatus)) {
+      throw new CosmeticException(
+          ExceptionUtils.INVALID_STATUS_TRANSITION,
+          ExceptionUtils.messages.get(ExceptionUtils.INVALID_STATUS_TRANSITION));
+    }
+
+    // Update the status
+    order.setStatus(newStatus);
+
+    // Update shipping_date when status changes to IN_TRANSIT
+    if (newStatus.equals(Constants.IN_TRANSIT)) {
+      order.setShippingDate(LocalDateTime.now());
+    }
+
+    // Update compilation_date when status changes to ORDER_RECEIVED, DELIVERY_FAILED, or
+    // RETURNED_AND_REFUNDED
+    if (newStatus.equals(Constants.ORDER_RECEIVED)
+        || newStatus.equals(Constants.DELIVERY_FAILED)
+        || newStatus.equals(Constants.RETURNED_AND_REFUNDED)) {
+      order.setCompletionDate(LocalDateTime.now());
+    }
+
+    order = orderRepository.save(order);
+
+    return order;
+  }
+
+  private static List<String> checkAllowesStatus(Order order) {
+    String currentStatus = order.getStatus();
+
+    Map<String, List<String>> validStatusTransitions =
+        Map.of(
+            Constants.ORDER_PLACED_SUCCESS,
+            List.of(Constants.SELLER_PREPARING_ORDER, Constants.ORDER_CANCELLED),
+            Constants.SELLER_PREPARING_ORDER,
+            List.of(Constants.IN_TRANSIT, Constants.ORDER_CANCELLED),
+            Constants.IN_TRANSIT, List.of(Constants.DELIVERY_SUCCESSFUL, Constants.DELIVERY_FAILED),
+            Constants.DELIVERY_SUCCESSFUL, List.of(Constants.ORDER_RECEIVED),
+            Constants.DELIVERY_FAILED, List.of(Constants.RETURNED_AND_REFUNDED),
+            Constants.ORDER_RECEIVED, List.of(),
+            Constants.RETURNED_AND_REFUNDED, List.of(),
+            Constants.ORDER_CANCELLED, List.of());
+
+    // Check if the new status is a valid transition
+    List<String> allowedStatuses = validStatusTransitions.get(currentStatus);
+    return allowedStatuses;
   }
 }

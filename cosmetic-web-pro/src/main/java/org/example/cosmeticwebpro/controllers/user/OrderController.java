@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/order")
+@RequestMapping("user/order")
 public class OrderController {
   private final OrderService orderService;
 
@@ -78,9 +78,9 @@ public class OrderController {
     }
   }
 
-  // cancel an order
-  @PutMapping("/cancel")
-  public ResponseEntity<Object> CancelAnOrder(
+  // update status an order for a user
+  @PutMapping("/update-status")
+  public ResponseEntity<Object> updateStatusAnOrderForUser(
       @RequestParam Long orderId, @RequestParam String status) {
     try {
       var order = orderService.updateStatusAnOrderForUser(orderId, status);

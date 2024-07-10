@@ -69,7 +69,7 @@ public class Order {
   private LocalDateTime shippingDate;
 
   @Column(name = "complition_date")
-  private LocalDateTime complitionDate;
+  private LocalDateTime completionDate;
 
   @Column(name = "user_id")
   private Long userId;
