@@ -86,6 +86,7 @@ public class CartServiceImpl implements CartService {
               .orElseThrow(() -> new CosmeticException("Product not found with id: " + productId));
       var cartLineDTO = mapStruct.mapToCartLineDTO(product);
       var discount = productService.getDiscountActiveForProduct(cartLineDTO.getProductId());
+      cartLineDTO.setProductId(product.getId());
       cartLineDTO.setPrice(product.getCurrentCost());
       cartLineDTO.setQuantity(cartLine.getQuantity());
       cartLineDTO.setProductDiscount(discount);
@@ -188,7 +189,7 @@ public class CartServiceImpl implements CartService {
   // clear all product in a cart for user
   @Override
   public void clearCartLine(Long userId) throws CosmeticException {
-    var cart  = this.getCartByUserId(userId);
+    var cart = this.getCartByUserId(userId);
     var cartLines = cartLineRepository.findAllByCartId(cart.getId());
     cartLineRepository.deleteAll(cartLines);
   }
