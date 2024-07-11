@@ -11,7 +11,7 @@ public interface CartLineRepository extends JpaRepository<CartLine, Long>,
     JpaSpecificationExecutor<Long> {
 
   @Query(
-      value = "select * from cart_line where cart_id = :cartId order by modified_date",
+      value = "select * from cart_line where cart_id = :cartId order by modified_date desc ",
       nativeQuery = true)
   List<CartLine> findAllByCartId(Long cartId);
 
