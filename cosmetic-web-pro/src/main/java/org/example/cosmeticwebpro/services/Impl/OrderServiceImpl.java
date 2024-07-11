@@ -79,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
   @Override
   public OrderDetailDTO createAnOrder(OrderReqDTO orderReqDTO) throws CosmeticException {
     var address = orderReqDTO.getAddress();
-    if (orderReqDTO.getUserId() == null || address.getId() == null) {
+    if (orderReqDTO.getUserId() == null ) {
       throw new CosmeticException(
           ExceptionUtils.ORDER_ERROR_2, ExceptionUtils.messages.get(ExceptionUtils.ORDER_ERROR_2));
     }

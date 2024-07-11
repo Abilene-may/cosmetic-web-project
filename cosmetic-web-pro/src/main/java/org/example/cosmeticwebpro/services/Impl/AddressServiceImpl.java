@@ -50,17 +50,18 @@ public class AddressServiceImpl implements AddressService {
   update an address
    */
   @Override
-  public void updateAddress(Address addressReq) throws CosmeticException {
+  public void updateAddress(Address address) throws CosmeticException {
     // check the address has to exist
-    var address = this.getAddressById(addressReq.getId());
+    this.getAddressById(address.getId());
     // check required fields
     checkNullField(
-        addressReq.getFullName(),
-        addressReq.getPhoneNumber(),
-        addressReq.getProvinceName(),
-        addressReq.getDistrictName(),
-        addressReq.getWardName(),
-        addressReq.getUserId());
+        address.getFullName(),
+        address.getPhoneNumber(),
+        address.getProvinceName(),
+        address.getDistrictName(),
+        address.getWardName(),
+        address.getUserId());
+    addressRepository.save(address);
   }
 
   private void checkNullField(
@@ -100,5 +101,8 @@ public class AddressServiceImpl implements AddressService {
   }
 
   @Override
-  public void deleteAddress(Long addressId) throws CosmeticException {}
+  public void deleteAddress(Long addressId) throws CosmeticException {
+    var address = this.getAddressById(addressId);
+    addressRepository.delete(address);
+  }
 }

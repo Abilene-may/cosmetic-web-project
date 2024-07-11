@@ -11,6 +11,7 @@ import org.example.cosmeticwebpro.services.AddressService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,10 +47,10 @@ public class AddressController {
     }
   }
   /**
-   * API update all prodcut status
+   * API update all product status
    */
   @PutMapping("/update")
-  private ResponseEntity<Object> updateAnAddress(Address address){
+  private ResponseEntity<Object> updateAnAddress(@RequestBody Address address){
     try {
       addressService.updateAddress(address);
       return new ResponseEntity<>( HttpStatus.OK);
@@ -91,6 +92,25 @@ public class AddressController {
     try {
       var addressList = addressService.getAllAddress(userId);
       return new ResponseEntity<>(addressList, HttpStatus.OK);
+    } catch (CosmeticException e) {
+      return new ResponseEntity<>(
+          new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+    } catch (Exception ex) {
+      log.error(ex.getMessage(), ex);
+      return new ResponseEntity<>(
+          ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  /**
+   * API delete an address
+   */
+  @DeleteMapping("/delete/{addressId}")
+  public ResponseEntity<Object> deleteAnAddress(@PathVariable Long addressId){
+    try {
+      addressService.deleteAddress(addressId);
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     } catch (CosmeticException e) {
       return new ResponseEntity<>(
           new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);

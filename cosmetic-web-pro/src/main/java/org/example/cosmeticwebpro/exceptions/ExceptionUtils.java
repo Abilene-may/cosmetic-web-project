@@ -127,7 +127,7 @@ public class ExceptionUtils {
         ExceptionUtils.ORDER_NOT_FOUND,
         "Không tìm thấy thông tin đơn hàng hoặc đơn hàng không tồn tại.");
     messages.put(ExceptionUtils.ORDER_ERROR_1, "orderId không được bỏ trống.");
-    messages.put(ExceptionUtils.ORDER_ERROR_2, "userId và addressId không được bỏ trống.");
+    messages.put(ExceptionUtils.ORDER_ERROR_2, "userId không được bỏ trống.");
     messages.put(ExceptionUtils.NOT_PERMISSION, "Không có quyền.");
     messages.put(ExceptionUtils.INVALID_STATUS_TRANSITION, "Chuyển trạng thái không hợp lệ.");
   }

@@ -52,8 +52,8 @@ public class UserController {
   @PutMapping("/update")
   public ResponseEntity<Object> updateUser(@RequestBody UserReqDTO userReqDTO){
     try{
-      userService.updateUser(userReqDTO);
-      return new ResponseEntity<>(HttpStatus.OK);
+      var user = userService.updateUser(userReqDTO);
+      return new ResponseEntity<>(user, HttpStatus.OK);
     } catch (CosmeticException e){
       return new ResponseEntity<>(
           new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);

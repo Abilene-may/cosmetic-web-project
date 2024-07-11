@@ -39,8 +39,8 @@ public class UserServiceImpl implements UserService {
    */
   @Transactional
   @Override
-  public void updateUser(UserReqDTO userReqDTO) throws CosmeticException {
-    this.viewDetailAUser(userReqDTO.getUserId());
+  public User updateUser(UserReqDTO userReqDTO) throws CosmeticException {
+    var updateUser = this.viewDetailAUser(userReqDTO.getUserId());
     if (userReqDTO.getPassword().isBlank()) {
       throw new CosmeticException(
           ExceptionUtils.SIGNUP_ERROR_NULL_2,
@@ -53,7 +53,6 @@ public class UserServiceImpl implements UserService {
           ExceptionUtils.USERNAME_HAS_ALREADY,
           ExceptionUtils.messages.get(ExceptionUtils.USERNAME_HAS_ALREADY));
     }
-    User updateUser = new User();
     updateUser.setFirstName(userReqDTO.getFirstName());
     updateUser.setLastName(userReqDTO.getLastName());
     updateUser.setUserName(userReqDTO.getUserName());
@@ -64,6 +63,7 @@ public class UserServiceImpl implements UserService {
       updateUser.setRequestDate(userReqDTO.getRequestDate());
     }
     userRepository.save(updateUser);
+    return updateUser;
   }
 
   @Override

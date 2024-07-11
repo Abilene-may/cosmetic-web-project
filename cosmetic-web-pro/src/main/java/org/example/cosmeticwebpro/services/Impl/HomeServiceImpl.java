@@ -12,6 +12,7 @@ import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.HomeDisplayDTO;
 import org.example.cosmeticwebpro.models.ProductDisplayDTO;
+import org.example.cosmeticwebpro.models.ProductOverviewDTO;
 import org.example.cosmeticwebpro.repositories.ProductRepository;
 import org.example.cosmeticwebpro.services.BrandService;
 import org.example.cosmeticwebpro.services.CartService;
@@ -79,5 +80,11 @@ public class HomeServiceImpl implements HomeService {
     var view = product.getCountView() + 1;
     product.setCountView(view);
     return productDisplayDTO;
+  }
+
+  @Override
+  public List<ProductOverviewDTO> filterProducts(String titleProduct, String categoryName,
+      String sortCode) throws CosmeticException {
+    return List.of();
   }
 }

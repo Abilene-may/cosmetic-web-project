@@ -8,7 +8,7 @@ import org.example.cosmeticwebpro.models.request.AddressReqDTO;
 public interface AddressService {
   Address createAddress(AddressReqDTO addressReqDTO) throws CosmeticException;
 
-  void updateAddress(Address addressReq) throws CosmeticException;
+  void updateAddress(Address address) throws CosmeticException;
 
   List<Address> getAllAddress(Long userId) throws CosmeticException;
 

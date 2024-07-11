@@ -7,7 +7,7 @@ import org.example.cosmeticwebpro.models.request.UserReqDTO;
 public interface UserService {
   User viewDetailAUser(Long userId) throws CosmeticException;
 
-  void updateUser(UserReqDTO userReqDTO) throws CosmeticException;
+  User updateUser(UserReqDTO userReqDTO) throws CosmeticException;
 
   void requestDeleteAccount(Long userId) throws CosmeticException;
 
