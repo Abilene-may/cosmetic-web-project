@@ -13,6 +13,7 @@ import org.example.cosmeticwebpro.domains.Order;
 import org.example.cosmeticwebpro.domains.OrderDetail;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
+import org.example.cosmeticwebpro.models.DisplayOrderDTO;
 import org.example.cosmeticwebpro.models.OrderDetailDTO;
 import org.example.cosmeticwebpro.models.request.OrderReqDTO;
 import org.example.cosmeticwebpro.repositories.CartLineRepository;
@@ -54,7 +55,7 @@ public class OrderServiceImpl implements OrderService {
 
   //  Sai cần xem lại
   @Override
-  public OrderDetailDTO showDetailAnOrder(Long orderId) throws CosmeticException {
+  public DisplayOrderDTO showDetailAnOrder(Long orderId) throws CosmeticException {
     if (orderId == null) {
       throw new CosmeticException(
           ExceptionUtils.ORDER_ERROR_1, ExceptionUtils.messages.get(ExceptionUtils.ORDER_ERROR_1));
@@ -62,16 +63,17 @@ public class OrderServiceImpl implements OrderService {
     var order = this.getByOrderId(orderId);
     var orderDetailList = orderDetailRepository.findAllByOrderId(orderId);
 
+    DisplayOrderDTO displayOrderDTO = new DisplayOrderDTO();
     // Calculate total amount of the order
-    double totalAmount =
-        orderDetailList.stream()
-            .mapToDouble(od -> od.getProductCost() * od.getQuantity() - od.getDiscountProduct())
-            .sum();
-    return OrderDetailDTO.builder()
-        .order(order)
-        .orderDetail(orderDetailList)
-        .totalAmount(totalAmount)
-        .build();
+    double totalAmount = order.getTotalCost();
+    if(order.getDiscountOrder() != null){
+      totalAmount = totalAmount - totalAmount*order.getDiscountOrder();
+    }
+    displayOrderDTO.setOrder(order);
+    displayOrderDTO.setOrderDetail(orderDetailList);
+    displayOrderDTO.setDiscountPercent(order.getDiscountOrder());
+    displayOrderDTO.setTotalAmount(totalAmount);
+    return displayOrderDTO;
   }
 
   // create an order for a user
@@ -261,7 +263,7 @@ public class OrderServiceImpl implements OrderService {
     Order order = this.getByOrderId(orderId);
 
     // Get current status
-    List<String> allowedStatuses = checkAllowesStatus(order);
+    List<String> allowedStatuses = checkAllowStatus(order);
     if (allowedStatuses == null || !allowedStatuses.contains(newStatus)) {
       throw new CosmeticException(
           ExceptionUtils.INVALID_STATUS_TRANSITION,
@@ -289,7 +291,7 @@ public class OrderServiceImpl implements OrderService {
     return order;
   }
 
-  private static List<String> checkAllowesStatus(Order order) {
+  private static List<String> checkAllowStatus(Order order) {
     String currentStatus = order.getStatus();
 
     Map<String, List<String>> validStatusTransitions =
