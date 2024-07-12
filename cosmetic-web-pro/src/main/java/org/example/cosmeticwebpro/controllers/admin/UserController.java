@@ -47,6 +47,25 @@ public class UserController {
   }
 
   /**
+   * API show detail a user
+   */
+  @GetMapping("/get-all")
+  public ResponseEntity<Object> getAll(){
+    try {
+      var userList = userService.getAll();
+      return new ResponseEntity<>(userList, HttpStatus.OK);
+    } catch (CosmeticException e) {
+      return new ResponseEntity<>(
+          new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+    } catch (Exception ex) {
+      log.error(ex.getMessage(), ex);
+      return new ResponseEntity<>(
+          ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  /**
    * update a user
    */
   @PutMapping("/update")

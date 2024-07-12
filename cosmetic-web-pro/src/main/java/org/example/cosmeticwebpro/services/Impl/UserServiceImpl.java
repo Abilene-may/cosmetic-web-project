@@ -2,6 +2,7 @@ package org.example.cosmeticwebpro.services.Impl;
 
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cosmeticwebpro.domains.User;
@@ -61,6 +62,11 @@ public class UserServiceImpl implements UserService {
     }
     userRepository.save(updateUser);
     return updateUser;
+  }
+
+  @Override
+  public List<User> getAll() throws CosmeticException {
+    return userRepository.findAll();
   }
 
   @Override
