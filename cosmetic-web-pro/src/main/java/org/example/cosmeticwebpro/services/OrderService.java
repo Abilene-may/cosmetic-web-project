@@ -19,4 +19,6 @@ public interface OrderService {
   List<Order> searchOrderByStatusForAdmin(String orderStatus) throws CosmeticException;
 
   Order updateStatusAnOrderForAdmin(Long orderId, String status) throws CosmeticException;
+
+  Order getByOrderId(Long orderId) throws CosmeticException;
 }

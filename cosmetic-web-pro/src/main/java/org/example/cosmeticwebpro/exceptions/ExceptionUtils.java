@@ -58,6 +58,10 @@ public class ExceptionUtils {
   public static final String NOT_PERMISSION = "NOT_PERMISSION";
   public static final String INVALID_STATUS_TRANSITION = "INVALID_STATUS_TRANSITION";
 
+  // product review
+  public static final String PRODUCT_REVIEW_NOT_FOUND = "PRODUCT_REVIEW_NOT_FOUND";
+  public static final String PRODUCT_REVIEW_ERROR_1 = "PRODUCT_REVIEW_ERROR_1";
+
   public static Map<String, String> messages;
 
   static {
@@ -130,5 +134,12 @@ public class ExceptionUtils {
     messages.put(ExceptionUtils.ORDER_ERROR_2, "userId không được bỏ trống.");
     messages.put(ExceptionUtils.NOT_PERMISSION, "Không có quyền.");
     messages.put(ExceptionUtils.INVALID_STATUS_TRANSITION, "Chuyển trạng thái không hợp lệ.");
+
+    // product review
+    messages.put(
+        ExceptionUtils.PRODUCT_REVIEW_NOT_FOUND,
+        "Không tìm thấy đánh giá hoặc đánh giá không tồn tại.");
+    messages.put(
+        ExceptionUtils.PRODUCT_REVIEW_ERROR_1, "Đơn hàng chưa hoàn thành không thể đánh giá.");
   }
 }

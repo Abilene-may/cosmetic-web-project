@@ -245,7 +245,8 @@ public class OrderServiceImpl implements OrderService {
     return orderDetails;
   }
 
-  private Order getByOrderId(Long orderId) throws CosmeticException {
+  @Override
+  public Order getByOrderId(Long orderId) throws CosmeticException {
     var order = orderRepository.findById(orderId);
     if (order.isEmpty()) {
       throw new CosmeticException(
