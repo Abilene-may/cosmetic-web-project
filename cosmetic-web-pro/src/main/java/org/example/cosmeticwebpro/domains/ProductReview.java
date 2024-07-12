@@ -41,12 +41,6 @@ public class ProductReview {
   @Column(name = "product_rating")
   private Integer productRating;
 
-  @Column(name = "shop_rating")
-  private Integer shopRating;
-
-  @Column(name = "delivery_speed")
-  private String deliverySpeed;
-
   @Column(name = "created_date")
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime createdDate;
@@ -54,6 +48,6 @@ public class ProductReview {
   @Column(name = "product_id")
   private Long ProductId;
 
-  @Column(name = "invoice_id")
-  private Long InvoiceId;
+  @Column(name = "order_id")
+  private Long orderId;
 }

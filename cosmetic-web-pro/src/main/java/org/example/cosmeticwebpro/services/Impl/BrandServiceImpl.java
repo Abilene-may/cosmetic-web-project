@@ -3,10 +3,12 @@ package org.example.cosmeticwebpro.services.Impl;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.cosmeticwebpro.domains.Brand;
+import org.example.cosmeticwebpro.domains.Product;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.request.BrandReqDTO;
 import org.example.cosmeticwebpro.repositories.BrandRepository;
+import org.example.cosmeticwebpro.repositories.ProductRepository;
 import org.example.cosmeticwebpro.services.BrandService;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class BrandServiceImpl implements BrandService {
   private final BrandRepository brandRepository;
+  private final ProductRepository productRepository;
 
   /**
    * create a new brand
@@ -67,5 +70,19 @@ public class BrandServiceImpl implements BrandService {
           ExceptionUtils.messages.get(ExceptionUtils.BRAND_ID_NOT_FOUND));
     }
     return brand.get();
+  }
+
+  @Override
+  public void delete(Long brandId) throws CosmeticException {
+    // Get a list of products in this category
+    List<Product> products = productRepository.findAllByCategoryId(brandId);
+
+    // remove category_id information from products
+    for (Product product : products) {
+      product.setBrandId(null);
+      productRepository.save(product);
+    }
+    var category = this.getById(brandId);
+    brandRepository.delete(category);
   }
 }

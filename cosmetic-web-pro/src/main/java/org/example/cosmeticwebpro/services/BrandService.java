@@ -14,4 +14,6 @@ public interface BrandService {
 
   Brand getById(Long brandId) throws CosmeticException;
 
+  void delete(Long brandId) throws CosmeticException;
+
 }
