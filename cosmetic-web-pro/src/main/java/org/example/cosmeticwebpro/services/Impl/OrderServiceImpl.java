@@ -242,6 +242,8 @@ public class OrderServiceImpl implements OrderService {
       var quantity = productDetail.getProductDTO().getQuantity();
       productRepository.updateCountPurchase(c.getProductId(), quantity);
     }
+    // clear cart
+    cartService.clearCartLine(userId);
     // Add logic to fetch actual order details
     return orderDetails;
   }
