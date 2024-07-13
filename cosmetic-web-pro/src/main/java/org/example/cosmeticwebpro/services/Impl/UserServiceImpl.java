@@ -43,16 +43,10 @@ public class UserServiceImpl implements UserService {
   public User updateUser(UserReqDTO userReqDTO) throws CosmeticException {
     var updateUser = this.viewDetailAUser(userReqDTO.getUserId());
     // check userName existed
-    var userByUserName = userRepository.findUserByUserName(userReqDTO.getUserName());
-    if (userByUserName.isPresent()) {
-      throw new CosmeticException(
-          ExceptionUtils.USERNAME_HAS_ALREADY,
-          ExceptionUtils.messages.get(ExceptionUtils.USERNAME_HAS_ALREADY));
-    }
     updateUser.setFirstName(userReqDTO.getFirstName());
     updateUser.setLastName(userReqDTO.getLastName());
     updateUser.setUserName(userReqDTO.getUserName());
-    if (userReqDTO.getPassword().isBlank()) {
+    if (!userReqDTO.getPassword().isBlank()) {
       updateUser.setPassword(passwordEncoder.encode(userReqDTO.getPassword()));
     }
     updateUser.setModifiedDate(LocalDateTime.now());
