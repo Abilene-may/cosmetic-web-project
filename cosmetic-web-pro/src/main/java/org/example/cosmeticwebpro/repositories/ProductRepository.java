@@ -3,6 +3,7 @@ package org.example.cosmeticwebpro.repositories;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import org.example.cosmeticwebpro.domains.Product;
+import org.example.cosmeticwebpro.models.DisplayProductDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,14 +12,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface ProductRepository
     extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
-  @Transactional
-  @Query(
-      value =
-          "SELECT * "
-              + "FROM product p  "
-              + "WHERE p.discount_id IS NOT NULL and p.product_status NOT LIKE :productStatus",
-      nativeQuery = true)
-  List<Product> findAllProductOnSale(@Param("productStatus") String productStatus);
 
   @Transactional
   @Query(
@@ -32,11 +25,76 @@ public interface ProductRepository
   @Transactional
   @Query(
       value =
-          " SELECT * FROM product p  "
-              + " WHERE p.product_status NOT LIKE :productStatus"
-              + " ORDER BY p.count_view DESC ",
-      nativeQuery = true)
-  List<Product> findAllProductTheMostView(@Param("productStatus") String productStatus);
+          "SELECT \n"
+              + "    p.id AS id, \n"
+              + "    p.title AS title, \n"
+              + "    p.description AS description,\n"
+              + "    p.current_cost AS currentCost,\n"
+              + "    p.made_in AS madeIn,\n"
+              + "    p.capacity AS capacity,\n"
+              + "    p.quantity AS quantity,\n"
+              + "    p.product_status AS productStatus,\n"
+              + "    p.count_view AS countView,\n"
+              + "    p.count_purchase AS countPurchase,\n"
+              + "    p.created_date AS createdDate,\n"
+              + "    p.modified_date AS modifiedDate,\n"
+              + "    p.brand_id AS brandId,\n"
+              + "    p.category_id AS categoryId,\n"
+              + "    MAX(pm.url_image) AS imageUrl,\n"
+              + "    COALESCE(MAX(d.discount_percent), 0) AS percentDiscount,\n"
+              + "    COALESCE(c.category_name, 'Unknown') AS categoryName,\n"
+              + "    COALESCE(b.name, 'Unknown') AS brandName,\n"
+              + "    COALESCE(COUNT(r.id), 0) AS totalRating,\n"
+              + "    COALESCE(AVG(r.product_rating), 0) AS averageRating\n"
+              + "FROM \n"
+              + "    product p \n"
+              + "    LEFT JOIN (\n"
+              + "        SELECT product_id, MAX(url_image) AS url_image \n"
+              + "        FROM product_image \n"
+              + "        GROUP BY product_id \n"
+              + "    ) pm ON p.id = pm.product_id \n"
+              + "    LEFT JOIN category c ON c.id = p.category_id \n"
+              + "    LEFT JOIN brand b ON b.id = p.brand_id \n"
+              + "    LEFT JOIN (\n"
+              + "        SELECT \n"
+              + "            product_id, \n"
+              + "            discount_percent \n"
+              + "        FROM \n"
+              + "            discount d1 \n"
+              + "            JOIN product_discount pd ON d1.id = pd.discount_id \n"
+              + "        WHERE \n"
+              + "            d1.discount_status = :discountStatus \n"
+              + "    ) d ON p.id = d.product_id \n"
+              + "    LEFT JOIN product_review r ON p.id = r.product_id \n"
+              + "WHERE \n"
+              + "    p.id IS NOT NULL\n"
+              + "    AND p.product_status != :productStatus \n"
+              + "GROUP BY \n"
+              + "    p.id, \n"
+              + "    p.title, \n"
+              + "    p.description,\n"
+              + "    p.current_cost,\n"
+              + "    p.made_in,\n"
+              + "    p.capacity,\n"
+              + "    p.quantity,\n"
+              + "    p.product_status,\n"
+              + "    p.count_view,\n"
+              + "    p.count_purchase,\n"
+              + "    p.created_date,\n"
+              + "    p.modified_date,\n"
+              + "    p.brand_id,\n"
+              + "    p.category_id,\n"
+              + "    c.category_name,\n"
+              + "    b.name ",
+      nativeQuery = true
+  )
+  List<DisplayProductDTO> findAllProductsForHomeScreen(
+      @Param("productStatus") String productStatus,
+      @Param("discountStatus") String discountStatus
+  );
+
+
+
 
   List<Product> findAllByCategoryId(Long categoryId);
 

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.example.cosmeticwebpro.domains.Discount;
 import org.example.cosmeticwebpro.domains.Product;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
+import org.example.cosmeticwebpro.models.DisplayProductDTO;
 import org.example.cosmeticwebpro.models.ProductDisplayDTO;
 import org.example.cosmeticwebpro.models.ProductOverviewDTO;
 import org.example.cosmeticwebpro.models.request.ProductReqDTO;
@@ -29,4 +30,5 @@ public interface ProductService {
   List<ProductOverviewDTO> productOverviewDTOS(List<Product> products) throws CosmeticException;
 
   Discount getDiscountActiveForProduct(Long productId);
+
 }

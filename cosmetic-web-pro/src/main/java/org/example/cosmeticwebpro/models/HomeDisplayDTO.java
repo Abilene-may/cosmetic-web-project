@@ -17,8 +17,7 @@ import org.mapstruct.control.MappingControl.Use;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HomeDisplayDTO {
-  private List<ProductOverviewDTO> listProductBestSeller;
-//  private List<ProductOverviewDTO> listProductTheMostView;
+  private List<DisplayProductDTO> displayProductDTOS;
   private List<Category> categoryList;
 
   private List<Brand> brandList;

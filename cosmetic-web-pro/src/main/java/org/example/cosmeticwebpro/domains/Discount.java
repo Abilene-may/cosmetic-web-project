@@ -39,15 +39,12 @@ public class Discount {
   @Column(name = "id")
   private Long id;
 
-  @NonNull
   @Column(name = "discount_percent")
   private Integer discountPercent;
 
-  @NonNull
   @Column(name = "from_date")
   private LocalDateTime fromDate;
 
-  @NonNull
   @Column(name = "to_date")
   private LocalDateTime toDate;
 

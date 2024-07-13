@@ -241,14 +241,17 @@ public class ProductServiceImpl implements ProductService {
     List<ProductOverviewDTO> productOverviewDTOs = new ArrayList<>();
     for (Product product : products) {
       ProductOverviewDTO productOverviewDTO = new ProductOverviewDTO();
-      var p = product.getProductDiscounts();
       var productDTO = mapStruct.mapToProductDTO(product);
+
       var discount = getDiscountActiveForProduct(product.getId());
       productDTO.setProductDiscount(discount);
+
       var categoryName = categoryRepository.findCategoryNameById(product.getCategoryId());
+
       var brandName = brandRepository.findBrandNameById(product.getBrandId());
       productDTO.setCategoryName(categoryName);
       productDTO.setBrandName(brandName);
+
       List<String> imageUrls = productRepository.findAllImagesByProductId(product.getId());
       productOverviewDTO.setProductDTO(productDTO);
       productOverviewDTO.setImageUrls(imageUrls);
@@ -256,6 +259,8 @@ public class ProductServiceImpl implements ProductService {
     }
     return productOverviewDTOs;
   }
+
+
 
   private void updateProductImage(MultipartFile[] multipartFiles, Long productId)
       throws IOException, CosmeticException {

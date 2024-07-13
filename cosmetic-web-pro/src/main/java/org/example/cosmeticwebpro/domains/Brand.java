@@ -28,11 +28,9 @@ public class Brand {
     @Column(name = "id")
     private Long id;
 
-    @NonNull
     @Column(name = "name")
     private String name;
 
-    @Lob
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
