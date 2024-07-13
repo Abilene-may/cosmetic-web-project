@@ -28,7 +28,6 @@ public class UserController {
 
   /**
    * API show detail a user
-   * @return
    */
   @GetMapping("/view-detail/{userId}")
   public ResponseEntity<Object> viewDetailUser(@PathVariable Long userId){
@@ -73,6 +72,25 @@ public class UserController {
     try{
       var user = userService.updateUser(userReqDTO);
       return new ResponseEntity<>(user, HttpStatus.OK);
+    } catch (CosmeticException e){
+      return new ResponseEntity<>(
+          new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+    } catch (Exception ex){
+      log.error(ex.getMessage(), ex);
+      return new ResponseEntity<>(
+          ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  /**
+   * request delete account
+   */
+  @PutMapping("/request-delete/{userId}")
+  public ResponseEntity<Object> updateUser(@PathVariable Long userId){
+    try{
+      userService.removeRequestDeleteAccount(userId);
+      return new ResponseEntity<>(HttpStatus.OK);
     } catch (CosmeticException e){
       return new ResponseEntity<>(
           new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);

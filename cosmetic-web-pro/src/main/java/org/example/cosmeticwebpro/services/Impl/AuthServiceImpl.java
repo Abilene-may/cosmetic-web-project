@@ -1,5 +1,6 @@
 package org.example.cosmeticwebpro.services.Impl;
 
+import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.Role;
@@ -46,6 +47,31 @@ public class AuthServiceImpl implements AuthService {
     var user =
         userRepository.findByUserNameOrEmail(
             loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail());
+    if(user.isEmpty()){
+      throw new CosmeticException(
+          ExceptionUtils.USER_NOT_FOUND,
+          ExceptionUtils.messages.get(ExceptionUtils.USER_NOT_FOUND));
+    }
+    // check status account
+    if (Constants.DE_ACTIVE.equals(user.get().getAccountStatus())) {
+      throw new CosmeticException(
+          ExceptionUtils.ACCOUNT_DEACTIVATED,
+          ExceptionUtils.messages.get(ExceptionUtils.ACCOUNT_DEACTIVATED)
+      );
+    }
+    if(user.get().getRequestDate() != null){
+      LocalDateTime requestDate = user.get().getRequestDate();
+      LocalDateTime today = LocalDateTime.now();
+      long daysBetween = Duration.between(requestDate, today).toDays();
+      if (daysBetween >= 30) {
+        user.get().setAccountStatus(Constants.DE_ACTIVE);
+        userRepository.save(user.get()); // Save the updated user status to the database
+        throw new CosmeticException(
+            ExceptionUtils.ACCOUNT_DEACTIVATED,
+            ExceptionUtils.messages.get(ExceptionUtils.ACCOUNT_DEACTIVATED)
+        );
+      }
+    }
     var cart = cartService.getCartByUserId(user.get().getId());
     String token = jwtTokenProvider.generateToken(authentication);
     String refreshToken = jwtTokenProvider.generateRefreshToken(new HashMap<>(), authentication);

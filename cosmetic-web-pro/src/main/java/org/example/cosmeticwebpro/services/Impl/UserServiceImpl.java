@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.User;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
@@ -66,6 +67,12 @@ public class UserServiceImpl implements UserService {
   @Override
   public void requestDeleteAccount(Long userId) throws CosmeticException {}
 
+  @Transactional
   @Override
-  public void removeRequestDeleteAccount(Long userId) throws CosmeticException {}
+  public void removeRequestDeleteAccount(Long userId) throws CosmeticException {
+    var user = this.viewDetailAUser(userId);
+    LocalDateTime today = LocalDateTime.now();
+    user.setRequestDate(today);
+    user.setAccountStatus(Constants.PENDING_DELETION);
+  }
 }

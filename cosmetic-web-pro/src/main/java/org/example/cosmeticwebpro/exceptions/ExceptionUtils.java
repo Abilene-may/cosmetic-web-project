@@ -14,6 +14,7 @@ public class ExceptionUtils {
   // user
   public static final String USER_NOT_FOUND = "USER_IS_NOT_EMPTY";
   public static final String USERNAME_HAS_ALREADY = "USERNAME_HAS_ALREADY";
+  public static final String ACCOUNT_DEACTIVATED = "ACCOUNT_DEACTIVATED";
 
   // role
   public static final String ROLE_NAME_IS_NOT_BLANK = "ROLE_NAME_IS_NOT_BLANK";
@@ -77,6 +78,9 @@ public class ExceptionUtils {
         "Không tìm thấy thông tin người dùng hoặc người dùng không tồn tại.");
     messages.put(
         ExceptionUtils.USERNAME_HAS_ALREADY, "username đã tồn tại vui lòng chọn username khác.");
+    messages.put(
+        ExceptionUtils.ACCOUNT_DEACTIVATED,
+        "Tài khoản của bạn đã bị vô hiệu hóa do không hoạt động.");
 
     // role
     messages.put(ExceptionUtils.ROLE_NAME_IS_NOT_BLANK, "Tên vai trò không được bỏ trống.");
