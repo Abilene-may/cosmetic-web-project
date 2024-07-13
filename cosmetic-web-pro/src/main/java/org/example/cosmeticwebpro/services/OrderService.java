@@ -4,7 +4,7 @@ import java.util.List;
 import org.example.cosmeticwebpro.domains.Order;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.models.DisplayOrderDTO;
-import org.example.cosmeticwebpro.models.OrderDetailDTO;
+import org.example.cosmeticwebpro.models.DisplayOrderDetailDTO;
 import org.example.cosmeticwebpro.models.request.OrderReqDTO;
 
 public interface OrderService {
@@ -12,7 +12,7 @@ public interface OrderService {
 
   DisplayOrderDTO showDetailAnOrder(Long orderId) throws CosmeticException;
 
-  OrderDetailDTO createAnOrder(OrderReqDTO orderReqDTO) throws CosmeticException;
+  DisplayOrderDetailDTO createAnOrder(OrderReqDTO orderReqDTO) throws CosmeticException;
 
   Order updateStatusAnOrderForUser(Long orderId, String status) throws CosmeticException;
 

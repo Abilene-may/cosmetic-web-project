@@ -15,7 +15,7 @@ import org.example.cosmeticwebpro.domains.OrderDetail;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDetailDTO {
+public class DisplayOrderDetailDTO {
   private Order order;
   private List<OrderDetail> orderDetail;
   private Discount discountOrder;

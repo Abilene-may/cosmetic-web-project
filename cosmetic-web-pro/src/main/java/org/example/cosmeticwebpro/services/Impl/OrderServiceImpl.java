@@ -14,14 +14,13 @@ import org.example.cosmeticwebpro.domains.OrderDetail;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.DisplayOrderDTO;
-import org.example.cosmeticwebpro.models.OrderDetailDTO;
+import org.example.cosmeticwebpro.models.DisplayOrderDetailDTO;
 import org.example.cosmeticwebpro.models.request.OrderReqDTO;
 import org.example.cosmeticwebpro.repositories.CartLineRepository;
 import org.example.cosmeticwebpro.repositories.DiscountRepository;
 import org.example.cosmeticwebpro.repositories.OrderDetailRepository;
 import org.example.cosmeticwebpro.repositories.OrderRepository;
 import org.example.cosmeticwebpro.repositories.ProductRepository;
-import org.example.cosmeticwebpro.services.AddressService;
 import org.example.cosmeticwebpro.services.CartService;
 import org.example.cosmeticwebpro.services.OrderService;
 import org.example.cosmeticwebpro.services.ProductService;
@@ -80,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
   // create an order for a user
   @Transactional
   @Override
-  public OrderDetailDTO createAnOrder(OrderReqDTO orderReqDTO) throws CosmeticException {
+  public DisplayOrderDetailDTO createAnOrder(OrderReqDTO orderReqDTO) throws CosmeticException {
     var address = orderReqDTO.getAddress();
     if (orderReqDTO.getUserId() == null ) {
       throw new CosmeticException(
@@ -133,8 +132,8 @@ public class OrderServiceImpl implements OrderService {
     order.setPaymentMethod(Constants.PAYMENT_CASH);
     order.setUserId(orderReqDTO.getUserId());
 
-    OrderDetailDTO orderDetailDTO =
-        OrderDetailDTO.builder().order(order).orderDetail(orderDetailList).build();
+    DisplayOrderDetailDTO orderDetailDTO =
+        DisplayOrderDetailDTO.builder().order(order).orderDetail(orderDetailList).build();
 
     // Apply discount if available
     double discountAmount = 0.0;
@@ -222,7 +221,7 @@ public class OrderServiceImpl implements OrderService {
               .productId(c.getProductId())
               .orderId(orderId)
               .productTitle(p.getTitle())
-              .productImageUrl(String.valueOf(i.get(0)))
+              .productImageUrl(i.get(0).getImageUrl())
               .quantity(c.getQuantity())
               .createdDate(today)
               .modifiedDate(today)

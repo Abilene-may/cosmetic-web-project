@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Set;
+import org.example.cosmeticwebpro.domains.OrderDetail;
 import org.example.cosmeticwebpro.domains.Product;
 import org.example.cosmeticwebpro.domains.Role;
 import org.example.cosmeticwebpro.models.CartLineDTO;
@@ -26,11 +27,14 @@ public interface MapStruct {
   //     ======================= COVERT OBJECT PRODUCT =======================
   //     Product mapToProduct(ProductResponseDto productDto);
   ProductOverviewDTO mapToProductResponseDto(Product product);
+
   List<ProductOverviewDTO> mapToProductResponseDtoList(List<Product> products);
 
   ProductDTO mapToProductDTO(Product product);
+
   List<ProductDTO> mapToProductDTOList(List<Product> products);
 
   DisplayRoleDTO mapToDisplayRoleDTO(Role role);
+
   CartLineDTO mapToCartLineDTO(Product product);
 }
