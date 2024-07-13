@@ -26,7 +26,7 @@ public interface ProductService {
 
   List<ProductOverviewDTO> getAllProductForAdmin() throws CosmeticException;
 
-  List<ProductOverviewDTO> productOverviewDTOS(List<Product> products);
+  List<ProductOverviewDTO> productOverviewDTOS(List<Product> products) throws CosmeticException;
 
   Discount getDiscountActiveForProduct(Long productId);
 }

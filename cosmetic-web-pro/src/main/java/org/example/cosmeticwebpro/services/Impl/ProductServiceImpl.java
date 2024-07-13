@@ -3,6 +3,7 @@ package org.example.cosmeticwebpro.services.Impl;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,11 +18,13 @@ import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.mapper.MapStruct;
 import org.example.cosmeticwebpro.models.ProductDisplayDTO;
+import org.example.cosmeticwebpro.models.ProductImageDTO;
 import org.example.cosmeticwebpro.models.ProductOverviewDTO;
 import org.example.cosmeticwebpro.models.request.ProductReqDTO;
 import org.example.cosmeticwebpro.models.request.ProductUpdateReqDTO;
 import org.example.cosmeticwebpro.repositories.DiscountRepository;
 import org.example.cosmeticwebpro.repositories.ProductDiscountRepository;
+import org.example.cosmeticwebpro.repositories.ProductImageRepository;
 import org.example.cosmeticwebpro.repositories.ProductRepository;
 import org.example.cosmeticwebpro.repositories.ProductReviewRepository;
 import org.example.cosmeticwebpro.services.CategoryService;
@@ -50,6 +53,7 @@ public class ProductServiceImpl implements ProductService {
   private final MapStruct mapStruct;
   private final ProductDiscountRepository productDiscountRepository;
   private final DiscountRepository discountRepository;
+  private final ProductImageRepository productImageRepository;
 
   @Transactional
   @Override
@@ -232,24 +236,30 @@ public class ProductServiceImpl implements ProductService {
 
   @Transactional
   @Override
-  public List<ProductOverviewDTO> productOverviewDTOS(List<Product> products) {
-    // Map product IDs to their images
-    Map<Long, List<ProductImage>> productImagesMap =
-        productImageService.getAll().stream()
-            .collect(Collectors.groupingBy(ProductImage::getProductId));
+  public List<ProductOverviewDTO> productOverviewDTOS(List<Product> products)
+      throws CosmeticException {
     // Create a list of ProductOverviewDTO
     List<ProductOverviewDTO> productOverviewDTOs = new ArrayList<>();
-
     for (Product product : products) {
+      ProductOverviewDTO productOverviewDTO = new ProductOverviewDTO();
       var p = product.getProductDiscounts();
       var productDTO = mapStruct.mapToProductDTO(product);
       var discount = getDiscountActiveForProduct(productDTO.getId());
       productDTO.setProductDiscount(discount);
-      List<String> imageUrls =
-          productImagesMap.getOrDefault(product.getId(), Collections.emptyList()).stream()
-              .map(ProductImage::getImageUrl)
-              .collect(Collectors.toList());
-      productOverviewDTOs.add(new ProductOverviewDTO(productDTO, imageUrls));
+      var productImageDTOS =
+          productRepository.findCategoryBrandNameAndImagesByProductId(product.getId());
+      List<String> imageUrls = new ArrayList<>();
+      if (productImageDTOS.isEmpty()) {
+        imageUrls = productImageRepository.findAllImageUrlByProductId(product.getId());
+      } else {
+        productOverviewDTO.setCategoryName(productImageDTOS.get(0).getCategoryName());
+        productOverviewDTO.setBrandName(productImageDTOS.get(0).getBrandName());
+        for (ProductImageDTO productImage : productImageDTOS) {
+          imageUrls.add(productImage.getImageUrl());
+        }
+      }
+      productOverviewDTO.setImageUrls(imageUrls);
+      productOverviewDTOs.add(productOverviewDTO);
     }
     return productOverviewDTOs;
   }

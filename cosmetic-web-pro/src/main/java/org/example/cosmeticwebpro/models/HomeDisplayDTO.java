@@ -17,16 +17,12 @@ import org.mapstruct.control.MappingControl.Use;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HomeDisplayDTO {
-  private Integer totalQuantityCart;
-
   // list product is on sale
   private List<ProductOverviewDTO> listProductOnSale;
 
   private List<ProductOverviewDTO> listProductBestSeller;
 
   private List<ProductOverviewDTO> listProductTheMostView;
-
-  private User account;
 
   private List<Category> categoryList;
 

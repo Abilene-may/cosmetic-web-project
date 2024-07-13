@@ -1,6 +1,7 @@
 package org.example.cosmeticwebpro.services.Impl;
 
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -41,11 +42,9 @@ public class HomeServiceImpl implements HomeService {
     var listProductTheMostView =
         productRepository.findAllProductTheMostView(Constants.PRODUCT_HIDDEN);
     var displayListTheMostView = productService.productOverviewDTOS(listProductTheMostView);
-    Integer totalQuantityCart = 0;
     var listCategory = categoryService.getAll();
     var listBrand = brandService.getAllBrand();
     return HomeDisplayDTO.builder()
-        .totalQuantityCart(totalQuantityCart)
         .listProductOnSale(displayListOneSale)
         .listProductBestSeller(displayListBestSeller)
         .listProductTheMostView(displayListTheMostView)
@@ -68,11 +67,11 @@ public class HomeServiceImpl implements HomeService {
           ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN,
           ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN));
     }
-    if(product.getCategoryId() != null){
+    if (product.getCategoryId() != null) {
       var category = categoryService.getById(product.getCategoryId());
       productDisplayDTO.setCategory(category);
     }
-    if(product.getBrandId() != null){
+    if (product.getBrandId() != null) {
       var brand = brandService.getById(product.getBrandId());
       productDisplayDTO.setBrand(brand);
     }
@@ -83,8 +82,16 @@ public class HomeServiceImpl implements HomeService {
   }
 
   @Override
-  public List<ProductOverviewDTO> filterProducts(String titleProduct, String categoryName,
-      String sortCode) throws CosmeticException {
-    return List.of();
+  public List<ProductOverviewDTO> filterProducts(
+      String titleProduct, String categoryName, String sortCode) throws CosmeticException {
+    List<Product> products = new ArrayList<>();
+    if (categoryName == null || categoryName.isBlank()) {
+      products = productRepository.filterByTitleAndSortCode(titleProduct, sortCode);
+    } else {
+      products =
+          productRepository.filterByTitleAndCategoryNameAndSortCode(
+              titleProduct, categoryName, sortCode);
+    }
+    return productService.productOverviewDTOS(products);
   }
 }
