@@ -113,11 +113,12 @@ public class OrderServiceImpl implements OrderService {
     // You should implement this method to fetch actual order details
     double totalCost = 0.0;
 
-    // todo
+    Integer totalQuantity =0;
     // check - product discount
     for (OrderDetail od : orderDetailList) {
       od.setOrderId(order.getId());
       totalCost += od.getProductCost() * od.getQuantity();
+      totalQuantity = totalQuantity + od.getQuantity();
       orderDetailRepository.save(od);
     }
     double shippingCost = 0;
@@ -126,7 +127,7 @@ public class OrderServiceImpl implements OrderService {
       shippingCost = Constants.SHIPPING_COST;
     }
     order.setShippingCost(shippingCost);
-    order.setTotalItem(orderDetailList.size() - 1);
+    order.setTotalQuantity(totalQuantity);
     order.setNote(orderReqDTO.getNote());
     order.setStatus(Constants.ORDER_PLACED_SUCCESS);
     order.setPaymentMethod(Constants.PAYMENT_CASH);

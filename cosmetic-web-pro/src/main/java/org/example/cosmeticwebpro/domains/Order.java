@@ -42,7 +42,7 @@ public class Order {
   private String addressDetail;
 
   @Column(name = "total_quantity")
-  private Integer totalItem;
+  private Integer totalQuantity;
 
   @Column(name = "total_cost")
   private double totalCost;
