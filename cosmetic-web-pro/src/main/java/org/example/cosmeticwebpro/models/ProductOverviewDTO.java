@@ -14,7 +14,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProductOverviewDTO {
   private ProductDTO productDTO;
-  private String categoryName;
-  private String brandName;
   private List<String> imageUrls;
 }

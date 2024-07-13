@@ -30,4 +30,6 @@ public class ProductDTO {
   private Long brandId;
   private Long categoryId;
   private Discount productDiscount;
+  private String categoryName;
+  private String brandName;
 }

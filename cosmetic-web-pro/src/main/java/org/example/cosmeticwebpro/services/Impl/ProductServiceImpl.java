@@ -2,10 +2,7 @@ package org.example.cosmeticwebpro.services.Impl;
 
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,10 +15,11 @@ import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.mapper.MapStruct;
 import org.example.cosmeticwebpro.models.ProductDisplayDTO;
-import org.example.cosmeticwebpro.models.ProductImageDTO;
 import org.example.cosmeticwebpro.models.ProductOverviewDTO;
 import org.example.cosmeticwebpro.models.request.ProductReqDTO;
 import org.example.cosmeticwebpro.models.request.ProductUpdateReqDTO;
+import org.example.cosmeticwebpro.repositories.BrandRepository;
+import org.example.cosmeticwebpro.repositories.CategoryRepository;
 import org.example.cosmeticwebpro.repositories.DiscountRepository;
 import org.example.cosmeticwebpro.repositories.ProductDiscountRepository;
 import org.example.cosmeticwebpro.repositories.ProductImageRepository;
@@ -49,7 +47,8 @@ public class ProductServiceImpl implements ProductService {
   private final CloudinaryService cloudinaryService;
   private final ProductImageService productImageService;
   private final ProductReviewRepository productReviewRepository;
-  private final CategoryService categoryService;
+  private final CategoryRepository categoryRepository;
+  private final BrandRepository brandRepository;
   private final MapStruct mapStruct;
   private final ProductDiscountRepository productDiscountRepository;
   private final DiscountRepository discountRepository;
@@ -244,20 +243,14 @@ public class ProductServiceImpl implements ProductService {
       ProductOverviewDTO productOverviewDTO = new ProductOverviewDTO();
       var p = product.getProductDiscounts();
       var productDTO = mapStruct.mapToProductDTO(product);
-      var discount = getDiscountActiveForProduct(productDTO.getId());
+      var discount = getDiscountActiveForProduct(product.getId());
       productDTO.setProductDiscount(discount);
-      var productImageDTOS =
-          productRepository.findCategoryBrandNameAndImagesByProductId(product.getId());
-      List<String> imageUrls = new ArrayList<>();
-      if (productImageDTOS.isEmpty()) {
-        imageUrls = productImageRepository.findAllImageUrlByProductId(product.getId());
-      } else {
-        productOverviewDTO.setCategoryName(productImageDTOS.get(0).getCategoryName());
-        productOverviewDTO.setBrandName(productImageDTOS.get(0).getBrandName());
-        for (ProductImageDTO productImage : productImageDTOS) {
-          imageUrls.add(productImage.getImageUrl());
-        }
-      }
+      var categoryName = categoryRepository.findCategoryNameById(product.getCategoryId());
+      var brandName = brandRepository.findBrandNameById(product.getBrandId());
+      productDTO.setCategoryName(categoryName);
+      productDTO.setBrandName(brandName);
+      List<String> imageUrls = productRepository.findAllImagesByProductId(product.getId());
+      productOverviewDTO.setProductDTO(productDTO);
       productOverviewDTO.setImageUrls(imageUrls);
       productOverviewDTOs.add(productOverviewDTO);
     }

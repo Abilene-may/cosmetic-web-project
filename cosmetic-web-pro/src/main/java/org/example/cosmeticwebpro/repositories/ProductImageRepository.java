@@ -19,4 +19,5 @@ public interface ProductImageRepository extends JpaRepository<ProductImage, Long
                 + " where p.id = :productId ",
         nativeQuery = true)
     List<String> findAllImageUrlByProductId(Long productId);
+
 }

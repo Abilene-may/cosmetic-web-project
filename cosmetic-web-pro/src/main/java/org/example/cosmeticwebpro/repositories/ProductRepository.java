@@ -3,13 +3,10 @@ package org.example.cosmeticwebpro.repositories;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import org.example.cosmeticwebpro.domains.Product;
-import org.example.cosmeticwebpro.models.ProductImageDTO;
-import org.example.cosmeticwebpro.models.ProductOverviewDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.parameters.P;
 
 public interface ProductRepository
     extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
@@ -70,11 +67,10 @@ public interface ProductRepository
 
   @Query(
       value =
-          "select c.category_name, b.name ,pm.url_image\n"
+          "select pm.url_image\n"
               + "from product p join product_image pm on p.id = pm.product_id\n"
-              + "join category c on c.id = p.category_id\n"
-              + "join brand b on b.id = p.brand_id\n"
               + "where p.id = :productId ",
       nativeQuery = true)
-  List<ProductImageDTO> findCategoryBrandNameAndImagesByProductId(Long productId);
+  List<String> findAllImagesByProductId(Long productId);
+
 }
