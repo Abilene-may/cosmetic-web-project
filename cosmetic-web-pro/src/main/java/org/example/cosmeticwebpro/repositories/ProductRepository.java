@@ -5,6 +5,7 @@ import java.util.List;
 import org.example.cosmeticwebpro.domains.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -72,5 +73,13 @@ public interface ProductRepository
               + "where p.id = :productId ",
       nativeQuery = true)
   List<String> findAllImagesByProductId(Long productId);
+
+  @Modifying
+  @Transactional
+  @Query(value = " UPDATE product  "
+      + " SET count_purchase = count_purchase + 1, quantity = quantity - :quantity "
+      + " WHERE id = :productId "
+  , nativeQuery = true)
+  void updateCountPurchase(@Param("productId") Long productId, @Param("quantity") Integer quantity);
 
 }

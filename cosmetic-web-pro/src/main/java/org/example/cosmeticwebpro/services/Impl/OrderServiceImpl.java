@@ -20,6 +20,7 @@ import org.example.cosmeticwebpro.repositories.CartLineRepository;
 import org.example.cosmeticwebpro.repositories.DiscountRepository;
 import org.example.cosmeticwebpro.repositories.OrderDetailRepository;
 import org.example.cosmeticwebpro.repositories.OrderRepository;
+import org.example.cosmeticwebpro.repositories.ProductRepository;
 import org.example.cosmeticwebpro.services.AddressService;
 import org.example.cosmeticwebpro.services.CartService;
 import org.example.cosmeticwebpro.services.OrderService;
@@ -37,7 +38,7 @@ public class OrderServiceImpl implements OrderService {
   private final UserService userService;
   private final CartLineRepository cartLineRepository;
   private final ProductService productService;
-  private final AddressService addressService;
+  private final ProductRepository productRepository;
   private final CartService cartService;
 
   // find a list order for a user
@@ -239,7 +240,7 @@ public class OrderServiceImpl implements OrderService {
       orderDetail.setProductCost(productCost);
       orderDetails.add(orderDetail);
       var quantity = productDetail.getProductDTO().getQuantity();
-      productDetail.getProductDTO().setQuantity(quantity - c.getQuantity());
+      productRepository.updateCountPurchase(c.getProductId(), quantity);
     }
     // Add logic to fetch actual order details
     return orderDetails;
