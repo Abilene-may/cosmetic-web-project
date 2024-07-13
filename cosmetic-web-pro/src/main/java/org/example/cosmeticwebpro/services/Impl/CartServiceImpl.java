@@ -134,6 +134,14 @@ public class CartServiceImpl implements CartService {
   @Transactional
   @Override
   public CartLine addANewProduct(CartReqDTO cartReqDTO) throws CosmeticException {
+    var checkProduct = productRepository.findById(cartReqDTO.getProductId());
+    if (checkProduct.isPresent()) {
+      if (checkProduct.get().getProductStatus().equals(Constants.OUT_OF_STOCK)) {
+        throw new CosmeticException(
+            ExceptionUtils.PRODUCT_OUT_OF_STOCK,
+            ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_OUT_OF_STOCK));
+      }
+    }
     var product =
         cartLineRepository.findAllByProductId(cartReqDTO.getProductId(), cartReqDTO.getCartId());
     LocalDateTime localDateTime = LocalDateTime.now();
