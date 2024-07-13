@@ -28,7 +28,6 @@ public class Product {
     @Column(name = "title")
     private String title;
 
-    @Lob
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 

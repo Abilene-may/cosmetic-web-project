@@ -55,7 +55,7 @@ public interface ProductRepository
 
   @Query(" SELECT p " +
           " FROM Product p " +
-          " WHERE ( :title is null or p.title like %:title% ) " +
+          " WHERE ( :title is null or p.title ilike %:title% ) " +
           " ORDER BY " +
           " CASE WHEN :sortCode = '1' THEN p.title END ASC, " +
           " CASE WHEN :sortCode = '2' THEN p.title END DESC, " +
