@@ -34,20 +34,13 @@ public class HomeServiceImpl implements HomeService {
   @Override
   public HomeDisplayDTO displayHomeScreen() throws CosmeticException {
     // find all product are on sale
-    var listProductOnSale = productRepository.findAllProductOnSale(Constants.PRODUCT_HIDDEN);
-    var displayListOneSale = productService.productOverviewDTOS(listProductOnSale);
     var listProductBestSeller =
         productRepository.findAllProductBestSeller(Constants.PRODUCT_HIDDEN);
     var displayListBestSeller = productService.productOverviewDTOS(listProductBestSeller);
-    var listProductTheMostView =
-        productRepository.findAllProductTheMostView(Constants.PRODUCT_HIDDEN);
-    var displayListTheMostView = productService.productOverviewDTOS(listProductTheMostView);
     var listCategory = categoryService.getAll();
     var listBrand = brandService.getAllBrand();
     return HomeDisplayDTO.builder()
-        .listProductOnSale(displayListOneSale)
         .listProductBestSeller(displayListBestSeller)
-        .listProductTheMostView(displayListTheMostView)
         .categoryList(listCategory)
         .brandList(listBrand)
         .build();
