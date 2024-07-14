@@ -14,6 +14,7 @@ import org.example.cosmeticwebpro.domains.ProductImage;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.mapper.MapStruct;
+import org.example.cosmeticwebpro.models.DisplayProductDTO;
 import org.example.cosmeticwebpro.models.ProductDisplayDTO;
 import org.example.cosmeticwebpro.models.ProductOverviewDTO;
 import org.example.cosmeticwebpro.models.request.ProductReqDTO;
@@ -22,10 +23,8 @@ import org.example.cosmeticwebpro.repositories.BrandRepository;
 import org.example.cosmeticwebpro.repositories.CategoryRepository;
 import org.example.cosmeticwebpro.repositories.DiscountRepository;
 import org.example.cosmeticwebpro.repositories.ProductDiscountRepository;
-import org.example.cosmeticwebpro.repositories.ProductImageRepository;
 import org.example.cosmeticwebpro.repositories.ProductRepository;
 import org.example.cosmeticwebpro.repositories.ProductReviewRepository;
-import org.example.cosmeticwebpro.services.CategoryService;
 import org.example.cosmeticwebpro.services.CloudinaryService;
 import org.example.cosmeticwebpro.services.ProductImageService;
 import org.example.cosmeticwebpro.services.ProductService;
@@ -52,7 +51,6 @@ public class ProductServiceImpl implements ProductService {
   private final MapStruct mapStruct;
   private final ProductDiscountRepository productDiscountRepository;
   private final DiscountRepository discountRepository;
-  private final ProductImageRepository productImageRepository;
 
   @Transactional
   @Override
@@ -225,12 +223,9 @@ public class ProductServiceImpl implements ProductService {
   Get all product for admin include hiden product
    */
   @Override
-  public List<ProductOverviewDTO> getAllProductForAdmin() throws CosmeticException {
+  public List<DisplayProductDTO> getAllProductForAdmin() throws CosmeticException {
     // Fetch all products
-    List<Product> products = productRepository.findAll();
-    // Map product IDs to their images
-
-    return this.productOverviewDTOS(products);
+    return productRepository.findAllProductsForHomeScreen(Constants.ACTIVE, null);
   }
 
   @Transactional
@@ -270,7 +265,7 @@ public class ProductServiceImpl implements ProductService {
       if (bufferedImage == null) {
         throw new CosmeticException("Invalid image!");
       }
-      Map result = cloudinaryService.upload(multipartFile);
+      var result = cloudinaryService.upload(multipartFile);
       ProductImage productImage =
           ProductImage.builder()
               .name((String) result.get("original_filename"))
