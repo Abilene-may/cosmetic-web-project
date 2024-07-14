@@ -101,4 +101,23 @@ public class UserController {
           HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  /**
+   * request delete account
+   */
+  @PutMapping("/admin/create")
+  public ResponseEntity<Object> createUserForAdmin(@RequestBody Long userId){
+    try{
+      userService.removeRequestDeleteAccount(userId);
+      return new ResponseEntity<>(HttpStatus.OK);
+    } catch (CosmeticException e){
+      return new ResponseEntity<>(
+          new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+    } catch (Exception ex){
+      log.error(ex.getMessage(), ex);
+      return new ResponseEntity<>(
+          ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 }

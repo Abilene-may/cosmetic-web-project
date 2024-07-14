@@ -17,4 +17,6 @@ public interface AuthService {
     TokenAuthDTO refreshToken(String refreshToken) throws CosmeticException;
 
     AuthUserDTO findUserByJwt(String jwt) throws CosmeticException;
+
+    String forgetPassword(String email) throws CosmeticException;
 }

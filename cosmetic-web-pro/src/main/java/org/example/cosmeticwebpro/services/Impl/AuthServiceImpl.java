@@ -2,7 +2,9 @@ package org.example.cosmeticwebpro.services.Impl;
 
 import java.time.Duration;
 import java.util.Optional;
+import java.util.Random;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.User;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
@@ -16,6 +18,7 @@ import org.example.cosmeticwebpro.repositories.UserRepository;
 import org.example.cosmeticwebpro.services.AuthService;
 import org.example.cosmeticwebpro.services.CartService;
 import org.example.cosmeticwebpro.services.CustomUserDetailsService;
+import org.example.cosmeticwebpro.services.EmailService;
 import org.example.cosmeticwebpro.utils.JwtTokenProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import org.thymeleaf.context.Context;
 
 @RequiredArgsConstructor
 @Service
@@ -38,6 +42,7 @@ public class AuthServiceImpl implements AuthService {
   private final CustomUserDetailsService customUserDetailsService;
   private final CartService cartService;
   private final RoleRepository roleRepository;
+  private final EmailService emailService;
 
   @Override
   public TokenAuthDTO login(LoginReqDTO loginDto) throws CosmeticException {
@@ -163,6 +168,26 @@ public class AuthServiceImpl implements AuthService {
     var user = userRepository.findByUserNameOrEmail(userName, userName);
     var cart = cartService.getCartByUserId(user.get().getId());
     return AuthUserDTO.builder().user(user.get()).cart(cart).build();
+  }
+
+  public String forgetPassword(String email) throws CosmeticException {
+    Optional<User> user = userRepository.findByUserNameOrEmail(email, email);
+    if (user.isPresent()) {
+      // Generate a random alphanumeric string of length 8
+      String newPassword = RandomStringUtils.randomAlphanumeric(8);
+
+      user.get().setPassword(passwordEncoder.encode(newPassword));
+      userRepository.save(user.get());
+
+      Context context = new Context();
+      context.setVariable("user_data", user.get());
+      context.setVariable("password", newPassword);
+
+      emailService.sendEmailWithHtmlTemplate(
+          user.get().getEmail(), "Reset Password", "reset-password-template", context);
+      return "Email sent";
+    }
+    return "Email isn't found";
   }
 
   private Authentication authenticate(String username, String password) throws CosmeticException {

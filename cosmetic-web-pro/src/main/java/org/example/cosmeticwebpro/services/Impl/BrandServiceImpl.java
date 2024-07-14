@@ -41,10 +41,11 @@ public class BrandServiceImpl implements BrandService {
    */
   @Override
   public void update(Brand updateBrand) throws CosmeticException {
-    Brand brand = this.getById(updateBrand.getId());
+   this.getById(updateBrand.getId());
     this.checkNotNull(updateBrand.getName());
     brandRepository.save(updateBrand);
   }
+
   private void checkNotNull(String name) throws CosmeticException {
     if (name.isEmpty()) {
       throw new CosmeticException(
@@ -55,7 +56,6 @@ public class BrandServiceImpl implements BrandService {
 
   /**
    * find all brands in the shop
-   * @return
    * @throws CosmeticException
    */
   @Override

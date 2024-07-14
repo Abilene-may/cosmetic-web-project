@@ -72,4 +72,22 @@ public class AuthController {
           HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  /** get user and cart by jwt */
+  @PostMapping("/forget-password")
+  public ResponseEntity<Object> forgetPassword(@RequestParam String email) {
+    try {
+      var forgetPassword = authService.forgetPassword(email);
+      return new ResponseEntity<>(forgetPassword, HttpStatus.OK);
+    } catch (CosmeticException e) {
+      return new ResponseEntity<>(
+          new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+    } catch (Exception ex) {
+      log.error(ex.getMessage(), ex);
+      return new ResponseEntity<>(
+          ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
 }
