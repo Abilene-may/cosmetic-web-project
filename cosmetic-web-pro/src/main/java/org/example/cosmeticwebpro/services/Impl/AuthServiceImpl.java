@@ -1,11 +1,13 @@
 package org.example.cosmeticwebpro.services.Impl;
 
 import java.time.Duration;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.User;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
+import org.example.cosmeticwebpro.models.AuthUserDTO;
 import org.example.cosmeticwebpro.models.TokenAuthDTO;
 import org.example.cosmeticwebpro.models.request.LoginReqDTO;
 import org.example.cosmeticwebpro.models.request.SignUpReqDTO;
@@ -152,6 +154,15 @@ public class AuthServiceImpl implements AuthService {
       tokenAuthDTO.setAccessToken(jwt);
     }
     return tokenAuthDTO;
+  }
+
+  @Override
+  public AuthUserDTO findUserByJwt(String jwt) throws CosmeticException {
+    String userName = jwtTokenProvider.getUsername(jwt.substring(7));
+    //        ============== DEMO Spring Mapstruct ==========================
+    var user = userRepository.findByUserNameOrEmail(userName, userName);
+    var cart = cartService.getCartByUserId(user.get().getId());
+    return AuthUserDTO.builder().user(user.get()).cart(cart).build();
   }
 
   private Authentication authenticate(String username, String password) throws CosmeticException {

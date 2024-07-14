@@ -112,13 +112,12 @@ public class CartServiceImpl implements CartService {
               totalCost
                   - (totalCost * ((double) bestDiscountForOrder.get().getDiscountPercent() / 100));
         }
-        cartDisplayDTO.setCartLineDTOS(cartLineDTOS);
-        cartDisplayDTO.setTotalItems(totalItems);
-        cartDisplayDTO.setTotalCost(totalCost);
-        cartDisplayDTO.setTotalFinalPrice(totalFinalPrice);
-        return cartDisplayDTO;
       }
     }
+    cartDisplayDTO.setCartLineDTOS(cartLineDTOS);
+    cartDisplayDTO.setTotalItems(totalItems);
+    cartDisplayDTO.setTotalCost(totalCost);
+    cartDisplayDTO.setTotalFinalPrice(totalFinalPrice);
     return cartDisplayDTO;
   }
 
@@ -160,11 +159,11 @@ public class CartServiceImpl implements CartService {
 
   @Override
   public CartLine updateCart(CartReqDTO cartReqDTO) throws CosmeticException {
-    var product = this.checkExistProduct(cartReqDTO.getProductId(), cartReqDTO.getCartId());
+    var cartLine = this.checkExistProduct(cartReqDTO.getProductId(), cartReqDTO.getCartId());
     LocalDateTime localDateTime = LocalDateTime.now();
-    product.setQuantity(product.getQuantity() + cartReqDTO.getQuantity());
-    product.setModifiedDate(localDateTime);
-    return cartLineRepository.save(product);
+    cartLine.setQuantity(cartLine.getQuantity() + cartReqDTO.getQuantity());
+    cartLine.setModifiedDate(localDateTime);
+    return cartLineRepository.save(cartLine);
   }
 
   /** delete a product from the shopping cart */

@@ -6,6 +6,7 @@ import org.example.cosmeticwebpro.domains.CartLine;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface CartLineRepository extends JpaRepository<CartLine, Long>,
     JpaSpecificationExecutor<Long> {
@@ -13,7 +14,7 @@ public interface CartLineRepository extends JpaRepository<CartLine, Long>,
   @Query(
       value = "select * from cart_line where cart_id = :cartId order by modified_date desc ",
       nativeQuery = true)
-  List<CartLine> findAllByCartId(Long cartId);
+  List<CartLine> findAllByCartId(@Param("cartId") Long cartId);
 
   @Query(
       value = "select * from cart_line where product_id = :productId and cart_id = :cartId",

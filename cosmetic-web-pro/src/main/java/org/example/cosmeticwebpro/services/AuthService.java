@@ -2,6 +2,7 @@ package org.example.cosmeticwebpro.services;
 
 import org.example.cosmeticwebpro.domains.User;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
+import org.example.cosmeticwebpro.models.AuthUserDTO;
 import org.example.cosmeticwebpro.models.TokenAuthDTO;
 import org.example.cosmeticwebpro.models.request.LoginReqDTO;
 import org.example.cosmeticwebpro.models.request.SignUpReqDTO;
@@ -14,4 +15,6 @@ public interface AuthService {
     TokenAuthDTO loginWithGoogle(OAuth2User principal);
 
     TokenAuthDTO refreshToken(String refreshToken) throws CosmeticException;
+
+    AuthUserDTO findUserByJwt(String jwt) throws CosmeticException;
 }
