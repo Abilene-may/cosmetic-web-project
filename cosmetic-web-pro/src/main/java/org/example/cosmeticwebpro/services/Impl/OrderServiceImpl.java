@@ -213,34 +213,34 @@ public class OrderServiceImpl implements OrderService {
     var cartLines = cartLineRepository.findAllByUserId(userId);
     for (CartLine c : cartLines) {
       var productDetail = productService.getByProductId(c.getProductId());
-      var p = productDetail.getProductDTO();
-      var i = productDetail.getProductImages();
-      var productCost = p.getCurrentCost();
-      LocalDateTime today = LocalDateTime.now();
-      OrderDetail orderDetail =
-          OrderDetail.builder()
-              .productId(c.getProductId())
-              .orderId(orderId)
-              .productTitle(p.getTitle())
-              .productImageUrl(i.get(0).getImageUrl())
-              .quantity(c.getQuantity())
-              .createdDate(today)
-              .modifiedDate(today)
-              .build();
-      if (p.getProductDiscount() != null) {
-        var discount =
-            discountRepository.findByIdAndStatus(p.getProductDiscount().getId(), Constants.ACTIVE);
-        if (discount.isPresent()
-            & Objects.equals(discount.get().getDiscountStatus(), Constants.ACTIVE)) {
-          productCost =
-              productCost - productCost * ((double) discount.get().getDiscountPercent() / 100);
-          orderDetail.setDiscountProduct(discount.get().getDiscountPercent());
-        }
-      }
-      orderDetail.setProductCost(productCost);
-      orderDetails.add(orderDetail);
-      var quantity = productDetail.getProductDTO().getQuantity();
-      productRepository.updateCountPurchase(c.getProductId(), quantity);
+////      var p = productDetail.getProductDTO();
+////      var i = productDetail.getProductImages();
+////      var productCost = p.getCurrentCost();
+////      LocalDateTime today = LocalDateTime.now();
+////      OrderDetail orderDetail =
+////          OrderDetail.builder()
+////              .productId(c.getProductId())
+////              .orderId(orderId)
+////              .productTitle(p.getTitle())
+////              .productImageUrl(i.get(0).getImageUrl())
+////              .quantity(c.getQuantity())
+////              .createdDate(today)
+////              .modifiedDate(today)
+////              .build();
+////      if (p.getProductDiscount() != null) {
+////        var discount =
+////            discountRepository.findByIdAndStatus(p.getProductDiscount().getId(), Constants.ACTIVE);
+////        if (discount.isPresent()
+////            & Objects.equals(discount.get().getDiscountStatus(), Constants.ACTIVE)) {
+////          productCost =
+////              productCost - productCost * ((double) discount.get().getDiscountPercent() / 100);
+////          orderDetail.setDiscountProduct(discount.get().getDiscountPercent());
+////        }
+////      }
+////      orderDetail.setProductCost(productCost);
+////      orderDetails.add(orderDetail);
+////      var quantity = productDetail.getProductDTO().getQuantity();
+//      productRepository.updateCountPurchase(c.getProductId(), quantity);
     }
     // clear cart
     cartService.clearCartLine(userId);
