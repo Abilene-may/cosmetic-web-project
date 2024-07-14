@@ -1,6 +1,7 @@
 package org.example.cosmeticwebpro.domains;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,6 +38,16 @@ public class Permission {
   @Column(name = "id")
   private Long id;
 
+  @Column(name = "permission_name")
+  private String permissionName;
+
+  @Column(name = "description")
+  private String description;
+
+  @Column(name = "allow")
+  private Boolean allow;
+
+  @JsonIgnore
   @OneToMany(mappedBy = "permission")
   private Set<RolePermission> rolePermissions = new HashSet<>();
 }

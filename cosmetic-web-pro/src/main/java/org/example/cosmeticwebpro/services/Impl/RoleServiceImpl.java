@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.Permission;
 import org.example.cosmeticwebpro.domains.Role;
 import org.example.cosmeticwebpro.domains.RolePermission;
@@ -15,9 +16,11 @@ import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.mapper.MapStruct;
 import org.example.cosmeticwebpro.models.DisplayRoleDTO;
 import org.example.cosmeticwebpro.models.request.RoleAndPermissionReqDTO;
+import org.example.cosmeticwebpro.models.request.UpdateRoleReqDTO;
 import org.example.cosmeticwebpro.repositories.PermissionRepository;
 import org.example.cosmeticwebpro.repositories.RolePermissionRepository;
 import org.example.cosmeticwebpro.repositories.RoleRepository;
+import org.example.cosmeticwebpro.repositories.UserRepository;
 import org.example.cosmeticwebpro.services.RoleService;
 import org.springframework.stereotype.Service;
 
@@ -28,81 +31,50 @@ public class RoleServiceImpl implements RoleService {
   private final PermissionRepository permissionRepository;
   private final RolePermissionRepository rolePermissionRepository;
   private final MapStruct mapStruct;
+  private final UserRepository userRepository;
 
-  /*
-  create a new role and permission of role
-   */
+  // create a new role
   @Override
-  public void createARoleAndPermissions(RoleAndPermissionReqDTO reqDTO) throws CosmeticException {
-    var permissions = reqDTO.getPermissions();
+  public void createANewRole(RoleAndPermissionReqDTO reqDTO) throws CosmeticException {
     if (reqDTO.getRoleName().isBlank()) {
       throw new CosmeticException(
           ExceptionUtils.ROLE_NAME_IS_NOT_BLANK,
           ExceptionUtils.messages.get(ExceptionUtils.ROLE_NAME_IS_NOT_BLANK));
     }
     LocalDateTime today = LocalDateTime.now();
-    Role createRole =
+    Role role =
         Role.builder()
             .roleName(reqDTO.getRoleName())
             .createdDate(today)
             .modifiedDate(today)
             .build();
-    var role = roleRepository.save(createRole);
-
-    for (Permission permission : permissions) {
-      var checkPermission =
-          permissionRepository
-              .findById(permission.getId())
-              .orElseThrow(() -> new RuntimeException("Permission not found"));
-
-      RolePermission rolePermission =
-          RolePermission.builder()
-              .roleId(role.getId())
-              .permissionId(checkPermission.getId())
-              .roleId(role.getId())
-              .permission(checkPermission)
-              .build();
-
-      rolePermissionRepository.save(rolePermission);
+    var saveRole = roleRepository.save(role);
+    for (Long permissionId : reqDTO.getPermissionIds()) {
+      roleRepository.createPermissionToRole(saveRole.getId(), permissionId);
     }
-
-    DisplayRoleDTO.builder().role(role).permissions(permissions).build();
   }
 
-  /** update a role or permission of the role */
-  @Transactional
+  // update a role
   @Override
-  public void updateRoleOrPermission(RoleAndPermissionReqDTO reqDTO) throws CosmeticException {
-    // Fetch the existing role
-    var updateRole = this.getById(reqDTO.getRoleId());
-
-    // Update role name
-    updateRole.setRoleName(reqDTO.getRoleName());
-    roleRepository.save(updateRole);
-
-    // Fetch existing permissions for the role
-    Set<RolePermission> existingRolePermissions =
-        rolePermissionRepository.findByRoleId(reqDTO.getRoleId());
-
-    // Delete the existing RolePermission records
-    rolePermissionRepository.deleteAll(existingRolePermissions);
-
-    // Add the new RolePermission records
+  public void updateARole(UpdateRoleReqDTO reqDTO) throws CosmeticException {
+    // check role exist
+    var checkRole = roleRepository.findRoleById(reqDTO.getRole().getId());
+    if (checkRole.isEmpty()) {
+      throw new CosmeticException(
+          ExceptionUtils.ROLE_NOT_FOUND,
+          ExceptionUtils.messages.get(ExceptionUtils.ROLE_NOT_FOUND));
+    }
+    var roleName = reqDTO.getRole().getRoleName();
+    if (roleName.isBlank()) {
+      throw new CosmeticException(
+          ExceptionUtils.ROLE_NAME_IS_NOT_BLANK,
+          ExceptionUtils.messages.get(ExceptionUtils.ROLE_NAME_IS_NOT_BLANK));
+    }
+    LocalDateTime today = LocalDateTime.now();
+    Role role = Role.builder().roleName(roleName).createdDate(today).modifiedDate(today).build();
+    var saveRole = roleRepository.save(role);
     for (Permission permission : reqDTO.getPermissions()) {
-      var checkPermission =
-          permissionRepository
-              .findById(permission.getId())
-              .orElseThrow(() -> new RuntimeException("Permission not found"));
-
-      RolePermission rolePermission =
-          RolePermission.builder()
-              .roleId(updateRole.getId())
-              .permissionId(checkPermission.getId())
-              .role(updateRole)
-              .permission(checkPermission)
-              .build();
-
-      rolePermissionRepository.save(rolePermission);
+      roleRepository.createPermissionToRole(saveRole.getId(), permission.getId());
     }
   }
 
@@ -116,7 +88,7 @@ public class RoleServiceImpl implements RoleService {
     var role = this.getById(roleId);
 
     // Fetch the permissions related to the role
-    Set<Permission> permissions = permissionRepository.findAllByRoleId(roleId);
+    var permissions = permissionRepository.findAllByRoleId(roleId);
 
     // Build and return the DisplayRoleDTO
     DisplayRoleDTO displayRoleDTO =
@@ -133,6 +105,8 @@ public class RoleServiceImpl implements RoleService {
 
     for (Role role : roles) {
       var displayRoleDTO = mapStruct.mapToDisplayRoleDTO(role);
+      var permissions = permissionRepository.findAllByRoleId(role.getId());
+      displayRoleDTO.setPermissions(permissions);
       displayRoleDTOs.add(displayRoleDTO);
     }
     return displayRoleDTOs;
@@ -140,31 +114,18 @@ public class RoleServiceImpl implements RoleService {
 
   @Transactional
   @Override
-  public void changeRole(Long oldRoleId, Long newRoleId) throws CosmeticException {
-    // Fetch the existing old role
-    Role oldRole =
-        roleRepository
-            .findById(oldRoleId)
-            .orElseThrow(() -> new CosmeticException("Old role not found"));
-
+  public void deleteARole(Long roleId) throws CosmeticException {
     // Fetch the existing new role
-    Role newRole =
-        roleRepository
-            .findById(newRoleId)
-            .orElseThrow(() -> new CosmeticException("New role not found"));
-
-    // Fetch existing RolePermission records for the old role
-    Set<RolePermission> oldRolePermissions = rolePermissionRepository.findByRoleId(oldRoleId);
-
-    // Update RolePermission records to point to the new role
-    for (RolePermission oldRolePermission : oldRolePermissions) {
-      oldRolePermission.setRoleId(newRoleId);
-      oldRolePermission.setRole(newRole);
-      rolePermissionRepository.save(oldRolePermission);
+    var role = this.getById(roleId);
+    // check if role is USER or ADMIN
+    if (role.getRoleName().equals(Constants.ROLE_USER)
+        || role.getRoleName().equals(Constants.ROLE_ADMIN)) {
+      throw new CosmeticException(
+          ExceptionUtils.CANNOT_DELETE, ExceptionUtils.messages.get(ExceptionUtils.CANNOT_DELETE));
     }
-
-    // Delete the old role
-    roleRepository.delete(oldRole);
+    // Update all users whose roles have been deleted to the USER role
+    userRepository.updateRole(roleId);
+    roleRepository.delete(role);
   }
 
   private Role getById(Long roleId) throws CosmeticException {

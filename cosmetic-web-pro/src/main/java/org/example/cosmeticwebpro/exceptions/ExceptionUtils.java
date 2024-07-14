@@ -19,6 +19,8 @@ public class ExceptionUtils {
   // role
   public static final String ROLE_NAME_IS_NOT_BLANK = "ROLE_NAME_IS_NOT_BLANK";
   public static final String ROLE_NOT_FOUND = "ROLE_NOT_FOUND";
+  public static final String CANNOT_DELETE = "CANNOT_DELETE";
+  public static final String ROLE_NAME_NOT_EMPTY = "ROLE_NAME_NOT_EMPTY";
 
   // product
   public static final String PRODUCT_ID_IS_NOT_EXIST = "PRODUCT_ID_IS_NOT_EXIST";
@@ -35,10 +37,11 @@ public class ExceptionUtils {
 
   // brand
   public static final String BRAND_ID_NOT_FOUND = "BRAND_ID_NOT_FOUND";
+  public static final String BRAND_NAME_NOT_EMPTY = "BRAND_NAME_NOT_EMPTY";
 
   // category
   public static final String CATEGORY_NOT_FOUND = "CATEGORY_NOT_FOUND";
-  public static final String CATEGORY_NAME_NOT_FOUND = "CATEGORY_NAME_NOT_FOUND";
+  public static final String CATEGORY_NAME_NOT_EMPTY = "CATEGORY_NAME_NOT_EMPTY";
 
   // cart
   public static final String CART_DOES_NOT_EXIST = "CART_DOES_NOT_EXIST";
@@ -88,6 +91,8 @@ public class ExceptionUtils {
     // role
     messages.put(ExceptionUtils.ROLE_NAME_IS_NOT_BLANK, "Role name cannot be left blank.");
     messages.put(ExceptionUtils.ROLE_NOT_FOUND, "Role not found or role does not exist.");
+    messages.put(ExceptionUtils.CANNOT_DELETE, "USER and ADMIN roles cannot be deleted.");
+    messages.put(ExceptionUtils.ROLE_NAME_NOT_EMPTY, "Role name cannot be left blank.");
 
     // product
     messages.put(
@@ -109,10 +114,11 @@ public class ExceptionUtils {
     // brand
     messages.put(
         ExceptionUtils.BRAND_ID_NOT_FOUND, "Brand information not found or brand does not exist.");
+    messages.put(ExceptionUtils.BRAND_NAME_NOT_EMPTY, "Category name cannot be left blank.");
 
     // categpry
     messages.put(ExceptionUtils.CATEGORY_NOT_FOUND, "No product catalog information found.");
-    messages.put(ExceptionUtils.CATEGORY_NAME_NOT_FOUND, "Category name cannot be left blank.");
+    messages.put(ExceptionUtils.CATEGORY_NAME_NOT_EMPTY, "Category name cannot be left blank.");
 
     // cart
     messages.put(

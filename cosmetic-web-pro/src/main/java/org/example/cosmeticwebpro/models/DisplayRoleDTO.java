@@ -1,7 +1,6 @@
 package org.example.cosmeticwebpro.models;
 
 import java.util.List;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,5 +17,5 @@ import org.example.cosmeticwebpro.domains.Role;
 public class DisplayRoleDTO {
   private Role role;
 
-  private Set<Permission> permissions;
+  private List<Permission> permissions;
 }

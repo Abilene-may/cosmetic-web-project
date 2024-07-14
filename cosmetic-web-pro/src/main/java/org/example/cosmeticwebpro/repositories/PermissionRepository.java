@@ -1,6 +1,7 @@
 package org.example.cosmeticwebpro.repositories;
 
 
+import java.util.List;
 import java.util.Set;
 import org.example.cosmeticwebpro.domains.Permission;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,5 +15,5 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>,
   @Query(value = "SELECT p.* FROM permission p " +
       " INNER JOIN role_permission rp ON p.id = rp.permission_id WHERE rp.role_id = :roleId "
       , nativeQuery = true)
-  Set<Permission> findAllByRoleId(@Param("roleId") Long roleId);
+  List<Permission> findAllByRoleId(@Param("roleId") Long roleId);
 }

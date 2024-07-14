@@ -1,19 +1,21 @@
 package org.example.cosmeticwebpro.models.request;
 
 import java.util.List;
-import java.util.Set;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.cosmeticwebpro.domains.Permission;
+import org.example.cosmeticwebpro.domains.Role;
 
 @Setter
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoleAndPermissionReqDTO {
-  private String roleName;
+public class UpdateRoleReqDTO {
+  private Role role;
 
-  private List<Long> permissionIds;
+  private List<Permission> permissions;
 }
