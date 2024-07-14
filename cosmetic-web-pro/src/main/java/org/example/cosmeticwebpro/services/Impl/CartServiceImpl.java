@@ -23,6 +23,7 @@ import org.example.cosmeticwebpro.repositories.ProductDiscountRepository;
 import org.example.cosmeticwebpro.repositories.ProductImageRepository;
 import org.example.cosmeticwebpro.repositories.ProductRepository;
 import org.example.cosmeticwebpro.services.CartService;
+import org.example.cosmeticwebpro.services.HomeService;
 import org.example.cosmeticwebpro.services.ProductService;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,7 @@ public class CartServiceImpl implements CartService {
   private final DiscountRepository discountRepository;
   private final ProductRepository productRepository;
   private final ProductImageRepository productImageRepository;
-  private final ProductDiscountRepository productDiscountRepository;
+  private final HomeService homeService;
   private final MapStruct mapStruct;
   private final ProductService productService;
 
@@ -80,53 +81,44 @@ public class CartServiceImpl implements CartService {
     }
     for (CartLine cartLine : cartLines) {
       Long productId = cartLine.getProductId();
-      Product product =
-          productRepository
-              .findById(productId)
-              .orElseThrow(() -> new CosmeticException("Product not found with id: " + productId));
-      var cartLineDTO = mapStruct.mapToCartLineDTO(product);
-      var discount = productService.getDiscountActiveForProduct(cartLineDTO.getProductId());
-      cartLineDTO.setProductId(product.getId());
-      cartLineDTO.setPrice(product.getCurrentCost());
-      cartLineDTO.setQuantity(cartLine.getQuantity());
-      cartLineDTO.setProductDiscount(discount);
-      double discountPercent = 0;
-      if (cartLineDTO.getProductDiscount() != null) {
-        var discountProduct = discountRepository.findById(cartLineDTO.getProductDiscount().getId());
-        if (discountProduct.isPresent()) {
-          discountPercent = (double) discountProduct.get().getDiscountPercent() / 100;
+      var productDisplayDTO = homeService.viewAProductDetail(productId);
+      if (productDisplayDTO.getDisplayProductDTO() != null) {
+        var product = productDisplayDTO.getDisplayProductDTO();
+        var cartLineDTO = mapStruct.mapToCartLineDTO(cartLine);
+        cartLineDTO.setTitle(product.getTitle());
+        cartLineDTO.setImageUrl(product.getImageUrl());
+        double productDiscount = product.getCurrentCost();
+        if(product.getPercentDiscount() != null){
+          productDiscount = product.getCurrentCost() - (product.getCurrentCost() * (
+              (double) product.getPercentDiscount()/100));
+          cartLineDTO.setProductDiscount(product.getPercentDiscount());
         }
+        cartLineDTO.setPrice(productDiscount);
+        // cost after discount
+        double cost = productDiscount * cartLine.getQuantity();
+        totalItems++;
+        totalCost = totalCost + cost;
+        cartLineDTOS.add(cartLineDTO);
+        totalFinalPrice = totalCost;
+        // Find the appropriate discount
+        // Get the current LocalDateTime
+        LocalDateTime today = LocalDateTime.now();
+        var bestDiscountForOrder =
+            discountRepository.findBestDiscountForOrder(
+                totalFinalPrice, Constants.ACTIVE, Constants.ORDER, today);
+        if (bestDiscountForOrder.isPresent()) {
+          cartDisplayDTO.setDiscount(bestDiscountForOrder.get());
+          totalFinalPrice =
+              totalCost
+                  - (totalCost * ((double) bestDiscountForOrder.get().getDiscountPercent() / 100));
+        }
+        cartDisplayDTO.setCartLineDTOS(cartLineDTOS);
+        cartDisplayDTO.setTotalItems(totalItems);
+        cartDisplayDTO.setTotalCost(totalCost);
+        cartDisplayDTO.setTotalFinalPrice(totalFinalPrice);
+        return cartDisplayDTO;
       }
-      // cost after discount
-      double cost =
-          (product.getCurrentCost() - product.getCurrentCost() * discountPercent)
-              * cartLine.getQuantity();
-
-      var productImages = productImageRepository.findProductImagesByProductId(productId);
-      // get an image from a list
-      String imageUrl = productImages.isEmpty() ? null : productImages.get(0).getImageUrl();
-      cartLineDTO.setImageUrl(imageUrl);
-      totalItems++;
-      totalCost = totalCost + cost;
-      cartLineDTOS.add(cartLineDTO);
     }
-    totalFinalPrice = totalCost;
-    // Find the appropriate discount
-    // Get the current LocalDateTime
-    LocalDateTime today = LocalDateTime.now();
-    var bestDiscountForOrder =
-        discountRepository.findBestDiscountForOrder(
-            totalFinalPrice, Constants.ACTIVE, Constants.ORDER, today);
-    if (bestDiscountForOrder.isPresent()) {
-      cartDisplayDTO.setDiscount(bestDiscountForOrder.get());
-      totalFinalPrice =
-          totalCost
-              - (totalCost * ((double) bestDiscountForOrder.get().getDiscountPercent() / 100));
-    }
-    cartDisplayDTO.setCartLineDTOS(cartLineDTOS);
-    cartDisplayDTO.setTotalItems(totalItems);
-    cartDisplayDTO.setTotalCost(totalCost);
-    cartDisplayDTO.setTotalFinalPrice(totalFinalPrice);
     return cartDisplayDTO;
   }
 

@@ -18,5 +18,5 @@ public class CartLineDTO {
   private String title;
   private double price;
   private Integer quantity;
-  private Discount productDiscount;
+  private Integer productDiscount;
 }
