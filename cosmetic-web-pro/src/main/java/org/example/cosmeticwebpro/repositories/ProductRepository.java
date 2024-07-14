@@ -14,7 +14,6 @@ import org.springframework.data.repository.query.Param;
 public interface ProductRepository
     extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
-  @Transactional
   @Query(
       value =
           "SELECT \n"
@@ -61,8 +60,8 @@ public interface ProductRepository
               + "WHERE \n"
               + "    p.id IS NOT NULL\n"
               + "    AND p.product_status != :productStatus \n"
-              + "    AND LOWER(p.title) LIKE LOWER(CONCAT('%', :titleProduct, '%')) "
-              + "    AND LOWER(c.category_name) LIKE LOWER(CONCAT('%', :categoryName, '%')) "
+              + "    AND (:titleProduct IS NULL OR LOWER(p.title) LIKE LOWER(CONCAT('%', :titleProduct, '%'))) \n"
+              + "    AND (:categoryName IS NULL OR LOWER(c.category_name) LIKE LOWER(CONCAT('%', :categoryName, '%'))) \n"
               + "GROUP BY \n"
               + "    p.id, \n"
               + "    p.title, \n"
@@ -79,12 +78,12 @@ public interface ProductRepository
               + "    p.brand_id,\n"
               + "    p.category_id,\n"
               + "    c.category_name,\n"
-              + "    b.name "
-              + " ORDER BY "
-              + " CASE WHEN :sortCode = '1' THEN p.title END ASC, "
-              + " CASE WHEN :sortCode = '2' THEN p.title END DESC, "
-              + " CASE WHEN :sortCode = '3' THEN p.current_cost END ASC, "
-              + " CASE WHEN :sortCode = '4' THEN p.current_cost END DESC ",
+              + "    b.name \n"
+              + "ORDER BY \n"
+              + "    CASE WHEN :sortCode = '1' THEN p.title END ASC, \n"
+              + "    CASE WHEN :sortCode = '2' THEN p.title END DESC, \n"
+              + "    CASE WHEN :sortCode = '3' THEN p.current_cost END ASC, \n"
+              + "    CASE WHEN :sortCode = '4' THEN p.current_cost END DESC",
       nativeQuery = true
   )
   List<DisplayProductDTO> searchAllProductsByCondition(
@@ -94,6 +93,7 @@ public interface ProductRepository
       @Param("productStatus") String productStatus,
       @Param("discountStatus") String discountStatus
   );
+
   @Transactional
   @Query(
       value =
