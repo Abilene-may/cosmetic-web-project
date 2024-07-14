@@ -59,6 +59,7 @@ public class ExceptionUtils {
   public static final String ORDER_ERROR_2 = "ORDER_ERROR_2";
   public static final String NOT_PERMISSION = "NOT_PERMISSION";
   public static final String INVALID_STATUS_TRANSITION = "INVALID_STATUS_TRANSITION";
+  public static final String CART_LINE_IS_EMPTY = "CART_LINE_IS_EMPTY";
 
   // product review
   public static final String PRODUCT_REVIEW_NOT_FOUND = "PRODUCT_REVIEW_NOT_FOUND";
@@ -141,6 +142,7 @@ public class ExceptionUtils {
     messages.put(ExceptionUtils.ORDER_ERROR_2, "The userId field cannot be left blank.");
     messages.put(ExceptionUtils.NOT_PERMISSION, "Not permission.");
     messages.put(ExceptionUtils.INVALID_STATUS_TRANSITION, "Invalid state transition.");
+    messages.put(ExceptionUtils.CART_LINE_IS_EMPTY, "Please add products before ordering.");
 
     // product review
     messages.put(

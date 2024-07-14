@@ -68,8 +68,8 @@ public class OrderServiceImpl implements OrderService {
     DisplayOrderDTO displayOrderDTO = new DisplayOrderDTO();
     // Calculate total amount of the order
     double totalAmount = order.getTotalCost();
-    if(order.getDiscountOrder() != null){
-      totalAmount = totalAmount - totalAmount*order.getDiscountOrder();
+    if (order.getDiscountOrder() != null) {
+      totalAmount = totalAmount - totalAmount * order.getDiscountOrder();
     }
     displayOrderDTO.setOrder(order);
     displayOrderDTO.setOrderDetail(orderDetailList);
@@ -83,7 +83,7 @@ public class OrderServiceImpl implements OrderService {
   @Override
   public DisplayOrderDetailDTO createAnOrder(OrderReqDTO orderReqDTO) throws CosmeticException {
     var address = orderReqDTO.getAddress();
-    if (orderReqDTO.getUserId() == null ) {
+    if (orderReqDTO.getUserId() == null) {
       throw new CosmeticException(
           ExceptionUtils.ORDER_ERROR_2, ExceptionUtils.messages.get(ExceptionUtils.ORDER_ERROR_2));
     }
@@ -115,7 +115,7 @@ public class OrderServiceImpl implements OrderService {
     // You should implement this method to fetch actual order details
     double totalCost = 0.0;
 
-    Integer totalQuantity =0;
+    Integer totalQuantity = 0;
     // check - product discount
     for (OrderDetail od : orderDetailList) {
       od.setOrderId(order.getId());
@@ -213,6 +213,11 @@ public class OrderServiceImpl implements OrderService {
     // Implement this method to fetch actual order details for the user
     // For now, returning a dummy list
     var cartLines = cartLineRepository.findAllByUserId(userId);
+    if (cartLines.isEmpty()) {
+      throw new CosmeticException(
+          ExceptionUtils.CART_LINE_IS_EMPTY,
+          ExceptionUtils.messages.get(ExceptionUtils.CART_LINE_IS_EMPTY));
+    }
     for (CartLine c : cartLines) {
       var productDisplayDTO = homeService.viewAProductDetail(c.getProductId());
       var productCost = productDisplayDTO.getDisplayProductDTO().getCurrentCost();
@@ -229,8 +234,7 @@ public class OrderServiceImpl implements OrderService {
               .build();
       var productDiscount = productDisplayDTO.getDisplayProductDTO().getPercentDiscount();
       if (productDiscount != null) {
-        productCost =
-            productCost - productCost * ((double) productDiscount / 100);
+        productCost = productCost - productCost * ((double) productDiscount / 100);
         orderDetail.setDiscountProduct(productDiscount);
       }
       orderDetail.setProductCost(productCost);
@@ -300,12 +304,18 @@ public class OrderServiceImpl implements OrderService {
             List.of(Constants.SELLER_PREPARING_ORDER, Constants.ORDER_CANCELLED),
             Constants.SELLER_PREPARING_ORDER,
             List.of(Constants.IN_TRANSIT, Constants.ORDER_CANCELLED),
-            Constants.IN_TRANSIT, List.of(Constants.DELIVERY_SUCCESSFUL, Constants.DELIVERY_FAILED),
-            Constants.DELIVERY_SUCCESSFUL, List.of(Constants.ORDER_RECEIVED),
-            Constants.DELIVERY_FAILED, List.of(Constants.RETURNED_AND_REFUNDED),
-            Constants.ORDER_RECEIVED, List.of(),
-            Constants.RETURNED_AND_REFUNDED, List.of(),
-            Constants.ORDER_CANCELLED, List.of());
+            Constants.IN_TRANSIT,
+            List.of(Constants.DELIVERY_SUCCESSFUL, Constants.DELIVERY_FAILED),
+            Constants.DELIVERY_SUCCESSFUL,
+            List.of(Constants.ORDER_RECEIVED),
+            Constants.DELIVERY_FAILED,
+            List.of(Constants.RETURNED_AND_REFUNDED),
+            Constants.ORDER_RECEIVED,
+            List.of(),
+            Constants.RETURNED_AND_REFUNDED,
+            List.of(),
+            Constants.ORDER_CANCELLED,
+            List.of());
 
     // Check if the new status is a valid transition
     List<String> allowedStatuses = validStatusTransitions.get(currentStatus);
