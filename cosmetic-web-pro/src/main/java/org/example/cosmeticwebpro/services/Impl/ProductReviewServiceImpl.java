@@ -36,11 +36,10 @@ public class ProductReviewServiceImpl implements ProductReviewService {
           ExceptionUtils.PRODUCT_REVIEW_ERROR_1,
           ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_REVIEW_ERROR_1));
     }
-
+    // check if the product exist in order detail
     var orderDetails = orderDetailRepository.findAllByOrderId(reqDTO.getOrderId());
     boolean productExistsInOrder = orderDetails.stream()
         .anyMatch(od -> od.getProductId().equals(reqDTO.getProductId()));
-
     if (!productExistsInOrder) {
       throw new CosmeticException(
           ExceptionUtils.PRODUCT_REVIEW_ERROR_3,
