@@ -22,6 +22,7 @@ import org.example.cosmeticwebpro.repositories.OrderDetailRepository;
 import org.example.cosmeticwebpro.repositories.OrderRepository;
 import org.example.cosmeticwebpro.repositories.ProductRepository;
 import org.example.cosmeticwebpro.services.CartService;
+import org.example.cosmeticwebpro.services.HomeService;
 import org.example.cosmeticwebpro.services.OrderService;
 import org.example.cosmeticwebpro.services.ProductService;
 import org.example.cosmeticwebpro.services.UserService;
@@ -39,6 +40,7 @@ public class OrderServiceImpl implements OrderService {
   private final ProductService productService;
   private final ProductRepository productRepository;
   private final CartService cartService;
+  private final HomeService homeService;
 
   // find a list order for a user
   @Override
@@ -212,35 +214,29 @@ public class OrderServiceImpl implements OrderService {
     // For now, returning a dummy list
     var cartLines = cartLineRepository.findAllByUserId(userId);
     for (CartLine c : cartLines) {
-      var productDetail = productService.getByProductId(c.getProductId());
-////      var p = productDetail.getProductDTO();
-////      var i = productDetail.getProductImages();
-////      var productCost = p.getCurrentCost();
-////      LocalDateTime today = LocalDateTime.now();
-////      OrderDetail orderDetail =
-////          OrderDetail.builder()
-////              .productId(c.getProductId())
-////              .orderId(orderId)
-////              .productTitle(p.getTitle())
-////              .productImageUrl(i.get(0).getImageUrl())
-////              .quantity(c.getQuantity())
-////              .createdDate(today)
-////              .modifiedDate(today)
-////              .build();
-////      if (p.getProductDiscount() != null) {
-////        var discount =
-////            discountRepository.findByIdAndStatus(p.getProductDiscount().getId(), Constants.ACTIVE);
-////        if (discount.isPresent()
-////            & Objects.equals(discount.get().getDiscountStatus(), Constants.ACTIVE)) {
-////          productCost =
-////              productCost - productCost * ((double) discount.get().getDiscountPercent() / 100);
-////          orderDetail.setDiscountProduct(discount.get().getDiscountPercent());
-////        }
-////      }
-////      orderDetail.setProductCost(productCost);
-////      orderDetails.add(orderDetail);
-////      var quantity = productDetail.getProductDTO().getQuantity();
-//      productRepository.updateCountPurchase(c.getProductId(), quantity);
+      var productDisplayDTO = homeService.viewAProductDetail(c.getProductId());
+      var productCost = productDisplayDTO.getDisplayProductDTO().getCurrentCost();
+      LocalDateTime today = LocalDateTime.now();
+      OrderDetail orderDetail =
+          OrderDetail.builder()
+              .productId(c.getProductId())
+              .orderId(orderId)
+              .productTitle(productDisplayDTO.getDisplayProductDTO().getTitle())
+              .productImageUrl(productDisplayDTO.getDisplayProductDTO().getImageUrl())
+              .quantity(c.getQuantity())
+              .createdDate(today)
+              .modifiedDate(today)
+              .build();
+      var productDiscount = productDisplayDTO.getDisplayProductDTO().getPercentDiscount();
+      if (productDiscount != null) {
+        productCost =
+            productCost - productCost * ((double) productDiscount / 100);
+        orderDetail.setDiscountProduct(productDiscount);
+      }
+      orderDetail.setProductCost(productCost);
+      orderDetails.add(orderDetail);
+      var quantity = productDisplayDTO.getDisplayProductDTO().getQuantity();
+      productRepository.updateCountPurchase(c.getProductId(), quantity);
     }
     // clear cart
     cartService.clearCartLine(userId);
