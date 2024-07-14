@@ -68,85 +68,85 @@ public class ExceptionUtils {
 
   static {
     messages = new HashMap<>();
-    messages.put(ExceptionUtils.USER_SIGNUP_1, "Email đã được đăng ký. Vui lòng nhập Email khác.");
-    messages.put(ExceptionUtils.E_INTERNAL_SERVER, "Server không phản hồi.");
-    messages.put(ExceptionUtils.SIGNUP_ERROR_NULL_1, "Vui lòng nhập Email.");
-    messages.put(ExceptionUtils.SIGNUP_ERROR_NULL_2, "Vui lòng nhập Password.");
+    messages.put(ExceptionUtils.USER_SIGNUP_1, "The Email was registered. Please enter another Email.");
+    messages.put(ExceptionUtils.E_INTERNAL_SERVER, "Server is not responding.");
+    messages.put(ExceptionUtils.SIGNUP_ERROR_NULL_1, "Please enter Email.");
+    messages.put(ExceptionUtils.SIGNUP_ERROR_NULL_2, "Please enter Password.");
 
     // user
     messages.put(
         ExceptionUtils.USER_NOT_FOUND,
-        "Không tìm thấy thông tin người dùng hoặc người dùng không tồn tại.");
+        "User information not found or user does not exist.");
     messages.put(
-        ExceptionUtils.USERNAME_HAS_ALREADY, "username đã tồn tại vui lòng chọn username khác.");
+        ExceptionUtils.USERNAME_HAS_ALREADY, "username already exists, please choose another username.");
     messages.put(
         ExceptionUtils.ACCOUNT_DEACTIVATED,
-        "Tài khoản của bạn đã bị vô hiệu hóa do không hoạt động.");
+        "Your account has been disabled.");
 
     // role
-    messages.put(ExceptionUtils.ROLE_NAME_IS_NOT_BLANK, "Tên vai trò không được bỏ trống.");
+    messages.put(ExceptionUtils.ROLE_NAME_IS_NOT_BLANK, "Role name cannot be left blank.");
     messages.put(
-        ExceptionUtils.ROLE_NOT_FOUND, "Không tìm thấy vai trò hoặc vai trò không tồn tại.");
+        ExceptionUtils.ROLE_NOT_FOUND, "Role not found or role does not exist.");
 
     // product
     messages.put(
         ExceptionUtils.PRODUCT_ID_IS_NOT_EXIST,
-        "Không tìm thấy thông tin của sản phẩm hoặc sản phẩm không tồn tại.");
-    messages.put(ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN, "Sản phẩm đã bị ẩn hoặc không tồn tại.");
-    messages.put(ExceptionUtils.PRODUCT_HAS_NO_QUANTITY_YET, "Vui lòng nhâp số lượng sản phẩm.");
-    messages.put(ExceptionUtils.PRODUCTS_NOT_FOUND, "Chưa có sản phẩm nào trong danh sách.");
-    messages.put(ExceptionUtils.PRODUCT_ERROR_1, "Vui lòng nhập Tiêu đề của sản phẩm.");
-    messages.put(ExceptionUtils.PRODUCT_ERROR_2, "Vui lòng nhập giá của sản phẩm.");
-    messages.put(ExceptionUtils.PRODUCT_ERROR_3, "Vui lòng nhập Made in của sản phẩm.");
+        "Product not found or product does not exist.");
+    messages.put(ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN, "The product is hidden or does not exist.");
+    messages.put(ExceptionUtils.PRODUCT_HAS_NO_QUANTITY_YET, "Please enter product quantity.");
+    messages.put(ExceptionUtils.PRODUCTS_NOT_FOUND, "There are no products in the list yet.");
+    messages.put(ExceptionUtils.PRODUCT_ERROR_1, "Please enter the Product's Title.");
+    messages.put(ExceptionUtils.PRODUCT_ERROR_2, "Please enter the product's price.");
+    messages.put(ExceptionUtils.PRODUCT_ERROR_3, "Please enter the product's Made in.");
     messages.put(
-        ExceptionUtils.PRODUCT_OUT_OF_STOCK, "Sản phẩm hiện tại đang hết hàng không thể thêm.");
+        ExceptionUtils.PRODUCT_OUT_OF_STOCK, "This product is currently out of stock and cannot be restocked.");
 
     // discount
-    messages.put(ExceptionUtils.DISCOUNT_NOT_FOUND, "Không tìm thấy thông tin mã giảm giá.");
+    messages.put(ExceptionUtils.DISCOUNT_NOT_FOUND, "No discount code information found.");
 
     // brand
     messages.put(
         ExceptionUtils.BRAND_ID_NOT_FOUND,
-        "Không tìm thấy thông tin của brand hoặc brand không tồn tại.");
+        "Brand information not found or brand does not exist.");
 
     // categpry
-    messages.put(ExceptionUtils.CATEGORY_NOT_FOUND, "Không tìm thấy thông tin danh mục hàng.");
-    messages.put(ExceptionUtils.CATEGORY_NAME_NOT_FOUND, "Tên danh mục không được bỏ trống.");
+    messages.put(ExceptionUtils.CATEGORY_NOT_FOUND, "No product catalog information found.");
+    messages.put(ExceptionUtils.CATEGORY_NAME_NOT_FOUND, "Category name cannot be left blank.");
 
     // cart
     messages.put(
         ExceptionUtils.CART_DOES_NOT_EXIST,
-        "Không tìm thấy thông tin giỏ hàng hoặc giỏ hàng không tồn tại.");
+        "Cart information not found or cart does not exist.");
     messages.put(
         ExceptionUtils.PRODUCT_IS_NOT_FOUND_IN_THE_CART,
-        "Không tìm thấy thông tin sản phẩm trong giỏ hàng.");
+        "No product information found in the cart.");
 
     // address
     messages.put(
         ExceptionUtils.ADDRESS_IS_NOT_FOUND,
-        "Không tìm thấy thông tin của địa chỉ hoặc địa chỉ không tồn tại.");
-    messages.put(ExceptionUtils.ADDRESS_ERROR_1, "Vui lòng nhập Họ và tên.");
+        "Address information could not be found or the address does not exist.");
+    messages.put(ExceptionUtils.ADDRESS_ERROR_1, "Please enter your first and last name.");
 
-    messages.put(ExceptionUtils.ADDRESS_ERROR_2, "Vui lòng nhập Số điện thoại.");
-    messages.put(ExceptionUtils.ADDRESS_ERROR_3, "Vui lòng nhập Tỉnh/Thành phố.");
-    messages.put(ExceptionUtils.ADDRESS_ERROR_4, "Vui lòng nhập Quận/Huyện.");
-    messages.put(ExceptionUtils.ADDRESS_ERROR_5, "Vui lòng nhập Xã/Phường.");
-    messages.put(ExceptionUtils.USER_ID_IS_NOT_EMPTY, "Trường userId không được bỏ trống.");
+    messages.put(ExceptionUtils.ADDRESS_ERROR_2, "Please enter the phone number.");
+    messages.put(ExceptionUtils.ADDRESS_ERROR_3, "Please enter Province/City.");
+    messages.put(ExceptionUtils.ADDRESS_ERROR_4, "Please enter District.");
+    messages.put(ExceptionUtils.ADDRESS_ERROR_5, "Please enter Ward.");
+    messages.put(ExceptionUtils.USER_ID_IS_NOT_EMPTY, "The userId field cannot be left blank.");
 
     // order
     messages.put(
         ExceptionUtils.ORDER_NOT_FOUND,
-        "Không tìm thấy thông tin đơn hàng hoặc đơn hàng không tồn tại.");
-    messages.put(ExceptionUtils.ORDER_ERROR_1, "orderId không được bỏ trống.");
-    messages.put(ExceptionUtils.ORDER_ERROR_2, "userId không được bỏ trống.");
-    messages.put(ExceptionUtils.NOT_PERMISSION, "Không có quyền.");
-    messages.put(ExceptionUtils.INVALID_STATUS_TRANSITION, "Chuyển trạng thái không hợp lệ.");
+        "Order information not found or order does not exist.");
+    messages.put(ExceptionUtils.ORDER_ERROR_1, "the orderId field cannot be left blank.");
+    messages.put(ExceptionUtils.ORDER_ERROR_2, "The userId field cannot be left blank.");
+    messages.put(ExceptionUtils.NOT_PERMISSION, "Not permission.");
+    messages.put(ExceptionUtils.INVALID_STATUS_TRANSITION, "Invalid state transition.");
 
     // product review
     messages.put(
         ExceptionUtils.PRODUCT_REVIEW_NOT_FOUND,
-        "Không tìm thấy đánh giá hoặc đánh giá không tồn tại.");
+        "No reviews found or reviews do not exist.");
     messages.put(
-        ExceptionUtils.PRODUCT_REVIEW_ERROR_1, "Đơn hàng chưa hoàn thành không thể đánh giá.");
+        ExceptionUtils.PRODUCT_REVIEW_ERROR_1, "Incomplete orders cannot be evaluated.");
   }
 }
