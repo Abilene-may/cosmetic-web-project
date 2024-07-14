@@ -8,7 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long>,
     JpaSpecificationExecutor<Long> {
-  @Query(value = " select * from order_detail order by modified_date DESC"
+  @Query(value = " select * from order_detail "
+      + " where order_id = :orderId order by modified_date DESC"
   , nativeQuery = true)
   List<OrderDetail> findAllByOrderId(Long orderId);
 }
