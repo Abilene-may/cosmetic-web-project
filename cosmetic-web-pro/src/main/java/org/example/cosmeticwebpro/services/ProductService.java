@@ -1,8 +1,6 @@
 package org.example.cosmeticwebpro.services;
 
-import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import org.example.cosmeticwebpro.domains.Discount;
 import org.example.cosmeticwebpro.domains.Product;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
@@ -25,7 +23,7 @@ public interface ProductService {
   void updateProduct(ProductUpdateReqDTO updatedProduct, MultipartFile[] multipartFiles, Long[] imageIdDelete)
       throws CosmeticException, IOException;
 
-  List<ProductOverviewDTO> getAllProductForAdmin() throws CosmeticException;
+  List<DisplayProductDTO> getAllProductForAdmin() throws CosmeticException;
 
   List<ProductOverviewDTO> productOverviewDTOS(List<Product> products) throws CosmeticException;
 
