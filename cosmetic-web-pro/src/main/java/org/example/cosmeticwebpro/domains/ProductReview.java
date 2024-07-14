@@ -46,7 +46,7 @@ public class ProductReview {
   private LocalDateTime createdDate;
 
   @Column(name = "product_id")
-  private Long ProductId;
+  private Long productId;
 
   @Column(name = "order_id")
   private Long orderId;

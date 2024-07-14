@@ -64,51 +64,51 @@ public class ExceptionUtils {
   // product review
   public static final String PRODUCT_REVIEW_NOT_FOUND = "PRODUCT_REVIEW_NOT_FOUND";
   public static final String PRODUCT_REVIEW_ERROR_1 = "PRODUCT_REVIEW_ERROR_1";
+  public static final String PRODUCT_REVIEW_ERROR_2 = "PRODUCT_REVIEW_ERROR_2";
+  public static final String PRODUCT_REVIEW_ERROR_3 = "PRODUCT_REVIEW_ERROR_3";
 
   public static Map<String, String> messages;
 
   static {
     messages = new HashMap<>();
-    messages.put(ExceptionUtils.USER_SIGNUP_1, "The Email was registered. Please enter another Email.");
+    messages.put(
+        ExceptionUtils.USER_SIGNUP_1, "The Email was registered. Please enter another Email.");
     messages.put(ExceptionUtils.E_INTERNAL_SERVER, "Server is not responding.");
     messages.put(ExceptionUtils.SIGNUP_ERROR_NULL_1, "Please enter Email.");
     messages.put(ExceptionUtils.SIGNUP_ERROR_NULL_2, "Please enter Password.");
 
     // user
     messages.put(
-        ExceptionUtils.USER_NOT_FOUND,
-        "User information not found or user does not exist.");
+        ExceptionUtils.USER_NOT_FOUND, "User information not found or user does not exist.");
     messages.put(
-        ExceptionUtils.USERNAME_HAS_ALREADY, "username already exists, please choose another username.");
-    messages.put(
-        ExceptionUtils.ACCOUNT_DEACTIVATED,
-        "Your account has been disabled.");
+        ExceptionUtils.USERNAME_HAS_ALREADY,
+        "username already exists, please choose another username.");
+    messages.put(ExceptionUtils.ACCOUNT_DEACTIVATED, "Your account has been disabled.");
 
     // role
     messages.put(ExceptionUtils.ROLE_NAME_IS_NOT_BLANK, "Role name cannot be left blank.");
-    messages.put(
-        ExceptionUtils.ROLE_NOT_FOUND, "Role not found or role does not exist.");
+    messages.put(ExceptionUtils.ROLE_NOT_FOUND, "Role not found or role does not exist.");
 
     // product
     messages.put(
-        ExceptionUtils.PRODUCT_ID_IS_NOT_EXIST,
-        "Product not found or product does not exist.");
-    messages.put(ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN, "The product is hidden or does not exist.");
+        ExceptionUtils.PRODUCT_ID_IS_NOT_EXIST, "Product not found or product does not exist.");
+    messages.put(
+        ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN, "The product is hidden or does not exist.");
     messages.put(ExceptionUtils.PRODUCT_HAS_NO_QUANTITY_YET, "Please enter product quantity.");
     messages.put(ExceptionUtils.PRODUCTS_NOT_FOUND, "There are no products in the list yet.");
     messages.put(ExceptionUtils.PRODUCT_ERROR_1, "Please enter the Product's Title.");
     messages.put(ExceptionUtils.PRODUCT_ERROR_2, "Please enter the product's price.");
     messages.put(ExceptionUtils.PRODUCT_ERROR_3, "Please enter the product's Made in.");
     messages.put(
-        ExceptionUtils.PRODUCT_OUT_OF_STOCK, "This product is currently out of stock and cannot be restocked.");
+        ExceptionUtils.PRODUCT_OUT_OF_STOCK,
+        "This product is currently out of stock and cannot be restocked.");
 
     // discount
     messages.put(ExceptionUtils.DISCOUNT_NOT_FOUND, "No discount code information found.");
 
     // brand
     messages.put(
-        ExceptionUtils.BRAND_ID_NOT_FOUND,
-        "Brand information not found or brand does not exist.");
+        ExceptionUtils.BRAND_ID_NOT_FOUND, "Brand information not found or brand does not exist.");
 
     // categpry
     messages.put(ExceptionUtils.CATEGORY_NOT_FOUND, "No product catalog information found.");
@@ -116,8 +116,7 @@ public class ExceptionUtils {
 
     // cart
     messages.put(
-        ExceptionUtils.CART_DOES_NOT_EXIST,
-        "Cart information not found or cart does not exist.");
+        ExceptionUtils.CART_DOES_NOT_EXIST, "Cart information not found or cart does not exist.");
     messages.put(
         ExceptionUtils.PRODUCT_IS_NOT_FOUND_IN_THE_CART,
         "No product information found in the cart.");
@@ -136,8 +135,7 @@ public class ExceptionUtils {
 
     // order
     messages.put(
-        ExceptionUtils.ORDER_NOT_FOUND,
-        "Order information not found or order does not exist.");
+        ExceptionUtils.ORDER_NOT_FOUND, "Order information not found or order does not exist.");
     messages.put(ExceptionUtils.ORDER_ERROR_1, "the orderId field cannot be left blank.");
     messages.put(ExceptionUtils.ORDER_ERROR_2, "The userId field cannot be left blank.");
     messages.put(ExceptionUtils.NOT_PERMISSION, "Not permission.");
@@ -146,9 +144,13 @@ public class ExceptionUtils {
 
     // product review
     messages.put(
-        ExceptionUtils.PRODUCT_REVIEW_NOT_FOUND,
-        "No reviews found or reviews do not exist.");
+        ExceptionUtils.PRODUCT_REVIEW_NOT_FOUND, "No reviews found or reviews do not exist.");
+    messages.put(ExceptionUtils.PRODUCT_REVIEW_ERROR_1, "Incomplete orders cannot be evaluated.");
     messages.put(
-        ExceptionUtils.PRODUCT_REVIEW_ERROR_1, "Incomplete orders cannot be evaluated.");
+        ExceptionUtils.PRODUCT_REVIEW_ERROR_2,
+        "The productId and orderId fields cannot be left blank.");
+    messages.put(
+        ExceptionUtils.PRODUCT_REVIEW_ERROR_3,
+        "The product is not included in the order. Cannot rate.");
   }
 }
