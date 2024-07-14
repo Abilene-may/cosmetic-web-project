@@ -67,8 +67,8 @@ public class CategoryServiceImpl implements CategoryService {
   private void checkNotNull(String name) throws CosmeticException {
     if (name.isEmpty()) {
       throw new CosmeticException(
-          ExceptionUtils.CATEGORY_NAME_NOT_FOUND,
-          ExceptionUtils.messages.get(ExceptionUtils.CATEGORY_NAME_NOT_FOUND));
+          ExceptionUtils.CATEGORY_NAME_NOT_EMPTY,
+          ExceptionUtils.messages.get(ExceptionUtils.CATEGORY_NAME_NOT_EMPTY));
     }
   }
 

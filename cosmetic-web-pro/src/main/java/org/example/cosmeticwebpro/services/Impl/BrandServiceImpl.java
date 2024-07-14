@@ -26,6 +26,7 @@ public class BrandServiceImpl implements BrandService {
    */
   @Override
   public Brand create(BrandReqDTO brandReqDTO) throws CosmeticException {
+    this.checkNotNull(brandReqDTO.getName());
     Brand brand =
         Brand.builder()
             .name(brandReqDTO.getName())
@@ -41,7 +42,15 @@ public class BrandServiceImpl implements BrandService {
   @Override
   public void update(Brand updateBrand) throws CosmeticException {
     Brand brand = this.getById(updateBrand.getId());
+    this.checkNotNull(updateBrand.getName());
     brandRepository.save(updateBrand);
+  }
+  private void checkNotNull(String name) throws CosmeticException {
+    if (name.isEmpty()) {
+      throw new CosmeticException(
+          ExceptionUtils.BRAND_NAME_NOT_EMPTY,
+          ExceptionUtils.messages.get(ExceptionUtils.BRAND_NAME_NOT_EMPTY));
+    }
   }
 
   /**
@@ -58,8 +67,6 @@ public class BrandServiceImpl implements BrandService {
   /**
    * find a brand
    * @param brandId
-   * @return
-   * @throws CosmeticException
    */
   @Override
   public Brand getById(Long brandId) throws CosmeticException {
