@@ -111,17 +111,21 @@ public class ProductServiceImpl implements ProductService {
     this.updateProductImage(multipartFiles, savedProduct.getId());
   }
 
-  /** view details of 1 product */
+  /** view details of 1 product for admin */
   @Override
   public ProductDisplayDTO getByProductId(Long productId) throws CosmeticException {
-    // find information of product
-    var product = this.getById(productId);
-    var productDTO = mapStruct.mapToProductDTO(product);
-    var productReviews = productReviewRepository.findAllByProductId(product.getId());
-    var productImages = productImageService.getAllByProductId(productId);
+    var detailByProductId =
+        productRepository.findProductDetailByProductId(Constants.ACTIVE, productId);
+    if (detailByProductId.isEmpty()) {
+      throw new CosmeticException(
+          ExceptionUtils.PRODUCT_ID_IS_NOT_EXIST,
+          ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_ID_IS_NOT_EXIST));
+    }
+    var productReviews = productReviewRepository.findAllByProductId(productId);
+    List<String> imageUrls = productRepository.findAllImagesByProductId(productId);
     return ProductDisplayDTO.builder()
-        .productDTO(productDTO)
-        .productImages(productImages)
+        .displayProductDTO(detailByProductId.get())
+        .productImages(imageUrls)
         .productReviews(productReviews)
         .build();
   }
@@ -225,7 +229,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public List<DisplayProductDTO> getAllProductForAdmin() throws CosmeticException {
     // Fetch all products
-    return productRepository.findAllProductsForHomeScreen(Constants.ACTIVE, null);
+    return productRepository.findAllProductsForAdmin(Constants.ACTIVE);
   }
 
   @Transactional
@@ -254,8 +258,6 @@ public class ProductServiceImpl implements ProductService {
     }
     return productOverviewDTOs;
   }
-
-
 
   private void updateProductImage(MultipartFile[] multipartFiles, Long productId)
       throws IOException, CosmeticException {
