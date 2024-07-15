@@ -15,6 +15,8 @@ public class ExceptionUtils {
   public static final String USER_NOT_FOUND = "USER_IS_NOT_EMPTY";
   public static final String USERNAME_HAS_ALREADY = "USERNAME_HAS_ALREADY";
   public static final String ACCOUNT_DEACTIVATED = "ACCOUNT_DEACTIVATED";
+  public static final String USER_REQ_NOT_EMPTY = "USER_REQ_NOT_EMPTY";
+  public static final String PASSWORD_NOT_MATCH = "PASSWORD_NOT_MATCH";
 
   // role
   public static final String ROLE_NAME_IS_NOT_BLANK = "ROLE_NAME_IS_NOT_BLANK";
@@ -87,6 +89,10 @@ public class ExceptionUtils {
         ExceptionUtils.USERNAME_HAS_ALREADY,
         "username already exists, please choose another username.");
     messages.put(ExceptionUtils.ACCOUNT_DEACTIVATED, "Your account has been disabled.");
+    messages.put(
+        ExceptionUtils.USER_REQ_NOT_EMPTY,
+        "Emai, username, account status, password, roleid cannot be left blank.");
+    messages.put(ExceptionUtils.PASSWORD_NOT_MATCH, "Passwords don't match.");
 
     // role
     messages.put(ExceptionUtils.ROLE_NAME_IS_NOT_BLANK, "Role name cannot be left blank.");

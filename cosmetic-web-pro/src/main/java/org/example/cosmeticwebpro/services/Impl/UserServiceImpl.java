@@ -9,6 +9,9 @@ import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.User;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
+import org.example.cosmeticwebpro.mapper.MapStruct;
+import org.example.cosmeticwebpro.models.request.CreateUserReqDTO;
+import org.example.cosmeticwebpro.models.request.ResetPasswordReqDTO;
 import org.example.cosmeticwebpro.models.request.UserReqDTO;
 import org.example.cosmeticwebpro.repositories.UserRepository;
 import org.example.cosmeticwebpro.services.UserService;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
+  private final MapStruct mapStruct;
 
   /*
   view a user detail
@@ -73,9 +77,6 @@ public class UserServiceImpl implements UserService {
     return userRepository.findAll();
   }
 
-  @Override
-  public void requestDeleteAccount(Long userId) throws CosmeticException {}
-
   @Transactional
   @Override
   public void removeRequestDeleteAccount(Long userId) throws CosmeticException {
@@ -83,5 +84,36 @@ public class UserServiceImpl implements UserService {
     LocalDateTime today = LocalDateTime.now();
     user.setRequestDate(today);
     user.setAccountStatus(Constants.PENDING_DELETION);
+  }
+
+  // create a new user for admin
+  @Override
+  public void createAUserForAdmin(CreateUserReqDTO reqDTO) throws CosmeticException {
+    if (reqDTO.getEmail().isBlank()
+        || reqDTO.getUserName().isBlank()
+        || reqDTO.getAccountStatus().isBlank()
+        || reqDTO.getPassword().isBlank()
+        || reqDTO.getRoleId() == null) {
+      throw new CosmeticException(
+          ExceptionUtils.USER_REQ_NOT_EMPTY,
+          ExceptionUtils.messages.get(ExceptionUtils.USER_REQ_NOT_EMPTY));
+    }
+    var user = mapStruct.mapToUser(reqDTO);
+    userRepository.save(user);
+  }
+
+  // reset password of the user for admin
+  @Transactional
+  @Override
+  public User resetPasswordOfUserForAdmin(ResetPasswordReqDTO reqDTO) throws CosmeticException {
+    if (!reqDTO.getNewPassword().equals(reqDTO.getReconfirmPassword())) {
+      throw new CosmeticException(
+          ExceptionUtils.PASSWORD_NOT_MATCH,
+          ExceptionUtils.messages.get(ExceptionUtils.PASSWORD_NOT_MATCH));
+    }
+    var user = this.viewDetailAUser(reqDTO.getUserId());
+    user.setPassword(passwordEncoder.encode(reqDTO.getNewPassword()));
+    user.setModifiedDate(LocalDateTime.now());
+    return user;
   }
 }
