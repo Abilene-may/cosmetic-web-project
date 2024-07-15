@@ -118,9 +118,12 @@ public class OrderServiceImpl implements OrderService {
     Integer totalQuantity = 0;
     // check - product discount
     for (OrderDetail od : orderDetailList) {
+      var product = productRepository.findById(od.getProductId());
       od.setOrderId(order.getId());
       totalCost += od.getProductCost() * od.getQuantity();
       totalQuantity = totalQuantity + od.getQuantity();
+      var quantity = product.get().getQuantity() - od.getQuantity();
+      product.get().setQuantity(quantity);
       orderDetailRepository.save(od);
     }
     double shippingCost = 0;
