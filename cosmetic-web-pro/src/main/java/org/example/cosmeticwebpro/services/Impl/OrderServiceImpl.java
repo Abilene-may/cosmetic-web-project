@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.CartLine;
@@ -172,16 +171,13 @@ public class OrderServiceImpl implements OrderService {
             Constants.ORDER_PLACED_SUCCESS, List.of(Constants.ORDER_CANCELLED),
             Constants.SELLER_PREPARING_ORDER, List.of(Constants.ORDER_CANCELLED),
             Constants.IN_TRANSIT, List.of(),
-            Constants.DELIVERY_SUCCESSFUL,
-                List.of(Constants.ORDER_RECEIVED, Constants.RETURNED_AND_REFUNDED),
+            Constants.DELIVERY_SUCCESSFUL,List.of(Constants.RETURNED_AND_REFUNDED),
             Constants.DELIVERY_FAILED, List.of(),
-            Constants.ORDER_RECEIVED, List.of(),
             Constants.RETURNED_AND_REFUNDED, List.of(),
             Constants.ORDER_CANCELLED, List.of());
 
     // Check if the new status is one of the allowed statuses for user updates
     if (!newStatus.equals(Constants.ORDER_CANCELLED)
-        && !newStatus.equals(Constants.ORDER_RECEIVED)
         && !newStatus.equals(Constants.RETURNED_AND_REFUNDED)) {
       throw new CosmeticException(
           ExceptionUtils.NOT_PERMISSION,
@@ -293,8 +289,7 @@ public class OrderServiceImpl implements OrderService {
 
     // Update compilation_date when status changes to ORDER_RECEIVED, DELIVERY_FAILED, or
     // RETURNED_AND_REFUNDED
-    if (newStatus.equals(Constants.ORDER_RECEIVED)
-        || newStatus.equals(Constants.DELIVERY_FAILED)
+    if (newStatus.equals(Constants.DELIVERY_FAILED)
         || newStatus.equals(Constants.RETURNED_AND_REFUNDED)) {
       order.setCompletionDate(LocalDateTime.now());
     }
@@ -315,12 +310,8 @@ public class OrderServiceImpl implements OrderService {
             List.of(Constants.IN_TRANSIT, Constants.ORDER_CANCELLED),
             Constants.IN_TRANSIT,
             List.of(Constants.DELIVERY_SUCCESSFUL, Constants.DELIVERY_FAILED),
-            Constants.DELIVERY_SUCCESSFUL,
-            List.of(Constants.ORDER_RECEIVED),
             Constants.DELIVERY_FAILED,
             List.of(Constants.RETURNED_AND_REFUNDED),
-            Constants.ORDER_RECEIVED,
-            List.of(),
             Constants.RETURNED_AND_REFUNDED,
             List.of(),
             Constants.ORDER_CANCELLED,

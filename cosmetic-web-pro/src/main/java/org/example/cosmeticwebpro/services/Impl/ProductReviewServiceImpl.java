@@ -31,7 +31,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     }
 
     var order = orderService.getByOrderId(reqDTO.getOrderId());
-    if (!order.getStatus().equals(Constants.ORDER_RECEIVED)) {
+    if (!order.getStatus().equals(Constants.DELIVERY_SUCCESSFUL)) {
       throw new CosmeticException(
           ExceptionUtils.PRODUCT_REVIEW_ERROR_1,
           ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_REVIEW_ERROR_1));

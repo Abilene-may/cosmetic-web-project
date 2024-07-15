@@ -26,7 +26,7 @@ public class Constants {
     public static final String IN_TRANSIT = "Đang giao hàng.";
     public static final String DELIVERY_SUCCESSFUL = "Giao hàng thành công.";
     public static final String DELIVERY_FAILED = "Giao hàng không thành công.";
-    public static final String ORDER_RECEIVED = "Đã nhận hàng.";
+//    public static final String ORDER_RECEIVED = "Đã nhận hàng.";
     public static final String RETURNED_AND_REFUNDED = "Trả hàng /Hoàn tiền.";
     public static final String PRODUCT = "product";
     public static final String ORDER = "order";
