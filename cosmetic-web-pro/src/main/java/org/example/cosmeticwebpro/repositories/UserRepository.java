@@ -25,7 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long>,
   @Query(
       value =
           "UPDATE users \n"
-              + "SET role_id = 'USER' \n"
+              + "SET role_id = 2 \n"
               + "WHERE role_id = :roleId ",
       nativeQuery = true)
   @Modifying
