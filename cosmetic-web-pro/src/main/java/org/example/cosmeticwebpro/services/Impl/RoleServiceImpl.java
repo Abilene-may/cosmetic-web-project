@@ -49,6 +49,7 @@ public class RoleServiceImpl implements RoleService {
   }
 
   // update a role
+  @Transactional
   @Override
   public Role updateARole(Long roleId ,String roleName, List<Long> permissionIds) throws CosmeticException {
     // check role exist
@@ -64,15 +65,15 @@ public class RoleServiceImpl implements RoleService {
           ExceptionUtils.messages.get(ExceptionUtils.ROLE_NAME_IS_NOT_BLANK));
     }
     LocalDateTime today = LocalDateTime.now();
-    Role role = Role.builder().roleName(roleName).modifiedDate(today).build();
+    checkRole.get().setRoleName(roleName);
+    checkRole.get().setModifiedDate(today);
     if(permissionIds == null){
-      role.setPermissions(new HashSet<>());
+      checkRole.get().setPermissions(new HashSet<>());
     }
     else{
-      role.setPermissions(new HashSet<>(permissionRepository.findAllById(permissionIds)));
+      checkRole.get().setPermissions(new HashSet<>(permissionRepository.findAllById(permissionIds)));
     }
-    role.setRoleName(roleName);
-    return roleRepository.save(role);
+    return checkRole.get();
   }
 
   /*
