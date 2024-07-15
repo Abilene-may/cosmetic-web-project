@@ -1,5 +1,6 @@
 package org.example.cosmeticwebpro.services.Impl;
 
+import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.example.cosmeticwebpro.domains.ProductDiscount;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.request.DiscountReqDTO;
+import org.example.cosmeticwebpro.models.request.DiscountUpdateReqDTO;
 import org.example.cosmeticwebpro.repositories.DiscountRepository;
 import org.example.cosmeticwebpro.repositories.ProductDiscountRepository;
 import org.example.cosmeticwebpro.services.DiscountService;
@@ -29,23 +31,20 @@ public class DiscountServiceImpl implements DiscountService {
             .discountPercent(discountReqDTO.getDiscountPercent())
             .fromDate(discountReqDTO.getFromDate())
             .toDate(discountReqDTO.getToDate())
-            .createdDate(discountReqDTO.getCreatedDate())
-            .modifiedDate(discountReqDTO.getModifiedDate())
             .applyTo(discountReqDTO.getApplyTo())
             .minAmount(discountReqDTO.getMinAmount())
             .maxUsage(discountReqDTO.getMaxUsage())
-            .totalUsage(discountReqDTO.getTotalUsage())
             .discountStatus(status)
             .build();
     discountRepository.save(discount);
     // Associate productIdList with ProductDiscount entities
-    for (Long productId : discountReqDTO.getProductIdList()) {
-      ProductDiscount productDiscount = new ProductDiscount();
-      productDiscount.setDiscountId(discount.getId());
-      productDiscount.setProductId(productId);
-      // You may want to set other fields in ProductDiscount if needed
-      productDiscountRepository.save(productDiscount);
-    }
+//    for (Long productId : discountReqDTO.getProductIdList()) {
+//      ProductDiscount productDiscount = new ProductDiscount();
+//      productDiscount.setDiscountId(discount.getId());
+//      productDiscount.setProductId(productId);
+//      // You may want to set other fields in ProductDiscount if needed
+//      productDiscountRepository.save(productDiscount);
+//    }
   }
 
   @Override
@@ -53,21 +52,22 @@ public class DiscountServiceImpl implements DiscountService {
     return discountRepository.findAll();
   }
 
+  @Transactional
   @Override
-  public void updateADiscount(Discount discount, List<Long> productIdList)
+  public void updateADiscount(DiscountUpdateReqDTO discount)
       throws CosmeticException {
     var checkDiscount = this.getByDiscountId(discount.getId());
+    LocalDateTime today = LocalDateTime.now();
     String status = setDiscountStatus(discount.getFromDate(), discount.getToDate());
-    discount.setDiscountStatus(status);
-    discountRepository.save(discount);
-    // Associate productIdList with ProductDiscount entities
-    for (Long productId : productIdList) {
-      ProductDiscount productDiscount = new ProductDiscount();
-      productDiscount.setDiscountId(discount.getId());
-      productDiscount.setProductId(productId);
-      // You may want to set other fields in ProductDiscount if needed
-      productDiscountRepository.save(productDiscount);
-    }
+    checkDiscount.setDiscountPercent(discount.getDiscountPercent());
+    checkDiscount.setFromDate(discount.getFromDate());
+    checkDiscount.setToDate(discount.getToDate());
+    checkDiscount.setModifiedDate(today);
+    checkDiscount.setApplyTo(discount.getApplyTo());
+    checkDiscount.setMinAmount(discount.getMinAmount());
+    checkDiscount.setMaxUsage(discount.getMaxUsage());
+    checkDiscount.setDiscountStatus(status);
+    discountRepository.save(checkDiscount);
   }
 
   private static String setDiscountStatus(LocalDateTime fromDate, LocalDateTime toDate) {

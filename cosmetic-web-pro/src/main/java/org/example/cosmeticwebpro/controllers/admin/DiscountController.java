@@ -66,7 +66,7 @@ public class DiscountController {
   public ResponseEntity<Object> updateADiscount(
       @RequestBody DiscountUpdateReqDTO reqDTO) {
     try {
-      discountService.updateADiscount(reqDTO.getDiscount(), reqDTO.getProductIdList());
+      discountService.updateADiscount(reqDTO);
       return new ResponseEntity<>(HttpStatus.OK);
     } catch (CosmeticException e) {
       return new ResponseEntity<>(

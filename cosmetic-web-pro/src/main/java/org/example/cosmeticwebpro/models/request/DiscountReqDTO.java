@@ -19,12 +19,7 @@ public class DiscountReqDTO {
   private Integer discountPercent;
   private LocalDateTime fromDate;
   private LocalDateTime toDate;
-  private LocalDateTime createdDate;
-  private LocalDateTime modifiedDate;
   private String applyTo;
   private Integer minAmount;
   private Integer maxUsage;
-  private Integer totalUsage;
-  private String discountStatus;
-  private List<Long> productIdList;
 }
