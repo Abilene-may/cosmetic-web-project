@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,5 +57,39 @@ public class OrderManagementController {
           HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+  // search all orders by the given status for admin
+  @GetMapping("/get-all")
+  public ResponseEntity<Object> getAllOrders() {
+    try {
+      var orders = orderService.getAllOrderForAdmin();
+      return new ResponseEntity<>(orders, HttpStatus.OK);
+    } catch (CosmeticException e) {
+      return new ResponseEntity<>(
+          new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+    } catch (Exception ex) {
+      log.error(ex.getMessage(), ex);
+      return new ResponseEntity<>(
+          ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // view detail an order for admin
+  @GetMapping("/get-by-id/{orderId}")
+  public ResponseEntity<Object> getById(@PathVariable Long orderId) {
+    try {
+      var displayOrderDTO = orderService.showDetailAnOrder(orderId);
+      return new ResponseEntity<>(displayOrderDTO, HttpStatus.OK);
+    } catch (CosmeticException e) {
+      return new ResponseEntity<>(
+          new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+    } catch (Exception ex) {
+      log.error(ex.getMessage(), ex);
+      return new ResponseEntity<>(
+          ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
 
 }

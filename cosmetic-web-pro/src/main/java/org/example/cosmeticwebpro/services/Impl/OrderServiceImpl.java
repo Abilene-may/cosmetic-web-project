@@ -259,6 +259,12 @@ public class OrderServiceImpl implements OrderService {
     return order.get();
   }
 
+  // find all orders for admin
+  @Override
+  public List<Order> getAllOrderForAdmin() throws CosmeticException {
+    return orderRepository.findAll();
+  }
+
   @Transactional
   @Override
   public Order updateStatusAnOrderForAdmin(Long orderId, String newStatus)
