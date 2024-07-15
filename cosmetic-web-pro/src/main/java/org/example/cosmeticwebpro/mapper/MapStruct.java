@@ -6,16 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Set;
 import org.example.cosmeticwebpro.domains.CartLine;
-import org.example.cosmeticwebpro.domains.OrderDetail;
 import org.example.cosmeticwebpro.domains.Product;
-import org.example.cosmeticwebpro.domains.ProductReview;
 import org.example.cosmeticwebpro.domains.Role;
 import org.example.cosmeticwebpro.models.CartLineDTO;
-import org.example.cosmeticwebpro.models.DisplayProductDTO;
-import org.example.cosmeticwebpro.models.DisplayRoleDTO;
 import org.example.cosmeticwebpro.models.ProductDTO;
 import org.example.cosmeticwebpro.models.ProductOverviewDTO;
-import org.example.cosmeticwebpro.models.ProductReviewDTO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
@@ -35,8 +30,6 @@ public interface MapStruct {
   List<ProductOverviewDTO> mapToProductResponseDtoList(List<Product> products);
 
   ProductDTO mapToProductDTO(Product product);
-
-  DisplayRoleDTO mapToDisplayRoleDTO(Role role);
 
   CartLineDTO mapToCartLineDTO(CartLine cartLine);
 

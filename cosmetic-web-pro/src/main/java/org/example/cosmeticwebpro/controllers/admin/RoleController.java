@@ -1,11 +1,11 @@
 package org.example.cosmeticwebpro.controllers.admin;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.common.ErrorDTO;
-import org.example.cosmeticwebpro.models.request.RoleAndPermissionReqDTO;
 import org.example.cosmeticwebpro.services.RoleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin("*")
@@ -31,10 +31,14 @@ public class RoleController {
    * change a role and permissions of a role
    */
   @PostMapping("/create")
-  public ResponseEntity<Object> createANewRole(@RequestBody RoleAndPermissionReqDTO reqDTO){
+  public ResponseEntity<Object> createANewRole(@RequestParam String roleName,
+      @RequestParam(required = false) List<Long> permissionIds){
     try{
-      roleService.createANewRole(reqDTO);
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      if (permissionIds != null && permissionIds.isEmpty()) {
+        permissionIds = null;
+      }
+      var role = roleService.createANewRole(roleName, permissionIds);
+      return new ResponseEntity<>(role,HttpStatus.OK);
     } catch (CosmeticException e){
       return new ResponseEntity<>(
           new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -50,10 +54,16 @@ public class RoleController {
    * change a role and permissions of a role
    */
   @PutMapping("/update")
-  public ResponseEntity<Object> updateARole(@RequestBody RoleAndPermissionReqDTO reqDTO){
+  public ResponseEntity<Object> updateARole(
+      @RequestParam Long roleId,
+      @RequestParam String roleName,
+      @RequestParam(required = false) List<Long> permissionIds){
     try{
-      roleService.createANewRole(reqDTO);
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      if (permissionIds != null && permissionIds.isEmpty()) {
+        permissionIds = null;
+      }
+      var updateRole = roleService.updateARole(roleId, roleName, permissionIds);
+      return new ResponseEntity<>(updateRole,HttpStatus.OK);
     } catch (CosmeticException e){
       return new ResponseEntity<>(
           new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);

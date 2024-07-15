@@ -105,7 +105,7 @@ public class UserController {
   /**
    * request delete account
    */
-  @PutMapping("/admin/create")
+  @PutMapping("/admin/create-user")
   public ResponseEntity<Object> createUserForAdmin(@RequestBody Long userId){
     try{
       userService.removeRequestDeleteAccount(userId);

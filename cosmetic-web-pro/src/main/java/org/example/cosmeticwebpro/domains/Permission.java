@@ -4,9 +4,11 @@ package org.example.cosmeticwebpro.domains;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -44,10 +46,7 @@ public class Permission {
   @Column(name = "description")
   private String description;
 
-  @Column(name = "allow")
-  private Boolean allow;
-
   @JsonIgnore
-  @OneToMany(mappedBy = "permission")
-  private Set<RolePermission> rolePermissions = new HashSet<>();
+  @ManyToMany(mappedBy = "permissions", fetch = FetchType.LAZY)
+  private Set<Role> roles = new HashSet<>();
 }
