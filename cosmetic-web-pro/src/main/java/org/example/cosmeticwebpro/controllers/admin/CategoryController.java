@@ -6,6 +6,7 @@ import org.example.cosmeticwebpro.domains.Category;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.common.ErrorDTO;
+import org.example.cosmeticwebpro.models.request.CategoryReqDTO;
 import org.example.cosmeticwebpro.services.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +32,9 @@ public class CategoryController {
    * Create a new category
    */
   @PostMapping("/create")
-  public ResponseEntity<Object> create(@RequestBody String categoryName){
+  public ResponseEntity<Object> create(@RequestBody CategoryReqDTO reqDTO){
     try{
-      categoryService.create(categoryName);
+      categoryService.create(reqDTO.getCategoryName());
       return new ResponseEntity<>(HttpStatus.OK);
     } catch (CosmeticException e){
       return new ResponseEntity<>(

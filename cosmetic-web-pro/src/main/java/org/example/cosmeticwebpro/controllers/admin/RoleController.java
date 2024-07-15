@@ -132,5 +132,23 @@ public class RoleController {
     }
   }
 
+  /**
+   * API show detail a role and permission of a role
+   */
+  @GetMapping("/permission/get-all")
+  public ResponseEntity<Object> getAllPermissions(){
+    try {
+      var permissions = roleService.getAllPermissions();
+      return new ResponseEntity<>(permissions, HttpStatus.OK);
+    } catch (CosmeticException e) {
+      return new ResponseEntity<>(
+          new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+    } catch (Exception ex) {
+      log.error(ex.getMessage(), ex);
+      return new ResponseEntity<>(
+          ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 
 }

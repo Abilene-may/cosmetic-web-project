@@ -116,4 +116,11 @@ public class RoleServiceImpl implements RoleService {
     userRepository.updateRole(roleId);
     roleRepository.deleteById(roleId);
   }
+
+
+  // Get all permissions
+  @Override
+  public List<Permission> getAllPermissions() throws CosmeticException {
+    return permissionRepository.findAll();
+  }
 }
