@@ -7,6 +7,7 @@ import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.ProductReview;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
+import org.example.cosmeticwebpro.models.request.DisplayReviewDTO;
 import org.example.cosmeticwebpro.models.request.ProductReviewReqDTO;
 import org.example.cosmeticwebpro.repositories.OrderDetailRepository;
 import org.example.cosmeticwebpro.repositories.ProductReviewRepository;
@@ -70,7 +71,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
   }
 
   @Override
-  public List<ProductReview> getAllByProductId(Long productId) throws CosmeticException {
-    return productReviewRepository.findAllByProductId(productId);
+  public List<DisplayReviewDTO> getAllByProductId(Long productId) throws CosmeticException {
+    return productReviewRepository.getAllProductReviewByProductId(productId);
   }
 }
