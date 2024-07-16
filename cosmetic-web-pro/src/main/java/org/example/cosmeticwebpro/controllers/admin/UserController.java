@@ -183,4 +183,23 @@ public class UserController {
     }
   }
 
+  /**
+   * request delete account
+   */
+  @PutMapping("/admin/change-role/{userId}/{roleId}")
+  public ResponseEntity<Object> updateUser(@PathVariable Long userId, @PathVariable Long roleId){
+    try{
+      userService.changeRoleUserForAdmin(userId, roleId);
+      return new ResponseEntity<>(HttpStatus.OK);
+    } catch (CosmeticException e){
+      return new ResponseEntity<>(
+          new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+    } catch (Exception ex){
+      log.error(ex.getMessage(), ex);
+      return new ResponseEntity<>(
+          ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
 }

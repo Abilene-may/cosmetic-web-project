@@ -73,6 +73,7 @@ public class RoleServiceImpl implements RoleService {
     else{
       checkRole.get().setPermissions(new HashSet<>(permissionRepository.findAllById(permissionIds)));
     }
+    roleRepository.save(checkRole.get());
     return checkRole.get();
   }
 

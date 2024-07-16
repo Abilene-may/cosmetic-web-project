@@ -24,4 +24,6 @@ public interface UserService {
   void deleteAUser(Long userId) throws CosmeticException;
 
   List<UserDTO> getAllUsersForAdmin() throws CosmeticException;
+
+  void changeRoleUserForAdmin(Long userId, Long roleId) throws CosmeticException;
 }

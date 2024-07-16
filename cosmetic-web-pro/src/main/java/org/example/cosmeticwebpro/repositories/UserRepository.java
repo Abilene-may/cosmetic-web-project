@@ -51,4 +51,11 @@ public interface UserRepository extends JpaRepository<User, Long>,
               + " order by u.created_date ",
       nativeQuery = true)
   List<UserDTO> findAllUsersForAdmin();
+
+  @Transactional
+  @Modifying
+  @Query(value = " UPDATE users SET role_id = :roleId WHERE id = :userId "
+      , nativeQuery = true
+  )
+  void changeRoleUserForAdmin(Long userId, Long roleId);
 }

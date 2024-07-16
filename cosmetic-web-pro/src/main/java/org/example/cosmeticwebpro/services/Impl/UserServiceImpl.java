@@ -137,4 +137,11 @@ public class UserServiceImpl implements UserService {
   public List<UserDTO> getAllUsersForAdmin() throws CosmeticException {
     return userRepository.findAllUsersForAdmin();
   }
+
+  // change role user for admin
+  @Override
+  public void changeRoleUserForAdmin(Long userId, Long roleId) throws CosmeticException {
+    userRepository.changeRoleUserForAdmin(userId, roleId);
+  }
+
 }
