@@ -23,6 +23,7 @@ public class ExceptionUtils {
   public static final String ROLE_NOT_FOUND = "ROLE_NOT_FOUND";
   public static final String CANNOT_DELETE = "CANNOT_DELETE";
   public static final String ROLE_NAME_NOT_EMPTY = "ROLE_NAME_NOT_EMPTY";
+  public static final String ROLE_CANNOT_BE_DELETED = "ROLE_CANNOT_BE_DELETED";
 
   // product
   public static final String PRODUCT_ID_IS_NOT_EXIST = "PRODUCT_ID_IS_NOT_EXIST";
@@ -99,6 +100,7 @@ public class ExceptionUtils {
     messages.put(ExceptionUtils.ROLE_NOT_FOUND, "Role not found or role does not exist.");
     messages.put(ExceptionUtils.CANNOT_DELETE, "USER and ADMIN roles cannot be deleted.");
     messages.put(ExceptionUtils.ROLE_NAME_NOT_EMPTY, "Role name cannot be left blank.");
+    messages.put(ExceptionUtils.ROLE_CANNOT_BE_DELETED, "Cannot delete this role.");
 
     // product
     messages.put(

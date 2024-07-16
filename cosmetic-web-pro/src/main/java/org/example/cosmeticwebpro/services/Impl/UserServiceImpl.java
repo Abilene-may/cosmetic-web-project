@@ -10,6 +10,7 @@ import org.example.cosmeticwebpro.domains.User;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.mapper.MapStruct;
+import org.example.cosmeticwebpro.models.UserDTO;
 import org.example.cosmeticwebpro.models.request.CreateUserReqDTO;
 import org.example.cosmeticwebpro.models.request.ResetPasswordReqDTO;
 import org.example.cosmeticwebpro.models.request.UserReqDTO;
@@ -115,5 +116,25 @@ public class UserServiceImpl implements UserService {
     user.setPassword(passwordEncoder.encode(reqDTO.getNewPassword()));
     user.setModifiedDate(LocalDateTime.now());
     return user;
+  }
+
+  // delete a user
+  @Transactional
+  @Override
+  public void deleteAUser(Long userId) throws CosmeticException {
+    var user = this.viewDetailAUser(userId);
+    if (user.getRoleId() == 1 || user.getRoleId() == 2) {
+      throw new CosmeticException(
+          ExceptionUtils.ROLE_CANNOT_BE_DELETED,
+          ExceptionUtils.messages.get(ExceptionUtils.ROLE_CANNOT_BE_DELETED));
+    }
+    userRepository.delete(user);
+  }
+
+
+  // get all users for admin
+  @Override
+  public List<UserDTO> getAllUsersForAdmin() throws CosmeticException {
+    return userRepository.findAllUsersForAdmin();
   }
 }

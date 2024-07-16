@@ -1,7 +1,9 @@
 package org.example.cosmeticwebpro.repositories;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
 import org.example.cosmeticwebpro.domains.User;
+import org.example.cosmeticwebpro.models.UserDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -32,5 +34,21 @@ public interface UserRepository extends JpaRepository<User, Long>,
   @Transactional
   void updateRole(Long roleId);
 
-    Optional<User> findUserByUserName(String userName);
+  @Query(
+      value =
+          "select u.id as id,\n"
+              + "       u.email as email,\n"
+              + "       u.first_name as firstName,\n"
+              + "       u.last_name as lastName,\n"
+              + "       u.username as username,\n"
+              + "       u.password as password,\n"
+              + "       u.created_date as createdDate,\n"
+              + "       u.modified_date as modifiedDate,\n"
+              + "       u.account_status as accountStatus,\n"
+              + "       u.request_date as requestDate,\n"
+              + "       r.role_name as roleName\n"
+              + "from users u join role r on u.role_id = r.id "
+              + " order by u.created_date ",
+      nativeQuery = true)
+  List<UserDTO> findAllUsersForAdmin();
 }

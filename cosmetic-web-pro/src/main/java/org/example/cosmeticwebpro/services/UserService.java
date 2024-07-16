@@ -3,6 +3,7 @@ package org.example.cosmeticwebpro.services;
 import java.util.List;
 import org.example.cosmeticwebpro.domains.User;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
+import org.example.cosmeticwebpro.models.UserDTO;
 import org.example.cosmeticwebpro.models.request.CreateUserReqDTO;
 import org.example.cosmeticwebpro.models.request.ResetPasswordReqDTO;
 import org.example.cosmeticwebpro.models.request.UserReqDTO;
@@ -19,4 +20,8 @@ public interface UserService {
   void createAUserForAdmin(CreateUserReqDTO reqDTO) throws CosmeticException;
 
   User resetPasswordOfUserForAdmin(ResetPasswordReqDTO reqDTO) throws CosmeticException;
+
+  void deleteAUser(Long userId) throws CosmeticException;
+
+  List<UserDTO> getAllUsersForAdmin() throws CosmeticException;
 }

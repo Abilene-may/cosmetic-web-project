@@ -13,6 +13,7 @@ import org.example.cosmeticwebpro.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -106,6 +107,26 @@ public class UserController {
   }
 
   /**
+   * API get all users for admin
+   */
+  @GetMapping("/admin/get-all")
+  public ResponseEntity<Object> getAllUsersForAdmin(){
+    try {
+      var userList = userService.getAllUsersForAdmin();
+      return new ResponseEntity<>(userList, HttpStatus.OK);
+    } catch (CosmeticException e) {
+      return new ResponseEntity<>(
+          new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+    } catch (Exception ex) {
+      log.error(ex.getMessage(), ex);
+      return new ResponseEntity<>(
+          ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+
+  /**
    * create a user for admin
    */
   @PostMapping("/admin/create-user")
@@ -142,4 +163,24 @@ public class UserController {
           HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  /**
+   * delete a user for admin
+   */
+  @DeleteMapping("/admin/delete-user/{userId}")
+  public ResponseEntity<Object> deleteAUser(@PathVariable Long userId){
+    try{
+      userService.deleteAUser(userId);
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    } catch (CosmeticException e){
+      return new ResponseEntity<>(
+          new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+    } catch (Exception ex){
+      log.error(ex.getMessage(), ex);
+      return new ResponseEntity<>(
+          ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
 }

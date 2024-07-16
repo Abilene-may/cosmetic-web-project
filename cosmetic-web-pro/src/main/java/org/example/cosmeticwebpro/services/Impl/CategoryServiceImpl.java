@@ -1,5 +1,6 @@
 package org.example.cosmeticwebpro.services.Impl;
 
+import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -47,20 +48,15 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   // update a category
+  @Transactional
   @Override
   public Category update(Category category) throws CosmeticException {
     // check category exist
-    this.getById(category.getId());
+    var updateCategory = this.getById(category.getId());
     this.checkNotNull(category.getCategoryName());
     LocalDateTime today = LocalDateTime.now();
-    Category updateCategory =
-        Category.builder()
-            .id(category.getId())
-            .categoryName(category.getCategoryName())
-            .createdDate(category.getCreatedDate())
-            .modifiedDate(today)
-            .build();
-    categoryRepository.save(updateCategory);
+    updateCategory.setCategoryName(category.getCategoryName());
+    updateCategory.setModifiedDate(today);
     return updateCategory;
   }
 
