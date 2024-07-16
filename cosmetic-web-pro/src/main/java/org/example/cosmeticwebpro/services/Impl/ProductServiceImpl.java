@@ -56,21 +56,13 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public void createProduct(ProductReqDTO productReqDTO, MultipartFile[] multipartFiles)
       throws CosmeticException, IOException {
-    if (productReqDTO.getTitle().isBlank()) {
+    if (productReqDTO.getTitle().isBlank()
+        || productReqDTO.getCurrentCost() == null
+        || productReqDTO.getBrandId() == null
+        || productReqDTO.getMadeIn().isBlank()) {
       throw new CosmeticException(
           ExceptionUtils.PRODUCT_ERROR_1,
           ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_ERROR_1));
-    }
-
-    if (productReqDTO.getCurrentCost() == null) {
-      throw new CosmeticException(
-          ExceptionUtils.PRODUCT_ERROR_2,
-          ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_ERROR_2));
-    }
-    if (productReqDTO.getMadeIn().isBlank()) {
-      throw new CosmeticException(
-          ExceptionUtils.PRODUCT_ERROR_3,
-          ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_ERROR_3));
     }
     String productStatus = productReqDTO.getProductStatus();
     if (productReqDTO.getProductStatus().isBlank()) {

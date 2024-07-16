@@ -5,11 +5,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.CartLine;
 import org.example.cosmeticwebpro.domains.Order;
 import org.example.cosmeticwebpro.domains.OrderDetail;
+import org.example.cosmeticwebpro.domains.Product;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.DisplayOrderDTO;
@@ -190,7 +192,12 @@ public class OrderServiceImpl implements OrderService {
           ExceptionUtils.NOT_PERMISSION,
           ExceptionUtils.messages.get(ExceptionUtils.NOT_PERMISSION));
     }
-
+    var orderDetails = orderDetailRepository.findAllByOrderId(orderId);
+    for (OrderDetail o: orderDetails){
+      var product = productRepository.findById(o.getProductId());
+      var count = product.get().getCountPurchase() + o.getQuantity();
+      product.get().setCountPurchase(count);
+    }
     // Update the order status
     order.setStatus(newStatus);
     return orderRepository.save(order);
@@ -293,9 +300,10 @@ public class OrderServiceImpl implements OrderService {
         || newStatus.equals(Constants.RETURNED_AND_REFUNDED)) {
       order.setCompletionDate(LocalDateTime.now());
     }
+    if(newStatus.equals(Constants.DELIVERY_SUCCESSFUL)){
 
+    }
     order = orderRepository.save(order);
-
     return order;
   }
 

@@ -31,8 +31,6 @@ public class ExceptionUtils {
   public static final String PRODUCT_HAS_NO_QUANTITY_YET = "PRODUCT_HAS_NO_QUANTITY_YET";
   public static final String PRODUCTS_NOT_FOUND = "PRODUCTS_NOT_FOUND";
   public static final String PRODUCT_ERROR_1 = "PRODUCT_ERROR_1";
-  public static final String PRODUCT_ERROR_2 = "PRODUCT_ERROR_2";
-  public static final String PRODUCT_ERROR_3 = "PRODUCT_ERROR_3";
   public static final String PRODUCT_OUT_OF_STOCK = "PRODUCT_OUT_OF_STOCK";
 
   // discount
@@ -109,9 +107,9 @@ public class ExceptionUtils {
         ExceptionUtils.PRODUCT_HAS_BEEN_HIDDEN, "The product is hidden or does not exist.");
     messages.put(ExceptionUtils.PRODUCT_HAS_NO_QUANTITY_YET, "Please enter product quantity.");
     messages.put(ExceptionUtils.PRODUCTS_NOT_FOUND, "There are no products in the list yet.");
-    messages.put(ExceptionUtils.PRODUCT_ERROR_1, "Please enter the Product's Title.");
-    messages.put(ExceptionUtils.PRODUCT_ERROR_2, "Please enter the product's price.");
-    messages.put(ExceptionUtils.PRODUCT_ERROR_3, "Please enter the product's Made in.");
+    messages.put(
+        ExceptionUtils.PRODUCT_ERROR_1,
+        "Please enter the Product's Title, product's cost, brandId and Made in.");
     messages.put(
         ExceptionUtils.PRODUCT_OUT_OF_STOCK,
         "This product is currently out of stock and cannot be restocked.");
