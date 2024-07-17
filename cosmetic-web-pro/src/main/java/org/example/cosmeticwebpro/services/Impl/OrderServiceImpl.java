@@ -5,43 +5,58 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.CartLine;
 import org.example.cosmeticwebpro.domains.Order;
 import org.example.cosmeticwebpro.domains.OrderDetail;
-import org.example.cosmeticwebpro.domains.Product;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.models.DisplayOrderDTO;
 import org.example.cosmeticwebpro.models.DisplayOrderDetailDTO;
 import org.example.cosmeticwebpro.models.request.OrderReqDTO;
 import org.example.cosmeticwebpro.repositories.CartLineRepository;
-import org.example.cosmeticwebpro.repositories.DiscountRepository;
 import org.example.cosmeticwebpro.repositories.OrderDetailRepository;
 import org.example.cosmeticwebpro.repositories.OrderRepository;
 import org.example.cosmeticwebpro.repositories.ProductRepository;
 import org.example.cosmeticwebpro.services.CartService;
 import org.example.cosmeticwebpro.services.HomeService;
 import org.example.cosmeticwebpro.services.OrderService;
-import org.example.cosmeticwebpro.services.ProductService;
 import org.example.cosmeticwebpro.services.UserService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
+@Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
 
   private final OrderRepository orderRepository;
   private final OrderDetailRepository orderDetailRepository;
-  private final DiscountRepository discountRepository;
   private final UserService userService;
   private final CartLineRepository cartLineRepository;
-  private final ProductService productService;
   private final ProductRepository productRepository;
   private final CartService cartService;
   private final HomeService homeService;
+
+  public OrderServiceImpl(
+      @Lazy OrderRepository orderRepository,
+      @Lazy OrderDetailRepository orderDetailRepository,
+      @Lazy UserService userService,
+      @Lazy CartLineRepository cartLineRepository,
+      @Lazy ProductRepository productRepository,
+      @Lazy CartService cartService,
+      @Lazy HomeService homeService
+  ){
+    super();
+    this.orderRepository = orderRepository;
+    this.orderDetailRepository = orderDetailRepository;
+    this.userService = userService;
+    this.cartLineRepository = cartLineRepository;
+    this.productRepository = productRepository;
+    this.cartService = cartService;
+    this.homeService = homeService;
+  }
 
   // find a list order for a user
   @Override

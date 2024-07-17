@@ -57,6 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
     LocalDateTime today = LocalDateTime.now();
     updateCategory.setCategoryName(category.getCategoryName());
     updateCategory.setModifiedDate(today);
+    categoryRepository.save(updateCategory);
     return updateCategory;
   }
 

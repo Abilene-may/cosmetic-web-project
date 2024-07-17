@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.Product;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
@@ -16,17 +17,30 @@ import org.example.cosmeticwebpro.repositories.ProductReviewRepository;
 import org.example.cosmeticwebpro.services.BrandService;
 import org.example.cosmeticwebpro.services.CategoryService;
 import org.example.cosmeticwebpro.services.HomeService;
+import org.example.cosmeticwebpro.services.ProductReviewService;
 import org.example.cosmeticwebpro.services.ProductService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
+@Slf4j
 @Service
 public class HomeServiceImpl implements HomeService {
   private final ProductRepository productRepository;
-  private final ProductService productService;
   private final ProductReviewRepository productReviewRepository;
   private final CategoryService categoryService;
   private final BrandService brandService;
+  public HomeServiceImpl(
+      @Lazy ProductRepository productRepository,
+      @Lazy ProductReviewRepository productReviewRepository,
+      @Lazy CategoryService categoryService,
+      @Lazy BrandService brandService
+  ){
+    super();
+    this.productRepository =productRepository;
+    this.productReviewRepository = productReviewRepository;
+    this.categoryService = categoryService;
+    this.brandService = brandService;
+  }
 
   @Override
   public HomeDisplayDTO displayHomeScreen() throws CosmeticException {
@@ -59,7 +73,7 @@ public class HomeServiceImpl implements HomeService {
         productRepository.findProductDetailByProductIdForUser(
             Constants.PRODUCT_HIDDEN, Constants.ACTIVE, productId);
     List<String> imageUrls = productRepository.findAllImagesByProductId(productId);
-    var productReviews = productReviewRepository.findAllByProductId(productId);
+    var productReviews = productReviewRepository.getAllProductReviewByProductId(productId);
     productDisplayDTO.setDisplayProductDTO(displayProductDTO.get());
     productDisplayDTO.setProductImages(imageUrls);
     productDisplayDTO.setProductReviews(productReviews);

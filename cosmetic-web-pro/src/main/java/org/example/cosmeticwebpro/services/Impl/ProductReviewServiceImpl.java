@@ -3,6 +3,7 @@ package org.example.cosmeticwebpro.services.Impl;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.ProductReview;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
@@ -13,14 +14,25 @@ import org.example.cosmeticwebpro.repositories.OrderDetailRepository;
 import org.example.cosmeticwebpro.repositories.ProductReviewRepository;
 import org.example.cosmeticwebpro.services.OrderService;
 import org.example.cosmeticwebpro.services.ProductReviewService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
-@RequiredArgsConstructor
 public class ProductReviewServiceImpl implements ProductReviewService {
   private final ProductReviewRepository productReviewRepository;
   private final OrderService orderService;
   private final OrderDetailRepository orderDetailRepository;
+
+  public ProductReviewServiceImpl(
+      @Lazy ProductReviewRepository productReviewRepository,
+      @Lazy OrderService orderService,
+      @Lazy OrderDetailRepository orderDetailRepository){
+    super();
+    this.productReviewRepository = productReviewRepository;
+    this.orderService = orderService;
+    this.orderDetailRepository = orderDetailRepository;
+  }
 
   // create a new review
   @Override

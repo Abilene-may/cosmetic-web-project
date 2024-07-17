@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.Cart;
 import org.example.cosmeticwebpro.domains.CartLine;
@@ -25,20 +26,35 @@ import org.example.cosmeticwebpro.repositories.ProductRepository;
 import org.example.cosmeticwebpro.services.CartService;
 import org.example.cosmeticwebpro.services.HomeService;
 import org.example.cosmeticwebpro.services.ProductService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
+@Slf4j
 @Service
 public class CartServiceImpl implements CartService {
   private final CartRepository cartRepository;
   private final CartLineRepository cartLineRepository;
   private final DiscountRepository discountRepository;
   private final ProductRepository productRepository;
-  private final ProductImageRepository productImageRepository;
   private final HomeService homeService;
   private final MapStruct mapStruct;
-  private final ProductService productService;
 
+  public CartServiceImpl(
+      @Lazy CartRepository cartRepository,
+      @Lazy CartLineRepository cartLineRepository,
+      @Lazy DiscountRepository discountRepository,
+      @Lazy ProductRepository productRepository,
+      @Lazy HomeService homeService,
+      @Lazy MapStruct mapStruct
+  ){
+    super();
+    this.cartRepository = cartRepository;
+    this.cartLineRepository = cartLineRepository;
+    this.discountRepository = discountRepository;
+    this.productRepository = productRepository;
+    this.homeService = homeService;
+    this.mapStruct = mapStruct;
+  }
   /** Create a shopping cart when customer successfully registers for an account */
   @Override
   public void createCart(User user) {

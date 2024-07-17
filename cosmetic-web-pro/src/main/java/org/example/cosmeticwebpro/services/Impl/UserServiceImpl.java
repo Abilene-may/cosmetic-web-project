@@ -115,6 +115,7 @@ public class UserServiceImpl implements UserService {
     var user = this.viewDetailAUser(reqDTO.getUserId());
     user.setPassword(passwordEncoder.encode(reqDTO.getNewPassword()));
     user.setModifiedDate(LocalDateTime.now());
+    userRepository.save(user);
     return user;
   }
 

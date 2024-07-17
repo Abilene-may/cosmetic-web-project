@@ -27,6 +27,7 @@ import org.example.cosmeticwebpro.repositories.ProductRepository;
 import org.example.cosmeticwebpro.repositories.ProductReviewRepository;
 import org.example.cosmeticwebpro.services.CloudinaryService;
 import org.example.cosmeticwebpro.services.ProductImageService;
+import org.example.cosmeticwebpro.services.ProductReviewService;
 import org.example.cosmeticwebpro.services.ProductService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -113,7 +114,7 @@ public class ProductServiceImpl implements ProductService {
           ExceptionUtils.PRODUCT_ID_IS_NOT_EXIST,
           ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_ID_IS_NOT_EXIST));
     }
-    var productReviews = productReviewRepository.findAllByProductId(productId);
+    var productReviews = productReviewRepository.getAllProductReviewByProductId(productId);
     List<String> imageUrls = productRepository.findAllImagesByProductId(productId);
     return ProductDisplayDTO.builder()
         .displayProductDTO(detailByProductId.get())
