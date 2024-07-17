@@ -148,7 +148,7 @@ public class UserController {
   /**
    * reset password of user for admin
    */
-  @PostMapping("/admin/reset-password")
+  @PutMapping("/admin/reset-password")
   public ResponseEntity<Object> resetPasswordOfUserForAdmin(@RequestBody ResetPasswordReqDTO reqDTO){
     try{
       var user = userService.resetPasswordOfUserForAdmin(reqDTO);

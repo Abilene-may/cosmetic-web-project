@@ -23,4 +23,6 @@ public interface OrderService {
   Order getByOrderId(Long orderId) throws CosmeticException;
 
   List<Order> getAllOrderForAdmin() throws CosmeticException;
+
+
 }
