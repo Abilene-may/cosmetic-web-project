@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import org.example.cosmeticwebpro.domains.Product;
 import org.example.cosmeticwebpro.models.DisplayProductDTO;
+import org.example.cosmeticwebpro.models.ProductStatisticDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,6 +14,20 @@ import org.springframework.data.repository.query.Param;
 
 public interface ProductRepository
     extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
+
+  @Query(
+      value =
+          "SELECT \n"
+              + "    p.id AS id,\n"
+              + "    p.title AS title,\n"
+              + "    p.quantity AS quantity,\n"
+              + "    p.count_purchase AS countPurchase\n"
+              + " FROM product p\n"
+              + " WHERE p.quantity <= 10\n"
+              + " ORDER BY p.quantity ASC\n"
+              + " LIMIT 10",
+      nativeQuery = true)
+  List<ProductStatisticDTO> findAllProductsOutOfStock();
 
   @Query(
       value =
@@ -421,5 +436,7 @@ public interface ProductRepository
       + " WHERE id = :productId "
   , nativeQuery = true)
   void updateCountPurchase(@Param("productId") Long productId, @Param("quantity") Integer quantity);
+
+
 
 }
