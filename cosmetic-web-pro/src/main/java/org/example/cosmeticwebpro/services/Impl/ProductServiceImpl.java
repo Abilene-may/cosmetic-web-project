@@ -176,6 +176,7 @@ public class ProductServiceImpl implements ProductService {
     existingProduct.setBrandId(updatedProduct.getBrandId());
     existingProduct.setCategoryId(updatedProduct.getCategoryId());
     if (updatedProduct.getDiscountId() != null) {
+
       // find old discount that is still active
       var productDiscounts = productDiscountRepository.findAllByProductId(updatedProduct.getId());
       // delete old discount that is still active
@@ -192,32 +193,14 @@ public class ProductServiceImpl implements ProductService {
               .build();
       productDiscountRepository.save(productDiscount);
     }
+    productRepository.save(existingProduct);
     if(multipartFiles != null){
       this.updateProductImage(multipartFiles, existingProduct.getId());
     }
-    var product = productRepository.save(existingProduct);
-
     // delete old images of the product
     if (imageIdDelete == null) return;
     for (Long imageId : imageIdDelete) {
-      productImageService.delete((long) imageId.intValue());
-    }
-
-    // add images in a product
-    for (MultipartFile multipartFile : multipartFiles) {
-      BufferedImage bi = ImageIO.read(multipartFile.getInputStream());
-      if (bi == null) {
-        throw new IOException("Hình ảnh không hợp lệ!");
-      }
-      Map result = cloudinaryService.upload(multipartFile);
-      ProductImage image =
-          ProductImage.builder()
-              .name((String) result.get("original_filename"))
-              .imageUrl((String) result.get("url"))
-              .imageId((String) result.get("public_id"))
-              .productId(product.getId())
-              .build();
-      productImageService.save(image);
+      productImageService.delete(imageId);
     }
   }
 

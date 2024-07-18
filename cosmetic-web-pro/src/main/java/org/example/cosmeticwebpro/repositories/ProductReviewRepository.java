@@ -25,7 +25,7 @@ public interface ProductReviewRepository extends JpaRepository<ProductReview, Lo
               + "       pr.created_date as createdDate,\n"
               + "       pr.product_id as productId,\n"
               + "       pr.order_id as orderId,\n"
-              + "       u.username as username\n"
+              + "       u.username as userName\n"
               + "from product_review pr join orders o on pr.order_id = o.id\n"
               + "join users u on o.user_id = u.id\n"
               + "where pr.product_id = :productId\n"

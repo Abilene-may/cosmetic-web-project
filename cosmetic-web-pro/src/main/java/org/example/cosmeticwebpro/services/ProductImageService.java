@@ -14,7 +14,7 @@ public interface ProductImageService {
 
   void save(ProductImage productImage);
 
-  void delete(Long id) throws IOException;
+  void delete(Long id) throws IOException, CosmeticException;
 
   boolean exists(Long id);
 

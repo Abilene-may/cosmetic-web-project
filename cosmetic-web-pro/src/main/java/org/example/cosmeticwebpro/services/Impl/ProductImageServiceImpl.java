@@ -1,8 +1,10 @@
 package org.example.cosmeticwebpro.services.Impl;
 
+import java.net.ConnectException;
 import lombok.RequiredArgsConstructor;
 import org.example.cosmeticwebpro.domains.ProductImage;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
+import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.repositories.ProductImageRepository;
 import org.example.cosmeticwebpro.services.CloudinaryService;
 import org.example.cosmeticwebpro.services.ProductImageService;
@@ -35,9 +37,12 @@ public class ProductImageServiceImpl implements ProductImageService {
   }
 
   @Override
-  public void delete(Long id) throws IOException {
-    ProductImage productImage = imageRepository.findById(id).get();
-    cloudinaryService.delete(productImage.getImageId());
+  public void delete(Long id) throws IOException, CosmeticException {
+    var productImage = imageRepository.findById(id);
+    if(productImage.isEmpty()){
+      throw new ConnectException(ExceptionUtils.IMAGE_NOT_FOUND);
+    }
+    cloudinaryService.delete(productImage.get().getImageId());
     imageRepository.deleteById(id);
   }
 

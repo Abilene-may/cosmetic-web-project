@@ -9,5 +9,5 @@ public interface DisplayReviewDTO {
     LocalDateTime getCreatedDate();
     Long getProductId();
     Long getOrderId();
-    String getUsername();
+    String getUserName();
 }

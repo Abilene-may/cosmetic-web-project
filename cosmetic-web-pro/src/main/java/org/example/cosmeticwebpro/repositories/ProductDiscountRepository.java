@@ -11,7 +11,8 @@ public interface ProductDiscountRepository
     extends JpaRepository<ProductDiscount, Long>, JpaSpecificationExecutor<Long> {
 
   @Query(
-      value = " SELECT discount_id FROM product_discount WHERE product_id = :productId",
+      value = " SELECT discount_id FROM product_discount "
+          + " WHERE product_id = :productId ",
       nativeQuery = true)
   List<Long> findAllByProductId(Long productId);
 

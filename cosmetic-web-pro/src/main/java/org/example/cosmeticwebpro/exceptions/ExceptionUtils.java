@@ -33,6 +33,7 @@ public class ExceptionUtils {
   public static final String PRODUCTS_NOT_FOUND = "PRODUCTS_NOT_FOUND";
   public static final String PRODUCT_ERROR_1 = "PRODUCT_ERROR_1";
   public static final String PRODUCT_OUT_OF_STOCK = "PRODUCT_OUT_OF_STOCK";
+  public static final String IMAGE_NOT_FOUND = "IMAGE_NOT_FOUND";
 
   // discount
   public static final String DISCOUNT_NOT_FOUND = "DISCOUNT_NOT_FOUND";
@@ -83,6 +84,7 @@ public class ExceptionUtils {
     messages.put(ExceptionUtils.SIGNUP_ERROR_NULL_1, "Please enter Email.");
     messages.put(ExceptionUtils.SIGNUP_ERROR_NULL_2, "Please enter Password.");
     messages.put(ExceptionUtils.EMAIL_IS_NOT_REGISTERED, "Email is not registered. Please check again.");
+    messages.put(ExceptionUtils.IMAGE_NOT_FOUND, "Image is not found.");
 
     // user
     messages.put(
