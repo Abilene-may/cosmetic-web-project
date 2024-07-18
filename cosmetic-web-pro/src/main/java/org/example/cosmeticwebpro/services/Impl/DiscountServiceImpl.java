@@ -103,6 +103,14 @@ public class DiscountServiceImpl implements DiscountService {
     return discountRepository.findAllDiscountsFroProduct(Constants.ORDER);
   }
 
+  // delete discount
+  @Override
+  @Transactional
+  public void deleteDiscountById(Long discountId) throws CosmeticException {
+    discountRepository.deleteProductDiscountByDiscountId(discountId);
+    discountRepository.deleteById(discountId);
+  }
+
   private void updateDiscountStatuses() {
     discountRepository.updateExpiredDiscounts(Constants.EXPIRED);
     discountRepository.updateUpcomingDiscounts(Constants.UPCOMING);

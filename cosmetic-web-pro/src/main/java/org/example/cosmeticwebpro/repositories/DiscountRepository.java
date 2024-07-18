@@ -73,4 +73,8 @@ public interface DiscountRepository
               + "  OR LOWER(TRIM(apply_to)) NOT LIKE :applyTo",
       nativeQuery = true)
   List<Discount> findAllDiscountsFroProduct(@Param("applyTo") String applyTo);
+
+  @Modifying
+  @Query("DELETE FROM ProductDiscount pd WHERE pd.discount.id = :discountId")
+  void deleteProductDiscountByDiscountId(Long discountId);
 }

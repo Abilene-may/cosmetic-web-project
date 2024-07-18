@@ -16,4 +16,6 @@ public interface DiscountService {
   Discount getByDiscountId(Long discountId) throws CosmeticException;
 
   List<Discount> findAllDiscountForProduct() throws CosmeticException;
+
+  void deleteDiscountById(Long discountId) throws CosmeticException;
 }
