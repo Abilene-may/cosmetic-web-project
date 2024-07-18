@@ -18,6 +18,7 @@ public interface DisplayProductDTO {
   Long getBrandId();
   Long getCategoryId();
   String getImageUrl();
+  Long getDiscountId();
   Integer getPercentDiscount();
   String getCategoryName();
   String getBrandName();

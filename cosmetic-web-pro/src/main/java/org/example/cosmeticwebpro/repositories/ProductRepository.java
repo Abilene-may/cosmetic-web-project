@@ -199,6 +199,7 @@ public interface ProductRepository
               + "    p.brand_id AS brandId,\n"
               + "    p.category_id AS categoryId,\n"
               + "    MAX(pm.url_image) AS imageUrl,\n"
+              + "    p.discount_id AS discountId, \n"
               + "    COALESCE(MAX(d.discount_percent), 0) AS percentDiscount,\n"
               + "    COALESCE(c.category_name, null) AS categoryName,\n"
               + "    COALESCE(b.name, null) AS brandName,\n"
@@ -243,6 +244,7 @@ public interface ProductRepository
               + "    p.modified_date,\n"
               + "    p.brand_id,\n"
               + "    p.category_id,\n"
+              + "    p.discount_id, \n"
               + "    c.category_name,\n"
               + "    b.name " ,
       nativeQuery = true
@@ -341,6 +343,7 @@ public interface ProductRepository
               + "    p.brand_id AS brandId,\n"
               + "    p.category_id AS categoryId,\n"
               + "    MAX(pm.url_image) AS imageUrl,\n"
+              + "    p.discount_id AS discountId, \n"
               + "    COALESCE(MAX(d.discount_percent), 0) AS percentDiscount,\n"
               + "    COALESCE(c.category_name, null) AS categoryName,\n"
               + "    COALESCE(b.name, null) AS brandName,\n"
@@ -384,6 +387,7 @@ public interface ProductRepository
               + "    p.modified_date,\n"
               + "    p.brand_id,\n"
               + "    p.category_id,\n"
+              + "    p.discount_id, \n"
               + "    c.category_name,\n"
               + "    b.name " ,
       nativeQuery = true
