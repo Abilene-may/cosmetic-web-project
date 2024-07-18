@@ -5,6 +5,7 @@ import org.example.cosmeticwebpro.domains.Discount;
 import org.example.cosmeticwebpro.domains.Product;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.models.DisplayProductDTO;
+import org.example.cosmeticwebpro.models.DisplayProductForAdminDTO;
 import org.example.cosmeticwebpro.models.ProductDisplayDTO;
 import org.example.cosmeticwebpro.models.ProductOverviewDTO;
 import org.example.cosmeticwebpro.models.request.ProductReqDTO;
@@ -16,7 +17,7 @@ public interface ProductService {
   void createProduct(ProductReqDTO productReqDTO, MultipartFile[] multipartFiles)
       throws CosmeticException, IOException;
 
-  ProductDisplayDTO getByProductId(Long productId) throws CosmeticException;
+  DisplayProductForAdminDTO getByProductId(Long productId) throws CosmeticException;
 
   List<Product> updateAllProductStatus() throws CosmeticException;
 

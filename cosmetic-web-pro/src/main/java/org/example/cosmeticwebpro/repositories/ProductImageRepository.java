@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ProductImageRepository extends JpaRepository<ProductImage, Long>, JpaSpecificationExecutor<Long> {
     List<ProductImage> findByOrderById();
@@ -14,10 +15,10 @@ public interface ProductImageRepository extends JpaRepository<ProductImage, Long
 
     @Query(
         value =
-            "select pm.url_image "
-                + " from product p join product_image pm on p.id = pm.product_id "
-                + " where p.id = :productId ",
+            "select * "
+                + " from product_image  "
+                + " where product_id = :productId ",
         nativeQuery = true)
-    List<String> findAllImageUrlByProductId(Long productId);
+    List<ProductImage> findAllByProductId(@Param("productId") Long productId);
 
 }

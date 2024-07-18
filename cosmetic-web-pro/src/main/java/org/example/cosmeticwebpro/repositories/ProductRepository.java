@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import org.example.cosmeticwebpro.domains.Product;
+import org.example.cosmeticwebpro.domains.ProductImage;
 import org.example.cosmeticwebpro.models.DisplayProductDTO;
 import org.example.cosmeticwebpro.models.ProductStatisticDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -442,7 +443,5 @@ public interface ProductRepository
       + " WHERE id = :productId "
   , nativeQuery = true)
   void updateCountPurchase(@Param("productId") Long productId, @Param("quantity") Integer quantity);
-
-
 
 }

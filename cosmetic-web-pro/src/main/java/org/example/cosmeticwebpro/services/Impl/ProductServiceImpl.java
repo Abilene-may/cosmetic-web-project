@@ -15,6 +15,7 @@ import org.example.cosmeticwebpro.exceptions.CosmeticException;
 import org.example.cosmeticwebpro.exceptions.ExceptionUtils;
 import org.example.cosmeticwebpro.mapper.MapStruct;
 import org.example.cosmeticwebpro.models.DisplayProductDTO;
+import org.example.cosmeticwebpro.models.DisplayProductForAdminDTO;
 import org.example.cosmeticwebpro.models.ProductDisplayDTO;
 import org.example.cosmeticwebpro.models.ProductOverviewDTO;
 import org.example.cosmeticwebpro.models.request.ProductReqDTO;
@@ -23,6 +24,7 @@ import org.example.cosmeticwebpro.repositories.BrandRepository;
 import org.example.cosmeticwebpro.repositories.CategoryRepository;
 import org.example.cosmeticwebpro.repositories.DiscountRepository;
 import org.example.cosmeticwebpro.repositories.ProductDiscountRepository;
+import org.example.cosmeticwebpro.repositories.ProductImageRepository;
 import org.example.cosmeticwebpro.repositories.ProductRepository;
 import org.example.cosmeticwebpro.repositories.ProductReviewRepository;
 import org.example.cosmeticwebpro.services.CloudinaryService;
@@ -52,6 +54,7 @@ public class ProductServiceImpl implements ProductService {
   private final MapStruct mapStruct;
   private final ProductDiscountRepository productDiscountRepository;
   private final DiscountRepository discountRepository;
+  private final ProductImageRepository productImageRepository;
 
   @Transactional
   @Override
@@ -106,7 +109,7 @@ public class ProductServiceImpl implements ProductService {
 
   /** view details of 1 product for admin */
   @Override
-  public ProductDisplayDTO getByProductId(Long productId) throws CosmeticException {
+  public DisplayProductForAdminDTO getByProductId(Long productId) throws CosmeticException {
     var detailByProductId =
         productRepository.findProductDetailByProductId(Constants.ACTIVE, productId);
     if (detailByProductId.isEmpty()) {
@@ -115,10 +118,10 @@ public class ProductServiceImpl implements ProductService {
           ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_ID_IS_NOT_EXIST));
     }
     var productReviews = productReviewRepository.getAllProductReviewByProductId(productId);
-    List<String> imageUrls = productRepository.findAllImagesByProductId(productId);
-    return ProductDisplayDTO.builder()
+    var allImagesByProductId = productImageRepository.findAllByProductId(productId);
+    return DisplayProductForAdminDTO.builder()
         .displayProductDTO(detailByProductId.get())
-        .productImages(imageUrls)
+        .productImages(allImagesByProductId)
         .productReviews(productReviews)
         .build();
   }
