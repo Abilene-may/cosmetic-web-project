@@ -29,8 +29,8 @@ public class Constants {
     public static final String RETURNED_AND_REFUNDED = "Trả hàng /Hoàn tiền.";
     public static final String PRODUCT = "product";
     public static final String ORDER = "order";
-    public static final double ORDER_THRESHOLD_FOR_SHIPPING_COST = 500000;
-    public static final double SHIPPING_COST = 35000;
+    public static final double ORDER_THRESHOLD_FOR_SHIPPING_COST = 50;
+    public static final double SHIPPING_COST = 2;
 
     // payment method
   public static final String PAYMENT_CASH = "Thanh toán tiền mặt.";

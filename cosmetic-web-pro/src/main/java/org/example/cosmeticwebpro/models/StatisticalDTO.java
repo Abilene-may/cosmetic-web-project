@@ -6,16 +6,16 @@ public interface StatisticalDTO {
   Integer getCanceledOrders();
   Integer getOrderSuccessful();
   Integer getPendingOrders();
-  Integer getTotalRevenueOfJanuary();
-  Integer getTotalRevenueOfFebruary();
-  Integer getTotalRevenueOfMarch();
-  Integer getTotalRevenueOfApril();
-  Integer getTotalRevenueOfMay();
-  Integer getTotalRevenueOfJune();
-  Integer getTotalRevenueOfJuly();
-  Integer getTotalRevenueOfAugust();
-  Integer getTotalRevenueOfSeptember();
-  Integer getTotalRevenueOfOctober();
-  Integer getTotalRevenueOfNovember();
-  Integer getTotalRevenueOfDecember();
+  double getTotalRevenueOfJanuary();
+  double getTotalRevenueOfFebruary();
+  double getTotalRevenueOfMarch();
+  double getTotalRevenueOfApril();
+  double getTotalRevenueOfMay();
+  double getTotalRevenueOfJune();
+  double getTotalRevenueOfJuly();
+  double getTotalRevenueOfAugust();
+  double getTotalRevenueOfSeptember();
+  double getTotalRevenueOfOctober();
+  double getTotalRevenueOfNovember();
+  double getTotalRevenueOfDecember();
 }
