@@ -58,8 +58,8 @@ public class ProductServiceImpl implements ProductService {
   public void createProduct(ProductReqDTO productReqDTO, MultipartFile[] multipartFiles)
       throws CosmeticException, IOException {
     if (productReqDTO.getTitle().isBlank()
-        || productReqDTO.getCurrentCost() == null
-        || productReqDTO.getBrandId() == null
+        || productReqDTO.getCurrentCost() == 0.0
+        || (productReqDTO.getBrandId() == null)
         || productReqDTO.getMadeIn().isBlank()) {
       throw new CosmeticException(
           ExceptionUtils.PRODUCT_ERROR_1,
