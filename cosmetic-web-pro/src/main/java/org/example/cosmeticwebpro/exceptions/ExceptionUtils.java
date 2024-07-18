@@ -10,6 +10,7 @@ public class ExceptionUtils {
   public static final String E_INTERNAL_SERVER = "E_INTERNAL_SERVER";
   public static final String SIGNUP_ERROR_NULL_1 = "SIGNUP_ERROR_NULL_1";
   public static final String SIGNUP_ERROR_NULL_2 = "SIGNUP_ERROR_NULL_2";
+  public static final String EMAIL_IS_NOT_REGISTERED = "EMAIL_IS_NOT_REGISTERED";
 
   // user
   public static final String USER_NOT_FOUND = "USER_IS_NOT_EMPTY";
@@ -80,6 +81,7 @@ public class ExceptionUtils {
     messages.put(ExceptionUtils.E_INTERNAL_SERVER, "Server is not responding.");
     messages.put(ExceptionUtils.SIGNUP_ERROR_NULL_1, "Please enter Email.");
     messages.put(ExceptionUtils.SIGNUP_ERROR_NULL_2, "Please enter Password.");
+    messages.put(ExceptionUtils.EMAIL_IS_NOT_REGISTERED, "Email is not registered. Please check again.");
 
     // user
     messages.put(

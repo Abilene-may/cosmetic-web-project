@@ -187,7 +187,9 @@ public class AuthServiceImpl implements AuthService {
           user.get().getEmail(), "Reset Password", "reset-password-template", context);
       return "Email sent";
     }
-    return "Email isn't found";
+    throw new CosmeticException(
+        ExceptionUtils.EMAIL_IS_NOT_REGISTERED,
+        ExceptionUtils.messages.get(ExceptionUtils.EMAIL_IS_NOT_REGISTERED));
   }
 
   private Authentication authenticate(String username, String password) throws CosmeticException {
