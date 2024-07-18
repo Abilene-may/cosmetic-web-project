@@ -1,6 +1,5 @@
 package org.example.cosmeticwebpro.controllers.admin;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cosmeticwebpro.exceptions.CosmeticException;
@@ -32,6 +31,23 @@ public class DiscountController {
   public ResponseEntity<Object> getAllDiscount() {
     try {
       var allDiscounts = discountService.getAllDiscounts();
+      return new ResponseEntity<>(allDiscounts, HttpStatus.OK);
+    } catch (CosmeticException e) {
+      return new ResponseEntity<>(
+          new ErrorDTO(e.getMessageKey(), e.getMessage()), HttpStatus.BAD_REQUEST);
+    } catch (Exception ex) {
+      log.error(ex.getMessage(), ex);
+      return new ResponseEntity<>(
+          ExceptionUtils.messages.get(ExceptionUtils.E_INTERNAL_SERVER),
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  /** API get all discounts */
+  @GetMapping("/get-all-for-product")
+  public ResponseEntity<Object> getAllDiscountsForProduct() {
+    try {
+      var allDiscounts = discountService.findAllDiscountForProduct();
       return new ResponseEntity<>(allDiscounts, HttpStatus.OK);
     } catch (CosmeticException e) {
       return new ResponseEntity<>(

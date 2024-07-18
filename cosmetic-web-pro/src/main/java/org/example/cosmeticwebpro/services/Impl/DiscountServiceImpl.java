@@ -92,4 +92,20 @@ public class DiscountServiceImpl implements DiscountService {
     }
     return discount.get();
   }
+
+  @Transactional
+  @Override
+  public List<Discount> findAllDiscountForProduct() throws CosmeticException{
+    // Update the status of all discounts
+    updateDiscountStatuses();
+
+    // Fetch all discounts
+    return discountRepository.findAllDiscountsFroProduct(Constants.ORDER);
+  }
+
+  private void updateDiscountStatuses() {
+    discountRepository.updateExpiredDiscounts(Constants.EXPIRED);
+    discountRepository.updateUpcomingDiscounts(Constants.UPCOMING);
+    discountRepository.updateActiveDiscounts(Constants.ACTIVE);
+  }
 }

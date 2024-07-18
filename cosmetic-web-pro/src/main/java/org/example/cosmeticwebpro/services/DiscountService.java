@@ -14,4 +14,6 @@ public interface DiscountService {
   void updateADiscount(DiscountUpdateReqDTO discount) throws CosmeticException;
 
   Discount getByDiscountId(Long discountId) throws CosmeticException;
+
+  List<Discount> findAllDiscountForProduct() throws CosmeticException;
 }
