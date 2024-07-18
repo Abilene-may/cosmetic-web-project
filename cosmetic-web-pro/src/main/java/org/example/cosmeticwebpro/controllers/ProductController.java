@@ -109,7 +109,7 @@ public class ProductController {
       @RequestParam("id") Long id,
       @RequestParam("title") String title,
       @RequestParam(value = "description", required = false) String description,
-      @RequestParam("currentCost") Integer currentCost,
+      @RequestParam("currentCost") double currentCost,
       @RequestParam("madeIn") String madeIn,
       @RequestParam(value = "capacity", required = false) Integer capacity,
       @RequestParam("quantity") Integer quantity,

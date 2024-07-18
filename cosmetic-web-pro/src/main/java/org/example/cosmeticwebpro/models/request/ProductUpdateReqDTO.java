@@ -15,7 +15,7 @@ public class ProductUpdateReqDTO {
   private Long id;
   private String title;
   private String description;
-  private Integer currentCost;
+  private double currentCost;
   private String madeIn;
   private Integer capacity;
   private Integer quantity;

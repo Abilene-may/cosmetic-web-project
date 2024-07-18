@@ -192,7 +192,9 @@ public class ProductServiceImpl implements ProductService {
               .build();
       productDiscountRepository.save(productDiscount);
     }
-    this.updateProductImage(multipartFiles, existingProduct.getId());
+    if(multipartFiles != null){
+      this.updateProductImage(multipartFiles, existingProduct.getId());
+    }
     var product = productRepository.save(existingProduct);
 
     // delete old images of the product
