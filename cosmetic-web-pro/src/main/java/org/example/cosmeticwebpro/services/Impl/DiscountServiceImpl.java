@@ -48,6 +48,9 @@ public class DiscountServiceImpl implements DiscountService {
 
   @Override
   public List<Discount> getAllDiscounts() throws CosmeticException {
+    // Update the status of all discounts
+    updateDiscountStatuses();
+
     return discountRepository.findAll();
   }
 
