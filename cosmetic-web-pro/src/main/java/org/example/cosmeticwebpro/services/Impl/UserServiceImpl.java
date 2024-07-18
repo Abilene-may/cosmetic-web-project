@@ -110,6 +110,7 @@ public class UserServiceImpl implements UserService {
           ExceptionUtils.messages.get(ExceptionUtils.USERNAME_HAS_ALREADY));
     }
     var user = mapStruct.mapToUser(reqDTO);
+    user.setPassword(passwordEncoder.encode(reqDTO.getPassword()) );
     var saveUser = userRepository.save(user);
     cartService.createCart(saveUser);
   }

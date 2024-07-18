@@ -71,6 +71,7 @@ public class ExceptionUtils {
   public static final String PRODUCT_REVIEW_ERROR_1 = "PRODUCT_REVIEW_ERROR_1";
   public static final String PRODUCT_REVIEW_ERROR_2 = "PRODUCT_REVIEW_ERROR_2";
   public static final String PRODUCT_REVIEW_ERROR_3 = "PRODUCT_REVIEW_ERROR_3";
+  public static final String PRODUCT_REVIEW_ERROR_4 = "PRODUCT_REVIEW_ERROR_4";
 
   public static Map<String, String> messages;
 
@@ -166,5 +167,7 @@ public class ExceptionUtils {
     messages.put(
         ExceptionUtils.PRODUCT_REVIEW_ERROR_3,
         "The product is not included in the order. Cannot rate.");
+    messages.put(ExceptionUtils.PRODUCT_REVIEW_ERROR_4,
+        "You have already rated the product and cannot rate it again.");
   }
 }

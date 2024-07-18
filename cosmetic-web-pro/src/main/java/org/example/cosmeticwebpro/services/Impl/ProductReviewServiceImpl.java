@@ -27,7 +27,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
   public ProductReviewServiceImpl(
       @Lazy ProductReviewRepository productReviewRepository,
       @Lazy OrderService orderService,
-      @Lazy OrderDetailRepository orderDetailRepository){
+      @Lazy OrderDetailRepository orderDetailRepository) {
     super();
     this.productReviewRepository = productReviewRepository;
     this.orderService = orderService;
@@ -49,10 +49,18 @@ public class ProductReviewServiceImpl implements ProductReviewService {
           ExceptionUtils.PRODUCT_REVIEW_ERROR_1,
           ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_REVIEW_ERROR_1));
     }
+    // Check if the test has been evaluated yet
+    var checkReview =
+        productReviewRepository.checkReview(reqDTO.getProductId(), reqDTO.getOrderId());
+    if (checkReview.isPresent()) {
+      throw new CosmeticException(
+          ExceptionUtils.PRODUCT_REVIEW_ERROR_4,
+          ExceptionUtils.messages.get(ExceptionUtils.PRODUCT_REVIEW_ERROR_4));
+    }
     // check if the product exist in order detail
     var orderDetails = orderDetailRepository.findAllByOrderId(reqDTO.getOrderId());
-    boolean productExistsInOrder = orderDetails.stream()
-        .anyMatch(od -> od.getProductId().equals(reqDTO.getProductId()));
+    boolean productExistsInOrder =
+        orderDetails.stream().anyMatch(od -> od.getProductId().equals(reqDTO.getProductId()));
     if (!productExistsInOrder) {
       throw new CosmeticException(
           ExceptionUtils.PRODUCT_REVIEW_ERROR_3,
