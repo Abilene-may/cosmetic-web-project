@@ -18,7 +18,7 @@ public class ProductReqDTO {
 
     private String description;
 
-    private Integer currentCost;
+    private double currentCost;
 
     private String madeIn;
 
