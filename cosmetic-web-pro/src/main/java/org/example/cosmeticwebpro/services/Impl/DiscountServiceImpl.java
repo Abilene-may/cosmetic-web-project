@@ -25,6 +25,7 @@ public class DiscountServiceImpl implements DiscountService {
   @Override
   public void createADiscount(DiscountReqDTO discountReqDTO) throws CosmeticException {
     var status = setDiscountStatus(discountReqDTO.getFromDate(), discountReqDTO.getToDate());
+    LocalDateTime today = LocalDateTime.now();
     Discount discount =
         Discount.builder()
             .discountPercent(discountReqDTO.getDiscountPercent())
@@ -34,6 +35,8 @@ public class DiscountServiceImpl implements DiscountService {
             .minAmount(discountReqDTO.getMinAmount())
             .maxUsage(discountReqDTO.getMaxUsage())
             .discountStatus(status)
+            .createdDate(today)
+            .modifiedDate(today)
             .build();
     discountRepository.save(discount);
     // Associate productIdList with ProductDiscount entities
