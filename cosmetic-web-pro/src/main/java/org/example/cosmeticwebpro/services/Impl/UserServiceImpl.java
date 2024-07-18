@@ -99,6 +99,14 @@ public class UserServiceImpl implements UserService {
           ExceptionUtils.USER_REQ_NOT_EMPTY,
           ExceptionUtils.messages.get(ExceptionUtils.USER_REQ_NOT_EMPTY));
     }
+    // check email or username exist
+    var userName =
+        userRepository.findByUserNameOrEmail(reqDTO.getUserName(), reqDTO.getUserName());
+    if (userName.isPresent()) {
+      throw new CosmeticException(
+          ExceptionUtils.USERNAME_HAS_ALREADY,
+          ExceptionUtils.messages.get(ExceptionUtils.USERNAME_HAS_ALREADY));
+    }
     var user = mapStruct.mapToUser(reqDTO);
     userRepository.save(user);
   }
