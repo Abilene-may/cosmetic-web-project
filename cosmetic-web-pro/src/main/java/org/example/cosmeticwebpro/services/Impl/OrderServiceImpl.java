@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cosmeticwebpro.commons.Constants;
 import org.example.cosmeticwebpro.domains.CartLine;
@@ -17,6 +16,7 @@ import org.example.cosmeticwebpro.models.DisplayOrderDTO;
 import org.example.cosmeticwebpro.models.DisplayOrderDetailDTO;
 import org.example.cosmeticwebpro.models.request.OrderReqDTO;
 import org.example.cosmeticwebpro.repositories.CartLineRepository;
+import org.example.cosmeticwebpro.repositories.DiscountRepository;
 import org.example.cosmeticwebpro.repositories.OrderDetailRepository;
 import org.example.cosmeticwebpro.repositories.OrderRepository;
 import org.example.cosmeticwebpro.repositories.ProductRepository;
@@ -38,6 +38,7 @@ public class OrderServiceImpl implements OrderService {
   private final ProductRepository productRepository;
   private final CartService cartService;
   private final HomeService homeService;
+  private final DiscountRepository discountRepository;
 
   public OrderServiceImpl(
       @Lazy OrderRepository orderRepository,
@@ -46,7 +47,8 @@ public class OrderServiceImpl implements OrderService {
       @Lazy CartLineRepository cartLineRepository,
       @Lazy ProductRepository productRepository,
       @Lazy CartService cartService,
-      @Lazy HomeService homeService
+      @Lazy HomeService homeService,
+      @Lazy DiscountRepository discountRepository
   ){
     super();
     this.orderRepository = orderRepository;
@@ -56,6 +58,7 @@ public class OrderServiceImpl implements OrderService {
     this.productRepository = productRepository;
     this.cartService = cartService;
     this.homeService = homeService;
+    this.discountRepository = discountRepository;
   }
 
   // find a list order for a user
@@ -165,6 +168,9 @@ public class OrderServiceImpl implements OrderService {
       totalCost = totalCost - discountAmount;
       order.setDiscountOrder(discount.getDiscountPercent());
       orderDetailDTO.setDiscountOrder(discount);
+      var totalUsage = discount.getTotalUsage() - 1;
+      discount.setTotalUsage(totalUsage);
+      discountRepository.save(discount);
     }
     order.setTotalCost(totalCost);
     orderDetailDTO.setTotalAmount(totalCost);

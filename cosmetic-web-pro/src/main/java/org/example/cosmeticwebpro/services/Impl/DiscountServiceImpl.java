@@ -25,6 +25,14 @@ public class DiscountServiceImpl implements DiscountService {
   @Override
   public void createADiscount(DiscountReqDTO discountReqDTO) throws CosmeticException {
     var status = setDiscountStatus(discountReqDTO.getFromDate(), discountReqDTO.getToDate());
+    var minAmount = discountReqDTO.getMinAmount();
+    var maxUsage = discountReqDTO.getMaxUsage();
+    if(minAmount == null){
+      minAmount = 0;
+    }
+    if(maxUsage == null){
+      maxUsage = 0;
+    }
     LocalDateTime today = LocalDateTime.now();
     Discount discount =
         Discount.builder()
@@ -32,21 +40,13 @@ public class DiscountServiceImpl implements DiscountService {
             .fromDate(discountReqDTO.getFromDate())
             .toDate(discountReqDTO.getToDate())
             .applyTo(discountReqDTO.getApplyTo())
-            .minAmount(discountReqDTO.getMinAmount())
-            .maxUsage(discountReqDTO.getMaxUsage())
+            .minAmount(minAmount)
+            .maxUsage(maxUsage)
             .discountStatus(status)
             .createdDate(today)
             .modifiedDate(today)
             .build();
     discountRepository.save(discount);
-    // Associate productIdList with ProductDiscount entities
-//    for (Long productId : discountReqDTO.getProductIdList()) {
-//      ProductDiscount productDiscount = new ProductDiscount();
-//      productDiscount.setDiscountId(discount.getId());
-//      productDiscount.setProductId(productId);
-//      // You may want to set other fields in ProductDiscount if needed
-//      productDiscountRepository.save(productDiscount);
-//    }
   }
 
   @Override
@@ -62,6 +62,14 @@ public class DiscountServiceImpl implements DiscountService {
   public void updateADiscount(DiscountUpdateReqDTO discount)
       throws CosmeticException {
     var checkDiscount = this.getByDiscountId(discount.getId());
+    var minAmount = discount.getMinAmount();
+    var maxUsage = discount.getMaxUsage();
+    if(minAmount == null){
+      minAmount = 0;
+    }
+    if(maxUsage == null){
+      maxUsage = 0;
+    }
     LocalDateTime today = LocalDateTime.now();
     String status = setDiscountStatus(discount.getFromDate(), discount.getToDate());
     checkDiscount.setDiscountPercent(discount.getDiscountPercent());
@@ -69,8 +77,8 @@ public class DiscountServiceImpl implements DiscountService {
     checkDiscount.setToDate(discount.getToDate());
     checkDiscount.setModifiedDate(today);
     checkDiscount.setApplyTo(discount.getApplyTo());
-    checkDiscount.setMinAmount(discount.getMinAmount());
-    checkDiscount.setMaxUsage(discount.getMaxUsage());
+    checkDiscount.setMinAmount(minAmount);
+    checkDiscount.setMaxUsage(maxUsage);
     checkDiscount.setDiscountStatus(status);
     discountRepository.save(checkDiscount);
   }

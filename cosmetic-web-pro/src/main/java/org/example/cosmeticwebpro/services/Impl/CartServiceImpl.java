@@ -122,7 +122,7 @@ public class CartServiceImpl implements CartService {
         var bestDiscountForOrder =
             discountRepository.findBestDiscountForOrder(
                 totalFinalPrice, Constants.ACTIVE, Constants.ORDER, today);
-        if (bestDiscountForOrder.isPresent()) {
+        if (bestDiscountForOrder.isPresent() && bestDiscountForOrder.get().getTotalUsage() != 0) {
           cartDisplayDTO.setDiscount(bestDiscountForOrder.get());
           totalFinalPrice =
               totalCost
