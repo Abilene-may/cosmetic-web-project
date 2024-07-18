@@ -15,6 +15,7 @@ import org.example.cosmeticwebpro.models.request.CreateUserReqDTO;
 import org.example.cosmeticwebpro.models.request.ResetPasswordReqDTO;
 import org.example.cosmeticwebpro.models.request.UserReqDTO;
 import org.example.cosmeticwebpro.repositories.UserRepository;
+import org.example.cosmeticwebpro.services.CartService;
 import org.example.cosmeticwebpro.services.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final MapStruct mapStruct;
+  private final CartService cartService;
 
   /*
   view a user detail
@@ -108,7 +110,8 @@ public class UserServiceImpl implements UserService {
           ExceptionUtils.messages.get(ExceptionUtils.USERNAME_HAS_ALREADY));
     }
     var user = mapStruct.mapToUser(reqDTO);
-    userRepository.save(user);
+    var saveUser = userRepository.save(user);
+    cartService.createCart(saveUser);
   }
 
   // reset password of the user for admin
