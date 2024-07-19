@@ -93,7 +93,7 @@ public class ExceptionUtils {
         ExceptionUtils.USER_NOT_FOUND, "User information not found or user does not exist.");
     messages.put(
         ExceptionUtils.USERNAME_HAS_ALREADY,
-        "username already exists, please choose another username.");
+        "username or email already exists, please choose another username.");
     messages.put(ExceptionUtils.ACCOUNT_DEACTIVATED, "Your account has been disabled.");
     messages.put(
         ExceptionUtils.USER_REQ_NOT_EMPTY,
