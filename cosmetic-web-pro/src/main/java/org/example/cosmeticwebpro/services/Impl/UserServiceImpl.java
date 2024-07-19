@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
     if (!updateUser.getUserName().equals(userReqDTO.getUserName())) {
       // check userName existed
       var userName =
-          userRepository.findByUserNameOrEmail(userReqDTO.getUserName(), userReqDTO.getUserName());
+          userRepository.findByUserNameOrEmailForAdmin(userReqDTO.getUserName(), userReqDTO.getUserName());
       if (userName.isPresent()) {
         throw new CosmeticException(
             ExceptionUtils.USERNAME_HAS_ALREADY,

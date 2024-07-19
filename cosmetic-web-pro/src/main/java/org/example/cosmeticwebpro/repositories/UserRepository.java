@@ -10,11 +10,20 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
+import org.springframework.data.repository.query.Param;
 
 public interface UserRepository extends JpaRepository<User, Long>,
         JpaSpecificationExecutor<User> {
 
-    Optional<User> findByUserNameOrEmail(String username, String email);
+  @Query(value =
+      "SELECT * FROM users " +
+          "WHERE LOWER(email) LIKE LOWER(CONCAT('%', :email, '%')) " +
+          " OR LOWER(username) LIKE LOWER(CONCAT('%', :username, '%')) " +
+          " AND account_status = :status",
+      nativeQuery = true)
+    Optional<User> findByUserNameOrEmailForAdmin(@Param("username") String username, @Param("email") String email);
+
+  Optional<User> findByUserNameOrEmail( String username, String email);
 
     @Query(value =
             "SELECT * FROM users " +
