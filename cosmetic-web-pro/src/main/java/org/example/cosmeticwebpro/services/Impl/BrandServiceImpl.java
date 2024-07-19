@@ -60,7 +60,7 @@ public class BrandServiceImpl implements BrandService {
    */
   @Override
   public List<Brand> getAllBrand() throws CosmeticException {
-    List<Brand> brands = brandRepository.findAll();
+    List<Brand> brands = brandRepository.findAllBrands();
     return brands;
   }
 

@@ -289,7 +289,7 @@ public class OrderServiceImpl implements OrderService {
   // find all orders for admin
   @Override
   public List<Order> getAllOrderForAdmin() throws CosmeticException {
-    return orderRepository.findAll();
+    return orderRepository.findAllForAdmin();
   }
 
   @Transactional

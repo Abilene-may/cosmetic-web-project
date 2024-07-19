@@ -27,4 +27,8 @@ public interface BrandRepository extends JpaRepository<Brand, Long>, JpaSpecific
       + " LIMIT 10 "
   , nativeQuery = true)
   List<RevenueOfBrandDTO> findAllRevenueOfBrandsByYear(Integer year);
+
+  @Query( value = " select * from brand order by created_date desc"
+      , nativeQuery = true)
+  List<Brand> findAllBrands();
 }

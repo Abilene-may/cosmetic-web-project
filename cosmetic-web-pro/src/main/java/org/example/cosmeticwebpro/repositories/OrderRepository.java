@@ -25,18 +25,18 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
               + "    COUNT(CASE WHEN status = 'Đơn hàng đã bị hủy.' THEN 1 END) AS canceledOrders,\n"
               + "    COUNT(CASE WHEN status = 'Giao hàng thành công.' THEN 1 END) AS orderSuccessful,\n"
               + "    COUNT(CASE WHEN status = 'Đặt hàng thành công.' THEN 1 END) AS pendingOrders,\n"
-              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 1 AND EXTRACT(YEAR FROM order_date) = :year THEN total_cost END), 0) AS totalRevenueOfJanuary,\n"
-              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 2 AND EXTRACT(YEAR FROM order_date) = :year THEN total_cost END), 0) AS totalRevenueOfFebruary,\n"
-              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 3 AND EXTRACT(YEAR FROM order_date) = :year THEN total_cost END), 0) AS totalRevenueOfMarch,\n"
-              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 4 AND EXTRACT(YEAR FROM order_date) = :year THEN total_cost END), 0) AS totalRevenueOfApril,\n"
-              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 5 AND EXTRACT(YEAR FROM order_date) = :year THEN total_cost END), 0) AS totalRevenueOfMay,\n"
-              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 6 AND EXTRACT(YEAR FROM order_date) = :year THEN total_cost END), 0) AS totalRevenueOfJune,\n"
-              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 7 AND EXTRACT(YEAR FROM order_date) = :year THEN total_cost END), 0) AS totalRevenueOfJuly,\n"
-              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 8 AND EXTRACT(YEAR FROM order_date) = :year THEN total_cost END), 0) AS totalRevenueOfAugust,\n"
-              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 9 AND EXTRACT(YEAR FROM order_date) = :year THEN total_cost END), 0) AS totalRevenueOfSeptember,\n"
-              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 10 AND EXTRACT(YEAR FROM order_date) = :year THEN total_cost END), 0) AS totalRevenueOfOctober,\n"
-              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 11 AND EXTRACT(YEAR FROM order_date) = :year THEN total_cost END), 0) AS totalRevenueOfNovember,\n"
-              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 12 AND EXTRACT(YEAR FROM order_date) = :year THEN total_cost END), 0) AS totalRevenueOfDecember\n"
+              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 1 AND EXTRACT(YEAR FROM order_date) = :year AND status = 'Giao hàng thành công.' THEN total_cost END), 0) AS totalRevenueOfJanuary,\n"
+              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 2 AND EXTRACT(YEAR FROM order_date) = :year AND status = 'Giao hàng thành công.' THEN total_cost END), 0) AS totalRevenueOfFebruary,\n"
+              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 3 AND EXTRACT(YEAR FROM order_date) = :year AND status = 'Giao hàng thành công.' THEN total_cost END), 0) AS totalRevenueOfMarch,\n"
+              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 4 AND EXTRACT(YEAR FROM order_date) = :year AND status = 'Giao hàng thành công.' THEN total_cost END), 0) AS totalRevenueOfApril,\n"
+              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 5 AND EXTRACT(YEAR FROM order_date) = :year AND status = 'Giao hàng thành công.' THEN total_cost END), 0) AS totalRevenueOfMay,\n"
+              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 6 AND EXTRACT(YEAR FROM order_date) = :year AND status = 'Giao hàng thành công.' THEN total_cost END), 0) AS totalRevenueOfJune,\n"
+              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 7 AND EXTRACT(YEAR FROM order_date) = :year AND status = 'Giao hàng thành công.' THEN total_cost END), 0) AS totalRevenueOfJuly,\n"
+              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 8 AND EXTRACT(YEAR FROM order_date) = :year AND status = 'Giao hàng thành công.' THEN total_cost END), 0) AS totalRevenueOfAugust,\n"
+              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 9 AND EXTRACT(YEAR FROM order_date) = :year AND status = 'Giao hàng thành công.' THEN total_cost END), 0) AS totalRevenueOfSeptember,\n"
+              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 10 AND EXTRACT(YEAR FROM order_date) = :year AND status = 'Giao hàng thành công.' THEN total_cost END), 0) AS totalRevenueOfOctober,\n"
+              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 11 AND EXTRACT(YEAR FROM order_date) = :year AND status = 'Giao hàng thành công.' THEN total_cost END), 0) AS totalRevenueOfNovember,\n"
+              + "    COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM order_date) = 12 AND EXTRACT(YEAR FROM order_date) = :year AND status = 'Giao hàng thành công.' THEN total_cost END), 0) AS totalRevenueOfDecember\n"
               + "FROM orders\n"
               + "WHERE EXTRACT(YEAR FROM order_date) = :year",
       nativeQuery = true)
@@ -61,4 +61,9 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
               + "    totalSpend DESC;",
       nativeQuery = true)
   List<UserPotentialDTO> findALlUserPotential();
+
+  @Query(value = " select * from orders order by order_date desc "
+      , nativeQuery = true
+  )
+  List<Order> findAllForAdmin();
 }

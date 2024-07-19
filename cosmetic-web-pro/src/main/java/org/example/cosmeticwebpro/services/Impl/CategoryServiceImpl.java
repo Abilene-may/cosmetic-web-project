@@ -86,6 +86,6 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Override
   public List<Category> getAll() throws CosmeticException {
-    return categoryRepository.findAll();
+    return categoryRepository.findAllCategories();
   }
 }
