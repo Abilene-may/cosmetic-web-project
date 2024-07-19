@@ -94,7 +94,6 @@ public class UserServiceImpl implements UserService {
   public void createAUserForAdmin(CreateUserReqDTO reqDTO) throws CosmeticException {
     if (reqDTO.getEmail().isBlank()
         || reqDTO.getUserName().isBlank()
-        || reqDTO.getAccountStatus().isBlank()
         || reqDTO.getPassword().isBlank()
         || reqDTO.getRoleId() == null) {
       throw new CosmeticException(
@@ -110,6 +109,7 @@ public class UserServiceImpl implements UserService {
           ExceptionUtils.messages.get(ExceptionUtils.USERNAME_HAS_ALREADY));
     }
     var user = mapStruct.mapToUser(reqDTO);
+    user.setAccountStatus(Constants.ACTIVE);
     user.setPassword(passwordEncoder.encode(reqDTO.getPassword()) );
     var saveUser = userRepository.save(user);
     cartService.createCart(saveUser);
