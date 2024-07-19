@@ -35,7 +35,7 @@ public interface ProductReviewRepository extends JpaRepository<ProductReview, Lo
 
 
   @Query(value = " select * from product_review where product_id = :productId "
-      + "   and orderId = :orderId "
+      + "   and order_id = :orderId "
       ,nativeQuery = true
   )
   Optional<ProductReview> checkReview(@Param("productId") Long productId,
