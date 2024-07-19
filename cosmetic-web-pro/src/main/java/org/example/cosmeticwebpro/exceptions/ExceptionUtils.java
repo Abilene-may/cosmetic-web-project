@@ -25,6 +25,7 @@ public class ExceptionUtils {
   public static final String CANNOT_DELETE = "CANNOT_DELETE";
   public static final String ROLE_NAME_NOT_EMPTY = "ROLE_NAME_NOT_EMPTY";
   public static final String ROLE_CANNOT_BE_DELETED = "ROLE_CANNOT_BE_DELETED";
+  public static final String CANNOT_HAS_THE_SAME_NAME = "CANNOT_HAS_THE_SAME_NAME";
 
   // product
   public static final String PRODUCT_ID_IS_NOT_EXIST = "PRODUCT_ID_IS_NOT_EXIST";
@@ -83,7 +84,8 @@ public class ExceptionUtils {
     messages.put(ExceptionUtils.E_INTERNAL_SERVER, "Server is not responding.");
     messages.put(ExceptionUtils.SIGNUP_ERROR_NULL_1, "Please enter Email.");
     messages.put(ExceptionUtils.SIGNUP_ERROR_NULL_2, "Please enter Password.");
-    messages.put(ExceptionUtils.EMAIL_IS_NOT_REGISTERED, "Email is not registered. Please check again.");
+    messages.put(
+        ExceptionUtils.EMAIL_IS_NOT_REGISTERED, "Email is not registered. Please check again.");
     messages.put(ExceptionUtils.IMAGE_NOT_FOUND, "Image is not found.");
 
     // user
@@ -104,6 +106,9 @@ public class ExceptionUtils {
     messages.put(ExceptionUtils.CANNOT_DELETE, "USER and ADMIN roles cannot be deleted.");
     messages.put(ExceptionUtils.ROLE_NAME_NOT_EMPTY, "Role name cannot be left blank.");
     messages.put(ExceptionUtils.ROLE_CANNOT_BE_DELETED, "Cannot delete this role.");
+    messages.put(
+        ExceptionUtils.CANNOT_HAS_THE_SAME_NAME,
+        "Cannot have the same name as the ADMIN and USER roles.");
 
     // product
     messages.put(
@@ -169,7 +174,8 @@ public class ExceptionUtils {
     messages.put(
         ExceptionUtils.PRODUCT_REVIEW_ERROR_3,
         "The product is not included in the order. Cannot rate.");
-    messages.put(ExceptionUtils.PRODUCT_REVIEW_ERROR_4,
+    messages.put(
+        ExceptionUtils.PRODUCT_REVIEW_ERROR_4,
         "You have already rated the product and cannot rate it again.");
   }
 }

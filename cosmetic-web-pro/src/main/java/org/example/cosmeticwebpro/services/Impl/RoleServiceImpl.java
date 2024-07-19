@@ -34,6 +34,11 @@ public class RoleServiceImpl implements RoleService {
           ExceptionUtils.ROLE_NAME_IS_NOT_BLANK,
           ExceptionUtils.messages.get(ExceptionUtils.ROLE_NAME_IS_NOT_BLANK));
     }
+    if(roleName.equals(Constants.ROLE_ADMIN) || roleName.equals(Constants.ROLE_USER)){
+      throw new CosmeticException(
+          ExceptionUtils.CANNOT_HAS_THE_SAME_NAME,
+          ExceptionUtils.messages.get(ExceptionUtils.CANNOT_HAS_THE_SAME_NAME));
+    }
     Role role =  new Role();
     if(permissionIds == null){
       role.setPermissions(new HashSet<>());
